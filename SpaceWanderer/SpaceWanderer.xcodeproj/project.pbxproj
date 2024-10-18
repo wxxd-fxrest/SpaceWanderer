@@ -14,6 +14,16 @@
 		0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C812CC272530008804A /* SpaceWanderer.xcdatamodeld */; };
 		0B301C852CC272550008804A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C842CC272550008804A /* Assets.xcassets */; };
 		0B301C882CC272550008804A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C862CC272550008804A /* LaunchScreen.storyboard */; };
+		0B301C9A2CC2742C0008804A /* Pretendard-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C902CC2742C0008804A /* Pretendard-Medium.ttf */; };
+		0B301C9B2CC2742C0008804A /* Pretendard-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C912CC2742C0008804A /* Pretendard-Black.ttf */; };
+		0B301C9C2CC2742C0008804A /* Pretendard-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C922CC2742C0008804A /* Pretendard-Regular.ttf */; };
+		0B301C9D2CC2742C0008804A /* Pretendard-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C932CC2742C0008804A /* Pretendard-Thin.ttf */; };
+		0B301C9E2CC2742C0008804A /* Pretendard-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C942CC2742C0008804A /* Pretendard-ExtraLight.ttf */; };
+		0B301C9F2CC2742C0008804A /* Pretendard-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C952CC2742C0008804A /* Pretendard-SemiBold.ttf */; };
+		0B301CA02CC2742C0008804A /* Pretendard-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C962CC2742C0008804A /* Pretendard-ExtraBold.ttf */; };
+		0B301CA12CC2742C0008804A /* Pretendard-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C972CC2742C0008804A /* Pretendard-Bold.ttf */; };
+		0B301CA22CC2742C0008804A /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C982CC2742C0008804A /* UIFont.swift */; };
+		0B301CA32CC2742C0008804A /* Pretendard-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C992CC2742C0008804A /* Pretendard-Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +36,16 @@
 		0B301C842CC272550008804A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0B301C872CC272550008804A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0B301C892CC272550008804A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0B301C902CC2742C0008804A /* Pretendard-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.ttf"; sourceTree = "<group>"; };
+		0B301C912CC2742C0008804A /* Pretendard-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Black.ttf"; sourceTree = "<group>"; };
+		0B301C922CC2742C0008804A /* Pretendard-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.ttf"; sourceTree = "<group>"; };
+		0B301C932CC2742C0008804A /* Pretendard-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Thin.ttf"; sourceTree = "<group>"; };
+		0B301C942CC2742C0008804A /* Pretendard-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraLight.ttf"; sourceTree = "<group>"; };
+		0B301C952CC2742C0008804A /* Pretendard-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-SemiBold.ttf"; sourceTree = "<group>"; };
+		0B301C962CC2742C0008804A /* Pretendard-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraBold.ttf"; sourceTree = "<group>"; };
+		0B301C972CC2742C0008804A /* Pretendard-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.ttf"; sourceTree = "<group>"; };
+		0B301C982CC2742C0008804A /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
+		0B301C992CC2742C0008804A /* Pretendard-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Light.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +81,7 @@
 				0B301C782CC272530008804A /* AppDelegate.swift */,
 				0B301C7A2CC272530008804A /* SceneDelegate.swift */,
 				0B301C7C2CC272530008804A /* ViewController.swift */,
+				0B301C8F2CC2742C0008804A /* Fonts */,
 				0B301C7E2CC272530008804A /* Main.storyboard */,
 				0B301C842CC272550008804A /* Assets.xcassets */,
 				0B301C862CC272550008804A /* LaunchScreen.storyboard */,
@@ -68,6 +89,23 @@
 				0B301C812CC272530008804A /* SpaceWanderer.xcdatamodeld */,
 			);
 			path = SpaceWanderer;
+			sourceTree = "<group>";
+		};
+		0B301C8F2CC2742C0008804A /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				0B301C902CC2742C0008804A /* Pretendard-Medium.ttf */,
+				0B301C912CC2742C0008804A /* Pretendard-Black.ttf */,
+				0B301C922CC2742C0008804A /* Pretendard-Regular.ttf */,
+				0B301C932CC2742C0008804A /* Pretendard-Thin.ttf */,
+				0B301C942CC2742C0008804A /* Pretendard-ExtraLight.ttf */,
+				0B301C952CC2742C0008804A /* Pretendard-SemiBold.ttf */,
+				0B301C962CC2742C0008804A /* Pretendard-ExtraBold.ttf */,
+				0B301C972CC2742C0008804A /* Pretendard-Bold.ttf */,
+				0B301C982CC2742C0008804A /* UIFont.swift */,
+				0B301C992CC2742C0008804A /* Pretendard-Light.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,9 +166,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B301C9F2CC2742C0008804A /* Pretendard-SemiBold.ttf in Resources */,
+				0B301C9A2CC2742C0008804A /* Pretendard-Medium.ttf in Resources */,
 				0B301C882CC272550008804A /* LaunchScreen.storyboard in Resources */,
+				0B301C9C2CC2742C0008804A /* Pretendard-Regular.ttf in Resources */,
 				0B301C852CC272550008804A /* Assets.xcassets in Resources */,
 				0B301C802CC272530008804A /* Main.storyboard in Resources */,
+				0B301CA32CC2742C0008804A /* Pretendard-Light.ttf in Resources */,
+				0B301C9B2CC2742C0008804A /* Pretendard-Black.ttf in Resources */,
+				0B301CA02CC2742C0008804A /* Pretendard-ExtraBold.ttf in Resources */,
+				0B301C9D2CC2742C0008804A /* Pretendard-Thin.ttf in Resources */,
+				0B301C9E2CC2742C0008804A /* Pretendard-ExtraLight.ttf in Resources */,
+				0B301CA12CC2742C0008804A /* Pretendard-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +191,7 @@
 				0B301C7D2CC272530008804A /* ViewController.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
+				0B301CA22CC2742C0008804A /* UIFont.swift in Sources */,
 				0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
