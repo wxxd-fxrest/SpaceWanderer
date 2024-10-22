@@ -24,6 +24,7 @@
 		0B301CA12CC2742C0008804A /* Pretendard-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C972CC2742C0008804A /* Pretendard-Bold.ttf */; };
 		0B301CA22CC2742C0008804A /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C982CC2742C0008804A /* UIFont.swift */; };
 		0B301CA32CC2742C0008804A /* Pretendard-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C992CC2742C0008804A /* Pretendard-Light.ttf */; };
+		0B9265E32CC7E4FE002270AF /* SpaceInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,8 @@
 		0B301C972CC2742C0008804A /* Pretendard-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.ttf"; sourceTree = "<group>"; };
 		0B301C982CC2742C0008804A /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		0B301C992CC2742C0008804A /* Pretendard-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Light.ttf"; sourceTree = "<group>"; };
+		0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SpaceInfo.plist; sourceTree = "<group>"; };
+		0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpaceWanderer.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +81,7 @@
 		0B301C772CC272530008804A /* SpaceWanderer */ = {
 			isa = PBXGroup;
 			children = (
+				0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */,
 				0B301C782CC272530008804A /* AppDelegate.swift */,
 				0B301C7A2CC272530008804A /* SceneDelegate.swift */,
 				0B301C7C2CC272530008804A /* ViewController.swift */,
@@ -86,6 +90,7 @@
 				0B301C842CC272550008804A /* Assets.xcassets */,
 				0B301C862CC272550008804A /* LaunchScreen.storyboard */,
 				0B301C892CC272550008804A /* Info.plist */,
+				0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */,
 				0B301C812CC272530008804A /* SpaceWanderer.xcdatamodeld */,
 			);
 			path = SpaceWanderer;
@@ -178,6 +183,7 @@
 				0B301C9D2CC2742C0008804A /* Pretendard-Thin.ttf in Resources */,
 				0B301C9E2CC2742C0008804A /* Pretendard-ExtraLight.ttf in Resources */,
 				0B301CA12CC2742C0008804A /* Pretendard-Bold.ttf in Resources */,
+				0B9265E32CC7E4FE002270AF /* SpaceInfo.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,6 +348,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SpaceWanderer/SpaceWanderer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KWVJ99C465;
@@ -357,7 +364,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.xoul.SpaceWanderer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.space.wanderer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -370,6 +377,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SpaceWanderer/SpaceWanderer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KWVJ99C465;
@@ -385,7 +393,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.xoul.SpaceWanderer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.space.wanderer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

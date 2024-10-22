@@ -98,5 +98,7 @@ iOSInjectionProject/
 
 Info.plist
 Config.plist
+SpaceInfo.plist
+SpaceWanderer.entitlements
 
 # End of https://www.toptal.com/developers/gitignore/api/swift,firebase
