@@ -1,15 +1,14 @@
 package com.spacewanderer.space_back.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.Random;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -17,7 +16,6 @@ import jakarta.persistence.Table;
 @NoArgsConstructor
 @Table(name = "user")
 public class UserEntity {
-
     @Id
     @Column(name = "user_unique_id", nullable = false, unique = true)
     private String userUniqueId;
@@ -43,17 +41,18 @@ public class UserEntity {
     @Column(nullable = true)
     private String profileImage;
 
+    @Column(name = "refresh_token", nullable = false)
+    private String refreshToken;  
+
     @Column(nullable = true)
     private String loginType;
 
-    @Column(name = "refresh_token", nullable = true)
-    private String refreshToken;  // 암호화된 refreshToken 저장
-
-    public UserEntity(String userUniqueId, String userIdentifier, String email, String refreshToken) {
+    public UserEntity(String userUniqueId, String userIdentifier, String email, String refreshToken, String loginType) {
         this.userUniqueId = userUniqueId;
         this.userIdentifier = userIdentifier;
         this.email = email;
         this.refreshToken = refreshToken;
+        this.loginType = loginType;
     }
 
     // 고유 ID 생성 메서드

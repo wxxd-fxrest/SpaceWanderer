@@ -23,6 +23,7 @@ public class EncryptionUtil {
 
     public String encrypt(String data) throws Exception {
         Cipher cipher = Cipher.getInstance(algorithm);
+        
         SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), "AES");
 
         // 랜덤 IV 생성
@@ -32,12 +33,14 @@ public class EncryptionUtil {
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
+
         byte[] encrypted = cipher.doFinal(data.getBytes());
 
         // IV와 암호문을 합쳐서 반환 (IV + 암호문)
         byte[] combined = new byte[iv.length + encrypted.length];
         System.arraycopy(iv, 0, combined, 0, iv.length);
         System.arraycopy(encrypted, 0, combined, iv.length, encrypted.length);
+
         return Base64.getEncoder().encodeToString(combined);
     }
 
@@ -50,12 +53,15 @@ public class EncryptionUtil {
         byte[] cipherText = Arrays.copyOfRange(decoded, 16, decoded.length);
 
         Cipher cipher = Cipher.getInstance(algorithm);
+
         SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
+
         cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
 
         // 복호화 시도
         byte[] decrypted = cipher.doFinal(cipherText);
+
         return new String(decrypted, StandardCharsets.UTF_8);
     }
 }

@@ -44,18 +44,27 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.ECDSASigner;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @RequiredArgsConstructor
-public class AppleService {
-    private final UserRepository userRepository;
+public class AppleService {    
+    private final UserRepository userRepository; 
     private final EncryptionUtil encryptionUtil;
 
     @Value("${APPLE.AUTH.TOKEN.URL}")
@@ -82,124 +91,182 @@ public class AppleService {
     @Value("${APPLE.KEY.PATH}")
     private String appleKeyPath;
 
-    // 사용자 등록 메서드
-    public UserEntity registerUser(String userIdentifier, String email, String refreshToken) {
+    private static final Logger logger = LoggerFactory.getLogger(AppleService.class);
+
+    // function: 사용자 정보 DB 저장 
+    public UserEntity registerUser(String userIdentifier, String email, String refreshToken, String lginType) {
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("유효하지 않은 이메일 주소입니다.");
+        }
+
         String userUniqueId = UserEntity.generateUserUniqueId();
-        System.out.println("새 사용자 등록: " + userUniqueId + ", 사용자 ID: " + userIdentifier + ", 이메일: " + email);
-        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, refreshToken);
+        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, refreshToken, "apple"); 
+            
         return userRepository.save(newUser);
     }
 
-    public Optional<UserEntity> findUserByUserIdentifier(String userIdentifier) {
-        System.out.println("findUserByUserIdentifier 호출: " + userIdentifier);
-        return userRepository.findByUserIdentifier(userIdentifier);
-    }
-
-    // 사용자 JWT 생성 메서드
+    // function: 사용자 JWT 생성 메서드 
     public String generateUserJWT(String userIdentifier, String email) {
         try {
-            // 현재 시간 설정
-            long now = System.currentTimeMillis();
+            Long now = System.currentTimeMillis();
 
-            // JWT Header 설정
-            JWSHeader header = new JWSHeader(JWSAlgorithm.HS256); // 사용되는 알고리즘에 맞게 조정
+            JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
 
-            // JWT Claims 설정
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                    .subject(userIdentifier) // 사용자 ID
-                    .claim("email", email) // 이메일 추가
-                    .issueTime(new Date(now))
-                    .expirationTime(new Date(now + 3600 * 1000)) // 1시간 만료
-                    .build();
+                .subject(userIdentifier)
+                .claim("email", email)
+                .issueTime(new Date(now))
+                .expirationTime(new Date(now + 3600 * 1000))
+                .build();
 
-            // JWT 서명
             SignedJWT signedJWT = new SignedJWT(header, claims);
-            JWSSigner signer = new MACSigner(appleKeyPath); // 적절한 비밀 키를 사용해야 함
+
+            JWSSigner signer = new MACSigner(appleKeyPath);
             signedJWT.sign(signer);
 
-            // 서명된 JWT 반환
             return signedJWT.serialize();
+ 
         } catch (Exception e) {
-            throw new RuntimeException("사용자 JWT를 생성하지 못했습니다.", e);
+            throw new RuntimeException("사용자 JWT를 생성하지 못했습니다.");
         }
     }
 
+    // function: Apple Login 요청 처리 
     public Map<String, String> handleAppleLogin(String idToken, String appleResponse) {
-        System.out.println("handleAppleLogin");
-    
-        // ID 토큰 검증
-        if (!validateAppleToken(idToken)) {
-            System.out.println("ID 토큰이 유효하지 않습니다.");
-            throw new RuntimeException("Invalid ID token");
+        if(!validateAppleToken(idToken)) {
+            throw new RuntimeException("유효하지 않은 ID 토큰");
         }
-    
-        // ID 토큰에서 이메일 및 사용자 식별자 추출
-        String email = extractEmailFromToken(idToken);
-        String userIdentifier = extractUserIdentifierFromToken(idToken);
-       
-        System.out.println("추출된 이메일: " + email + ", 사용자 ID: " + userIdentifier);
-    
-        // 애플 응답에서 authorizationCode 추출
-        String authorizationCode = extractAuthorizationCodeFromAppleResponse(appleResponse);
-        System.out.println("추출된 authorizationCode: " + authorizationCode);
-    
-        if (authorizationCode == null || authorizationCode.isEmpty()) {
+
+        String email = extractEmailFromToken(idToken); // ID 토큰에서 email 추출 
+        String userIdentifier = extractUserIdentifierFromToken(idToken); // ID 토큰에서 사용자 식별자 추출 
+        String authorizationCode = extractAuthorizationCodeFromAppleResponse(appleResponse); // 애플의 응답데이터(appleResponse)에서 인증 코드 추출 
+
+        if(authorizationCode == null || authorizationCode.isEmpty()) {
             throw new RuntimeException("인증 코드는 null이거나 비어 있을 수 없습니다.");
         }
-    
-        // Access Token 및 Refresh Token 요청
+
         String refreshToken;
         try {
             refreshToken = getRefreshTokenUsingAuthorizationCode(authorizationCode);
-            System.out.println("발급된 Refresh Token: " + refreshToken);
         } catch (Exception e) {
-            System.err.println("Refresh Token 요청 중 오류 발생: " + e.getMessage());
-            throw new RuntimeException("Failed to retrieve refresh token");
+            throw new RuntimeException("Refresh token을 찾을 수 없습니다.");
         }
-    
-        // Refresh Token 암호화
+
         String encryptedRefreshToken = generateEncryptedRefreshToken(refreshToken);
-        System.out.println("암호화된 데이터 (저장 전): " + refreshToken);
-        System.out.println("암호화된 데이터 (저장 후): " + encryptedRefreshToken);
-    
-        // 사용자 조회 및 등록
-        Optional<UserEntity> existingUser = findUserByUserIdentifier(userIdentifier);
+        Optional<UserEntity> existingUser = userRepository.findByUserIdentifier(userIdentifier); 
+
         String userUniqueId;
-    
-        if (existingUser.isPresent()) {
-            // 이미 존재하는 사용자, Refresh Token만 업데이트
-            UserEntity user = existingUser.get();
-            user.setRefreshToken(encryptedRefreshToken); // 기존 사용자 Refresh Token 업데이트
-            userRepository.save(user);
-            System.out.println("기존 사용자 Refresh Token 업데이트: " + userIdentifier);
-            userUniqueId = user.getUserUniqueId(); // 기존 사용자 Unique ID 가져오기
-        } else {
-            // 새 사용자 등록 및 암호화된 refreshToken 저장
-            UserEntity newUser = registerUser(userIdentifier, email, encryptedRefreshToken);
-            userUniqueId = newUser.getUserUniqueId(); // 새 사용자의 Unique ID 가져오기
-            System.out.println("새 사용자 등록: " + newUser);
+        if(existingUser.isPresent()) {
+            UserEntity userEntity = existingUser.get();
+            userEntity.setRefreshToken(encryptedRefreshToken);
+            userRepository.save(userEntity);
+            userUniqueId = userEntity.getUserUniqueId();
+        } else  {
+            UserEntity newUser = registerUser(userIdentifier, email, encryptedRefreshToken, "apple");
+            userUniqueId = newUser.getUserUniqueId();
         }
-    
-        // Access Token 요청
-        String accessToken;
+
+        String accessToken; // accessToken 변수 생성 
         try {
             accessToken = getAccessTokenUsingRefreshToken(refreshToken);
-            System.out.println("발급된 Access Token: " + accessToken);
         } catch (Exception e) {
-            System.err.println("Access Token 요청 중 오류 발생: " + e.getMessage());
-            throw new RuntimeException("액세스 토큰을 검색하지 못했습니다.");
+            throw new RuntimeException("Access token을 검색하지 못했습니다.");
         }
-    
-        // Access Token 요청 후 JWT 생성
+
         String userJWT = generateUserJWT(userIdentifier, email);
-        System.out.println("생성된 JWT: " + userJWT);
-        
+  
         return Map.of("userIdentifier", userIdentifier, "refreshToken", accessToken, "userJWT", userJWT, "userUniqueId", userUniqueId);
     }
-    
 
+    // function: ID Token 검증 
+    public boolean validateAppleToken(String idToken) {
+        try {
+            // 1. Apple의 공개 키를 가져옴
+            logger.info("URL에서 Apple 공개 키 가져오기: " + applePublicKeyUrl);
+            JWKSet publicKeys = JWKSet.load(new URL(applePublicKeyUrl));
+
+            // 2. idToken을 SignedJWT로 파싱
+            SignedJWT signedJWT = SignedJWT.parse(idToken);
+            
+            // 3. 토큰의 헤더에서 keyID 가져오기
+            String keyId = signedJWT.getHeader().getKeyID();
+            logger.info("Token key ID: " + keyId);
+
+            // 4. keyID와 일치하는 공개 키 검색
+            JWK jwk = publicKeys.getKeyByKeyId(keyId);
+            if (jwk == null) {
+                logger.error("키 ID와 일치하는 키가 없습니다: " + keyId);
+                return false; // 일치하는 키가 없으면 검증 실패
+            }
+
+            // 5. 공개 키를 사용해 토큰의 서명을 검증
+            RSAKey rsaKey = jwk.toRSAKey();
+            JWSObject jwsObject = JWSObject.parse(idToken);
+            if (!jwsObject.verify(new com.nimbusds.jose.crypto.RSASSAVerifier(rsaKey))) {
+                logger.error("토큰 서명 검증에 실패했습니다.");
+                return false; // 서명이 올바르지 않으면 검증 실패
+            }
+
+            // 6. 토큰의 클레임(Claims) 유효성 확인
+            JsonNode claims = new ObjectMapper().readTree(signedJWT.getPayload().toString());
+            String issuer = claims.get("iss").asText();
+            String audience = claims.get("aud").asText();
+            logger.info("Token issuer: " + issuer + ", audience: " + audience);
+
+            if (!appleIss.equals(issuer) || !appleAud.equals(audience)) {
+                logger.error("appleIss 또는 appleAud이 일치하지 않습니다. 예상 appleIss: " + appleIss + ", appleAud: " + appleAud);
+                return false; // 발행자와 클라이언트 ID가 일치하지 않으면 검증 실패
+            }
+
+            // 7. 만료 시간 확인
+            long expiration = claims.get("exp").asLong();
+            if (System.currentTimeMillis() / 1000 >= expiration) {
+                logger.error("Token has expired");
+                return false; // 토큰이 만료되었으면 검증 실패
+            }
+
+            logger.info("토큰이 유효합니다.");
+            return true; // 모든 검증에 성공하면 유효한 토큰
+        } catch (ParseException | JOSEException | IOException e) {
+            logger.error("토큰 유효성 검사 중 예외가 발생했습니다.", e);
+            throw new RuntimeException("유효하지 않은 ID 토큰", e);
+        }
+    }
+
+    // function: ID Token에서 Email 추출 
+    private String extractEmailFromToken(String idToken) {
+        try {
+            JWT jwt = JWTParser.parse(idToken);
+
+            if (jwt instanceof SignedJWT) {
+                SignedJWT signedJWT = (SignedJWT) jwt;
+
+                return signedJWT.getJWTClaimsSet().getStringClaim("email");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // function: ID Token에서 UserIdentifier 추출 
+    private String extractUserIdentifierFromToken(String idToken) {
+        try {
+            JWT jwt = JWTParser.parse(idToken);
+
+            if (jwt instanceof SignedJWT) {
+                SignedJWT signedJWT = (SignedJWT) jwt;
+
+                return signedJWT.getJWTClaimsSet().getStringClaim("sub");  
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // function: 애플의 응답데이터(appleResponse)에서 인증 코드 추출 
     private String extractAuthorizationCodeFromAppleResponse(String response) {
-        // 애플 로그인 후 응답을 JSON 객체로 변환
         JSONObject jsonResponse = new JSONObject(response);
 
         // authorizationCode 추출
@@ -209,10 +276,11 @@ public class AppleService {
             throw new RuntimeException("Apple 응답에서 인증 코드를 찾을 수 없습니다");
         }
     }
-
+    
+    // function: 주어진 인증 코드(authorizationCode)를 사용하여 Refresh-Token 획득 
     private String getRefreshTokenUsingAuthorizationCode(String authorizationCode) {
         // 애플의 토큰 엔드포인트
-        String tokenUrl = "https://appleid.apple.com/auth/token";
+        String tokenUrl = appleAuthTokenUrl;
     
         try {
             URL url = new URL(tokenUrl);
@@ -262,18 +330,36 @@ public class AppleService {
                     errorResponse.append(line);
                 }
                 errorReader.close();
-                System.err.println("새로 고침 토큰을 검색하지 못했습니다." + responseCode);
-                System.err.println("Error Response: " + errorResponse.toString());
                 throw new RuntimeException("Apple에서 새로 고침 토큰을 검색하지 못했습니다.");
             }
         } catch (IOException e) {
-            System.err.println("IOException occurred: " + e.getMessage());
             throw new RuntimeException("새로 고침 토큰을 요청하는 중 IOException이 발생했습니다.");
         }
     }    
 
+    // function: Refresh Token 암호화 메서드 
+    private String generateEncryptedRefreshToken(String refreshToken) {
+        try {
+            // AES 암호화 사용
+            return encryptionUtil.encrypt(refreshToken);
+        } catch (Exception e) {
+            throw new RuntimeException("Refresh Token 암호화하지 못함", e);
+        }
+    }
+
+    // function: Refresh Token 복호화 메서드 
+    public String decryptRefreshToken(String encryptedToken) {
+        try {
+            return encryptionUtil.decrypt(encryptedToken);
+        } catch (Exception e) {
+            throw new RuntimeException("Refresh Token 복호화하지 못함" + e.getMessage(), e);
+        }
+    }
+
+    // function: 응답 JSON에서 refresh token 추출 
     private String extractRefreshTokenFromResponse(String jsonResponse) {
         JSONObject response = new JSONObject(jsonResponse);
+
         if (response.has("refresh_token")) {
             return response.getString("refresh_token");
         } else {
@@ -281,64 +367,7 @@ public class AppleService {
         }
     }
 
-    public String getUserIdentifierFromToken(String idToken) {
-        return extractUserIdentifierFromToken(idToken);
-    }
-
-    private String extractEmailFromToken(String idToken) {
-        try {
-            JWT jwt = JWTParser.parse(idToken);
-            if (jwt instanceof SignedJWT) {
-                SignedJWT signedJWT = (SignedJWT) jwt;
-                return signedJWT.getJWTClaimsSet().getStringClaim("email");
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private String extractUserIdentifierFromToken(String idToken) {
-        try {
-            JWT jwt = JWTParser.parse(idToken);
-            if (jwt instanceof SignedJWT) {
-                SignedJWT signedJWT = (SignedJWT) jwt;
-                return signedJWT.getJWTClaimsSet().getStringClaim("sub");  // userIdentifier 추출
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public boolean validateAppleToken(String idToken) {
-        // (토큰 검증 로직은 그대로 유지)
-        return true;
-    }
-
-
-    // Refresh Token 암호화 메서드
-    private String generateEncryptedRefreshToken(String refreshToken) {
-        try {
-            // AES 암호화 사용
-            System.out.println("Refresh Token 암호화 중: " + refreshToken);
-            return encryptionUtil.encrypt(refreshToken);
-        } catch (Exception e) {
-            throw new RuntimeException("Refresh Token 암호화하지 못함", e);
-        }
-    }
-
-    // Refresh Token 복호화 메서드
-    public String decryptRefreshToken(String encryptedToken) {
-        try {
-            System.out.println("Refresh Token 복호화 중: " + encryptedToken);
-            return encryptionUtil.decrypt(encryptedToken);
-        } catch (Exception e) {
-            System.err.println("복호화 중 오류 발생: " + e.getMessage());
-            throw new RuntimeException("Refresh Token 복호화하지 못함" + e.getMessage(), e);
-        }
-    }
-
+    // function: client secret 생성 
     private String generateClientSecret() {
         try {
             // 현재 시간 설정
@@ -352,7 +381,7 @@ public class AppleService {
             // JWT Claims 설정
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
                     .issuer(appleTeamId) // Team ID
-                    .audience("https://appleid.apple.com") // Audience
+                    .audience(appleIss) // Audience
                     .subject(appleAud) // Client ID
                     .issueTime(new Date(now))
                     .expirationTime(new Date(now + 3600 * 1000)) // 1시간 만료
@@ -370,16 +399,14 @@ public class AppleService {
         }
     }
 
+    // function: private key 가져오기 
     private PrivateKey getPrivateKey() {
         try {
-            // Private Key 파일 경로 출력
-            System.out.println("Private key path: " + appleKeyPath);
-
             // 파일 존재 여부 확인
             File keyFile = new File(appleKeyPath);
             if (!keyFile.exists()) {
-                System.err.println("개인 키 파일이 존재하지 않습니다: " + appleKeyPath);
-            }
+                throw new RuntimeException("private key 파일이 존재하지 않습니다: " + appleKeyPath);
+            }            
 
             // Private Key 파일 읽기
             String privateKeyContent = new String(Files.readAllBytes(Paths.get(appleKeyPath)))
@@ -400,50 +427,38 @@ public class AppleService {
         }
     }
 
-     // Access Token 가져오는 메서드
-     public String getAccessTokenUsingRefreshToken(String refreshToken) {
-        System.out.println("사용 중인 Refresh Token: " + refreshToken); // 현재 사용 중인 Refresh Token 로그 출력
-        String tokenEndpoint = "https://appleid.apple.com/auth/token"; 
+    // function: 리프레시 토큰을 사용해 액세스 토큰 가져오기 
+    public String getAccessTokenUsingRefreshToken(String refreshToken) {
+        String tokenEndpoint = appleAuthTokenUrl;
+        
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/x-www-form-urlencoded");
-    
+
         String clientSecret = generateClientSecret(); // Client Secret 생성
-        // 요청 파라미터 출력
-        System.out.println("요청 파라미터 출력 Client ID: " + appleAud);
-        System.out.println("요청 파라미터 출력 Client Secret: " + clientSecret);
-        
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("client_id", appleAud);
         body.add("client_secret", clientSecret);
         body.add("grant_type", "refresh_token");
         body.add("refresh_token", refreshToken);    
-    
+
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
-        System.out.println("Request Body: " + body.toSingleValueMap());
     
         ResponseEntity<Map> responseEntity;
         try {
             System.out.println("Apple에 요청을 보내는 중...");
-            System.out.println("Client Secret: " + clientSecret); // Client Secret 로그 추가
-            System.out.println("Request Body: " + body.toSingleValueMap()); // Request Body 로그 추가
-
             responseEntity = restTemplate.postForEntity(tokenEndpoint, requestEntity, Map.class);
-            System.out.println("Response: " + responseEntity.getBody());
+            // restTemplate.postForEntity()를 사용하여 POST 요청을 전송하고, 애플의 토큰 엔드포인트에서 응답을 받음
             
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 return (String) responseEntity.getBody().get("access_token");
             } else {
-                System.err.println("Apple의 오류 응답: " + responseEntity.getBody());
                 throw new RuntimeException("액세스 토큰을 검색하지 못함" + responseEntity.getStatusCode());
             }
         } catch (HttpClientErrorException e) {
-            System.err.println("액세스 토큰을 가져오는 중 오류 발생 " + e.getStatusCode());
-            System.err.println("Response Body: " + e.getResponseBodyAsString());
             throw new RuntimeException("액세스 토큰을 검색하지 못함" + e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("액세스 토큰을 가져오는 중 오류 발생 " + e.getMessage());
             throw new RuntimeException("액세스 토큰을 검색하지 못함", e);
         }
     }
