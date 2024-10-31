@@ -21,7 +21,7 @@ public class UserEntity {
     private String userUniqueId;
 
     @Column(name = "user_identifier", nullable = false, unique = true)
-    private String userIdentifier;  // 애플의 userIdentifier로 사용
+    private String userIdentifier; 
 
     @Column(nullable = true)
     private String email;

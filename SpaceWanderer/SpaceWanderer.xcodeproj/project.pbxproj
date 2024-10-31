@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0767682CD2283000866B22 /* KakaoLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */; };
+		0B07676F2CD2767600866B22 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0B07676E2CD2767600866B22 /* KakaoSDKAuth */; };
+		0B0767752CD2767600866B22 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0767742CD2767600866B22 /* KakaoSDKCommon */; };
+		0B0767772CD276E500866B22 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0767762CD276E500866B22 /* KakaoSDKUser */; };
 		0B301C792CC272530008804A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C782CC272530008804A /* AppDelegate.swift */; };
 		0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C7A2CC272530008804A /* SceneDelegate.swift */; };
 		0B301C7D2CC272530008804A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C7C2CC272530008804A /* ViewController.swift */; };
@@ -25,9 +29,15 @@
 		0B301CA22CC2742C0008804A /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C982CC2742C0008804A /* UIFont.swift */; };
 		0B301CA32CC2742C0008804A /* Pretendard-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C992CC2742C0008804A /* Pretendard-Light.ttf */; };
 		0B9265E32CC7E4FE002270AF /* SpaceInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */; };
+		0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */; };
+		0BEBD88D2CD3A4CD001590E8 /* AppleLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */; };
+		0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */; };
+		0BEBD8912CD3A63B001590E8 /* AppleLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */; };
+		0BEBD8932CD3A686001590E8 /* KakaoLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginViewController.swift; sourceTree = "<group>"; };
 		0B301C752CC272530008804A /* SpaceWanderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceWanderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B301C782CC272530008804A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B301C7A2CC272530008804A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +59,11 @@
 		0B301C992CC2742C0008804A /* Pretendard-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Light.ttf"; sourceTree = "<group>"; };
 		0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SpaceInfo.plist; sourceTree = "<group>"; };
 		0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpaceWanderer.entitlements; sourceTree = "<group>"; };
+		0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginViewController.swift; sourceTree = "<group>"; };
+		0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginManager.swift; sourceTree = "<group>"; };
+		0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginResponse.swift; sourceTree = "<group>"; };
+		0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,17 +71,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B0767772CD276E500866B22 /* KakaoSDKUser in Frameworks */,
+				0B0767752CD2767600866B22 /* KakaoSDKCommon in Frameworks */,
+				0B07676F2CD2767600866B22 /* KakaoSDKAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B0767692CD2743400866B22 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0B301C6C2CC272520008804A = {
 			isa = PBXGroup;
 			children = (
 				0B301C772CC272530008804A /* SpaceWanderer */,
 				0B301C762CC272530008804A /* Products */,
+				0B0767692CD2743400866B22 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -84,7 +110,13 @@
 				0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */,
 				0B301C782CC272530008804A /* AppDelegate.swift */,
 				0B301C7A2CC272530008804A /* SceneDelegate.swift */,
+				0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */,
+				0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */,
+				0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */,
 				0B301C7C2CC272530008804A /* ViewController.swift */,
+				0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */,
+				0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */,
+				0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */,
 				0B301C8F2CC2742C0008804A /* Fonts */,
 				0B301C7E2CC272530008804A /* Main.storyboard */,
 				0B301C842CC272550008804A /* Assets.xcassets */,
@@ -129,6 +161,11 @@
 			dependencies = (
 			);
 			name = SpaceWanderer;
+			packageProductDependencies = (
+				0B07676E2CD2767600866B22 /* KakaoSDKAuth */,
+				0B0767742CD2767600866B22 /* KakaoSDKCommon */,
+				0B0767762CD276E500866B22 /* KakaoSDKUser */,
+			);
 			productName = SpaceWanderer;
 			productReference = 0B301C752CC272530008804A /* SpaceWanderer.app */;
 			productType = "com.apple.product-type.application";
@@ -157,6 +194,9 @@
 				Base,
 			);
 			mainGroup = 0B301C6C2CC272520008804A;
+			packageReferences = (
+				0B07675C2CD2270800866B22 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+			);
 			productRefGroup = 0B301C762CC272530008804A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -196,9 +236,15 @@
 			files = (
 				0B301C7D2CC272530008804A /* ViewController.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
+				0B0767682CD2283000866B22 /* KakaoLoginViewController.swift in Sources */,
+				0BEBD88D2CD3A4CD001590E8 /* AppleLoginViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
+				0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */,
 				0B301CA22CC2742C0008804A /* UIFont.swift in Sources */,
+				0BEBD8912CD3A63B001590E8 /* AppleLoginResponse.swift in Sources */,
 				0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */,
+				0BEBD8932CD3A686001590E8 /* KakaoLoginManager.swift in Sources */,
+				0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +398,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KWVJ99C465;
+				ENABLE_TESTABILITY = NO;
+				ENABLE_TESTING_SEARCH_PATHS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpaceWanderer/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -381,6 +429,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KWVJ99C465;
+				ENABLE_TESTABILITY = NO;
+				ENABLE_TESTING_SEARCH_PATHS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpaceWanderer/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -423,6 +473,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0B07675C2CD2270800866B22 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.23.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0B07676E2CD2767600866B22 /* KakaoSDKAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B07675C2CD2270800866B22 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKAuth;
+		};
+		0B0767742CD2767600866B22 /* KakaoSDKCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B07675C2CD2270800866B22 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKCommon;
+		};
+		0B0767762CD276E500866B22 /* KakaoSDKUser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B07675C2CD2270800866B22 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKUser;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		0B301C812CC272530008804A /* SpaceWanderer.xcdatamodeld */ = {

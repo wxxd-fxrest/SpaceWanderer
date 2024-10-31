@@ -18,7 +18,14 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())  // CSRF 보호 비활성화 (필요시)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/api/v1/auth/oauth2/apple-login", "/api/v1/auth/oauth2/auto-login").permitAll()  // 인증 없이 접근 가능 경로
+                .requestMatchers(
+                    "/", 
+                    "/api/v1/auth/oauth2/apple-login", 
+                    "/api/v1/auth/oauth2/auto-login", 
+                    "/api/v1/auth/oauth2/kakao-login",
+                    "/api/v1/auth/oauth2/get-kakao-user/*",
+                    "/api/v1/auth/oauth2/get-kakao-access-token"
+                ).permitAll()  // 인증 없이 접근 가능 경로
                 .anyRequest().authenticated()  // 다른 요청은 인증 필요
             );
 

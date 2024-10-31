@@ -7,15 +7,31 @@
 
 import UIKit
 import CoreData
+import KakaoSDKCommon
+import KakaoSDKAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Space.plist에서 Kakao app key 가져오기
+        if let path = Bundle.main.path(forResource: "SpaceInfo", ofType: "plist"),
+           let spaceDict = NSDictionary(contentsOfFile: path) as? [String: Any],
+           let kakaoAppKey = spaceDict["KAKAO_APP_KEY"] as? String { // 여기에 맞는 키를 사용해야 함
+            KakaoSDK.initSDK(appKey: kakaoAppKey)
+        } else {
+            print("Kakao app key를 가져올 수 없습니다.")
+        }
+        
         return true
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        if (AuthApi.isKakaoTalkLoginUrl(url)) {
+            return AuthController.handleOpenUrl(url: url)
+        }
+
+        return false
     }
 
     // MARK: UISceneSession Lifecycle
