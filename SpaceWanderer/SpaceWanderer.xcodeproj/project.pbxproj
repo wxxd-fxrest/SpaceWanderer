@@ -29,6 +29,7 @@
 		0B301CA22CC2742C0008804A /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C982CC2742C0008804A /* UIFont.swift */; };
 		0B301CA32CC2742C0008804A /* Pretendard-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C992CC2742C0008804A /* Pretendard-Light.ttf */; };
 		0B9265E32CC7E4FE002270AF /* SpaceInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */; };
+		0BE8B8532CD4D6DB003524C3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE8B8522CD4D6DB003524C3 /* MainViewController.swift */; };
 		0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */; };
 		0BEBD88D2CD3A4CD001590E8 /* AppleLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */; };
 		0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */; };
@@ -59,6 +60,7 @@
 		0B301C992CC2742C0008804A /* Pretendard-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Light.ttf"; sourceTree = "<group>"; };
 		0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SpaceInfo.plist; sourceTree = "<group>"; };
 		0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpaceWanderer.entitlements; sourceTree = "<group>"; };
+		0BE8B8522CD4D6DB003524C3 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginViewController.swift; sourceTree = "<group>"; };
 		0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginManager.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				0B301C7A2CC272530008804A /* SceneDelegate.swift */,
 				0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */,
 				0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */,
+				0BE8B8522CD4D6DB003524C3 /* MainViewController.swift */,
 				0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */,
 				0B301C7C2CC272530008804A /* ViewController.swift */,
 				0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */,
@@ -237,6 +240,7 @@
 				0B301C7D2CC272530008804A /* ViewController.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
 				0B0767682CD2283000866B22 /* KakaoLoginViewController.swift in Sources */,
+				0BE8B8532CD4D6DB003524C3 /* MainViewController.swift in Sources */,
 				0BEBD88D2CD3A4CD001590E8 /* AppleLoginViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
 				0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */,

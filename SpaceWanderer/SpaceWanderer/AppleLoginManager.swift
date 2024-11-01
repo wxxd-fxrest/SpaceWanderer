@@ -7,15 +7,20 @@
 
 import Foundation
 
+protocol AppleAutoLoginManagerDelegate: AnyObject {
+    func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String)
+}
+
 class AppleLoginManager {
     let userDefaults = UserDefaults.standard
+    weak var autoDelegate: AppleAutoLoginManagerDelegate?
     
     lazy var backendURL: String = {
         // Space.plist에서 BackendURL 가져오기
         if let path = Bundle.main.path(forResource: "SpaceInfo", ofType: "plist"),
            let spaceDict = NSDictionary(contentsOfFile: path) as? [String: Any],
-           let backendURL = spaceDict["BASE_URL"] as? String {
-            print("BASE_URL", backendURL)
+           let backendURL = spaceDict["AUTH_BASE_URL"] as? String {
+            print("AUTH_BASE_URL", backendURL)
 
             return backendURL
         } else {
@@ -132,8 +137,10 @@ class AppleLoginManager {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let accessToken = json["accessToken"] as? String,
                    let userUniqueId = json["userUniqueId"] as? String {
+                    completion(accessToken, userUniqueId) // Access Token 및 userUniqueId 반환
+
                     DispatchQueue.main.async {
-                        completion(accessToken, userUniqueId) // Access Token 및 userUniqueId 반환
+                        self.autoDelegate?.didCompleteLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
                     }
                 } else {
                     print("응답 데이터가 예상한 형식이 아닙니다.")

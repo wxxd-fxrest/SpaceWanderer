@@ -11,7 +11,6 @@ import KakaoSDKAuth
 import KakaoSDKUser
 
 class KakaoLoginViewController: UIViewController, KakaoLoginManagerDelegate {
-    
     let kakaoLoginManager = KakaoLoginManager()
     
     override func viewDidLoad() {
@@ -24,9 +23,6 @@ class KakaoLoginViewController: UIViewController, KakaoLoginManagerDelegate {
         } else {
             print("저장된 Kakao 사용자 식별자가 없습니다.")
         }
-        
-        // 자동 로그인 시도
-        kakaoLoginManager.attemptAutoLogin()
         
         setupKakaoLoginButton()
     }
@@ -85,8 +81,10 @@ class KakaoLoginViewController: UIViewController, KakaoLoginManagerDelegate {
                                 let email = user.kakaoAccount?.email ?? "이메일 권한 없음"
                                 let refreshToken = oauthToken.refreshToken
                                 let loginType = "kakao"
+                                let userUniqueId = "\(userId)" // 이 부분을 실제로 사용할 userUniqueId로 수정
+                                let accessToken = oauthToken.accessToken // accessToken도 oauthToken에서 가져옴
                                 
-                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType)
+                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType, accessToken: accessToken)
                             }
                         }
                     }
@@ -118,7 +116,9 @@ class KakaoLoginViewController: UIViewController, KakaoLoginManagerDelegate {
                                 let refreshToken = oauthToken.refreshToken
                                 let loginType = "kakao"
                                 
-                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType)
+                                let accessToken = oauthToken.accessToken // accessToken도 oauthToken에서 가져옴
+                                
+                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType, accessToken: accessToken)
                             }
                         }
                     }
@@ -135,5 +135,10 @@ class KakaoLoginViewController: UIViewController, KakaoLoginManagerDelegate {
                 print("Access Token 정보: \(accessTokenInfo)")
             }
         }
+    }
+    
+    // 최초 로그인 후 main 화면으로 뒤로가기
+    func didCompleteKakaoLogin() {
+        self.navigationController?.popViewController(animated: true) // 뒤로가기
     }
 }

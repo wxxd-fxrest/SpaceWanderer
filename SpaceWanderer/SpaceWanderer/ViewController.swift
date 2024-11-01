@@ -8,7 +8,7 @@
 import UIKit
 import AuthenticationServices
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAutoLoginManagerDelegate {
     let kakaoButton = UIButton(type: .system)
     let appleButton = UIButton(type: .system)
 
@@ -18,6 +18,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .gray
+        kakaoLoginManager.autoDelegate = self
+        appleLoginManager.autoDelegate = self
+
 //        KeychainHelper.shared.deleteValue(for: "appleUserIdentifier")
 //        KeychainHelper.shared.deleteValue(for: "kakaoUserIdentifier")
         KeychainHelper.shared.printValue(for: "appleUserIdentifier")
@@ -46,9 +49,14 @@ class ViewController: UIViewController {
          
 
         setupButtons() // 버튼 설정
-        autoLoginIfNeeded() // 자동 로그인 시도
-        setupLogoutButton() // 로그아웃 버튼 설정
+        // autoLoginIfNeeded() // 자동 로그인 시도
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        autoLoginIfNeeded() // 여기에서 호출
+    }
+
 
     // 로그인 버튼을 설정하는 메서드
     private func setupButtons() {
@@ -78,54 +86,7 @@ class ViewController: UIViewController {
         ])
     }
     
-    private func setupLogoutButton() {
-        // 로그아웃 버튼 생성 및 속성 설정
-        let logoutButton = UIButton(type: .system)
-        logoutButton.setTitle("로그아웃", for: .normal)
-        logoutButton.setTitleColor(.red, for: .normal)
-        logoutButton.layer.cornerRadius = 8
-        logoutButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
-        
-        // 버튼 레이아웃 설정
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(logoutButton)
-        
-        // 버튼 위치 제약 설정 (카카오 로그인 버튼 아래)
-        NSLayoutConstraint.activate([
-            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoutButton.topAnchor.constraint(equalTo: kakaoButton.bottomAnchor, constant: 120),
-            logoutButton.widthAnchor.constraint(equalToConstant: 200),
-            logoutButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
     
-    @objc private func handleLogout() {
-        // UserDefaults에서 로그인 타입 확인
-        if let loginType = UserDefaults.standard.string(forKey: "LoginType") {
-            switch loginType {
-            case "LOGIN_APPLE":
-                appleLoginManager.logout()
-                print("애플 로그아웃 완료")
-                // 애플 로그아웃 후 UI 업데이트 등 필요한 추가 작업 수행
-
-            case "LOGIN_KAKAO":
-                kakaoLoginManager.logout { success in
-                    if success {
-                        print("카카오 로그아웃 완료")
-                        // 카카오 로그아웃 후 UI 업데이트 등 필요한 추가 작업 수행
-                    } else {
-                        print("카카오 로그아웃 실패")
-                    }
-                }
-
-            default:
-                print("알 수 없는 로그인 타입입니다.")
-            }
-        } else {
-            print("로그인 타입이 UserDefaults에 저장되어 있지 않습니다.")
-        }
-    }
     
     // 자동 로그인 처리
     private func autoLoginIfNeeded() {
@@ -135,13 +96,18 @@ class ViewController: UIViewController {
             
             if loginType == "LOGIN_KAKAO" {
                 // Kakao 자동 로그인 시도
-                kakaoLoginManager.attemptAutoLogin()
+                kakaoLoginManager.attemptAutoLogin { accessToken, userUniqueId in
+                    if let accessToken = accessToken, let userUniqueId = userUniqueId {
+                        print("kakaoLoginManager Access Token: \(accessToken)")
+                    } else {
+                        print("자동 로그인 실패")
+                    }
+                }
             } else if loginType == "LOGIN_APPLE" {
                 // Apple 자동 로그인 처리
                 appleLoginManager.autoLogin { accessToken, userUniqueId in
                     if let accessToken = accessToken, let userUniqueId = userUniqueId {
-                        print("Access Token: \(accessToken)")
-                        self.displayUserUniqueId(userUniqueId) // userUniqueId 표시
+                        print("appleLoginManager Access Token: \(accessToken)")
                     } else {
                         print("자동 로그인 실패")
                     }
@@ -154,6 +120,17 @@ class ViewController: UIViewController {
         }
     }
     
+    // 자동로그인 후 Main View로 이동
+    func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String) {
+        print("이동 전")
+        let mainVC = MainViewController()
+        mainVC.userUniqueId = userUniqueId // userUniqueId 전달
+        mainVC.userIdentifier = userIdentifier // userIdentifier 전달
+        mainVC.accessToken = accessToken // accessToken 전달
+        navigationController?.pushViewController(mainVC, animated: true)
+        print("이동 후")
+    }
+
     // userUniqueId를 화면에 표시하는 메서드
     func displayUserUniqueId(_ userUniqueId: String) {
         // 여기에서 userUniqueId를 표시하는 코드 작성

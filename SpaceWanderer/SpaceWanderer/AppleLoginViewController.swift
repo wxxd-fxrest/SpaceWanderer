@@ -21,16 +21,6 @@ class AppleLoginViewController: UIViewController {
             print("userIdentifier 확인", userIdentifier)
         }
         
-        // 앱 로딩 시 자동 로그인 처리
-        appleLoginManager.autoLogin { accessToken, userUniqueId in
-            if let accessToken = accessToken, let userUniqueId = userUniqueId {
-                print("Access Token: \(accessToken)")
-                self.displayUserUniqueId(userUniqueId) // userUniqueId 표시
-            } else {
-                print("자동 로그인 실패")
-            }
-        }
-
         // 애플 로그인 버튼 추가
         let appleSignInButton = ASAuthorizationAppleIDButton()
         appleSignInButton.addTarget(self, action: #selector(handleAppleSignIn), for: .touchUpInside)
@@ -104,7 +94,10 @@ extension AppleLoginViewController: ASAuthorizationControllerDelegate, ASAuthori
             if let userIdentifier = response.userIdentifier, let userUniqueId = response.userUniqueId {
                 self.appleLoginManager.saveUserIdentifier(userIdentifier)
                 print("로그인 성공, userIdentifier: \(userIdentifier), userUniqueId: \(userUniqueId)")
-                self.displayUserUniqueId(userUniqueId) // userUniqueId를 화면에 표시
+                
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true) // 뒤로가기
+               }
             } else {
                 print("로그인 실패")
             }

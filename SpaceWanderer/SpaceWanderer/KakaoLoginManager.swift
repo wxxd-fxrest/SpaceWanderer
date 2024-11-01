@@ -5,23 +5,29 @@
 //  Created by 밀가루 on 10/31/24.
 //
 
+import UIKit
 import Foundation
 import KakaoSDKUser
-import UIKit
 
 protocol KakaoLoginManagerDelegate: AnyObject {
     func didRequestReLogin()
+    func didCompleteKakaoLogin()
+}
+
+protocol KakaoAutoLoginManagerDelegate: AnyObject {
+    func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String)
 }
 
 class KakaoLoginManager {
     weak var delegate: KakaoLoginManagerDelegate?
+    weak var autoDelegate: KakaoAutoLoginManagerDelegate?
     
     lazy var backendURL: String = {
         // Space.plist에서 BackendURL 가져오기
         if let path = Bundle.main.path(forResource: "SpaceInfo", ofType: "plist"),
            let spaceDict = NSDictionary(contentsOfFile: path) as? [String: Any],
-           let backendURL = spaceDict["BASE_URL"] as? String {
-            print("BASE_URL", backendURL)
+           let backendURL = spaceDict["AUTH_BASE_URL"] as? String {
+            print("AUTH_BASE_URL", backendURL)
 
             return backendURL
         } else {
@@ -34,17 +40,24 @@ class KakaoLoginManager {
         print("Backend URL: \(backendURL)")
     }
     
-    func attemptAutoLogin() {
+    func attemptAutoLogin(completion: @escaping (String?, String?) -> Void) {
         print("자동 로그인 시도")
+        
+        // UserDefaults에서 userIdentifier 가져오기
         if let userIdentifier = UserDefaults.standard.string(forKey: "kakaoUserIdentifier") {
             print("자동 로그인 시도: ", userIdentifier)
-            fetchUserDataFromBackend(userIdentifier: userIdentifier)
+            fetchUserDataFromBackend(userIdentifier: userIdentifier) { accessToken, userUniqueId, kakaoUserId in
+                // 백엔드에서 사용자 데이터 가져오기 완료 후 클로저 호출
+                completion(accessToken, userUniqueId)
+            }
         } else {
             print("kakaoUserIdentifier가 UserDefaults에 저장되어 있지 않습니다.")
+            // 실패 시 nil 반환
+            completion(nil, nil)
         }
     }
     
-    func fetchUserDataFromBackend(userIdentifier: String) {
+    private func fetchUserDataFromBackend(userIdentifier: String, completion: @escaping (String?, String?, String?) -> Void) {
         guard let url = URL(string: "\(backendURL)/get-kakao-user/\(userIdentifier)?limit=10") else { return }
         var request = URLRequest(url: url)
 
@@ -75,9 +88,10 @@ class KakaoLoginManager {
             do {
                 if let userData = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                     print("사용자 데이터 가져오기 성공: \(userData)")
-                    if let refreshToken = userData["refreshToken"] as? String {
+                    if let refreshToken = userData["refreshToken"] as? String,
+                       let userUniqueId = userData["userUniqueId"] as? String {
                         print("refreshToken | ", refreshToken)
-                        self.getAccessToken(refreshToken: refreshToken)
+                        self.getAccessToken(refreshToken: refreshToken, userIdentifier: userIdentifier, userUniqueId: userUniqueId) // userIdentifier 전달
                     }
                 }
             } catch {
@@ -87,16 +101,17 @@ class KakaoLoginManager {
         task.resume()
     }
     
-    func getAccessToken(refreshToken: String) {
+    func getAccessToken(refreshToken: String, userIdentifier: String, userUniqueId: String) {
         print("Access Token 가져오기")
+        print("getAccessToken | userUniqueId: \(userUniqueId), refreshToken: \(refreshToken), userIdentifier: \(userIdentifier)")
         guard let url = URL(string: "\(backendURL)/get-kakao-access-token") else { return }
         var request = URLRequest(url: url)
-        
+
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
         let parameters: [String: Any] = ["refreshToken": refreshToken]
-        
+
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
         } catch {
@@ -134,7 +149,12 @@ class KakaoLoginManager {
                 if let tokenResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let accessToken = tokenResponse["access_token"] as? String {
                     print("Access Token: \(accessToken)")
-                    // 추가 로직 (예: 화면 전환 등)
+                    
+                    // 로그인 성공 시 delegate를 통해 화면 전환 요청
+                    DispatchQueue.main.async {
+                        print("로그인 성공 시 delegate를 통해 화면 전환 요청")
+                        self.autoDelegate?.didCompleteLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+                    }
                 }
             } catch {
                 print("JSON 파싱 중 오류 발생: \(error)")
@@ -155,7 +175,7 @@ class KakaoLoginManager {
         }
     }
     
-    func sendUserInfoToBackend(userIdentifier: String, email: String, refreshToken: String, loginType: String) {
+    func sendUserInfoToBackend(userIdentifier: String, email: String, refreshToken: String, loginType: String, accessToken: String) {
         guard let url = URL(string: "\(backendURL)/kakao-login") else { return }
         var request = URLRequest(url: url)
         
@@ -198,11 +218,23 @@ class KakaoLoginManager {
             }
 
             do {
-                let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
-                print("서버로부터의 응답: \(jsonResponse)")
+                let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                print("서버로부터의 응답: \(String(describing: jsonResponse))")
 
-                UserDefaults.standard.set("LOGIN_KAKAO", forKey: "LoginType")
-                print("UserDefaults에 'LOGIN_KAKAO' 저장 완료")
+                // JSON 응답에서 userUniqueId 추출
+                if let jsonResponse = jsonResponse,
+                   let userUniqueId = jsonResponse["userUniqueId"] as? String,
+                   let refreshToken = jsonResponse["refreshToken"] as? String {
+                    UserDefaults.standard.set("LOGIN_KAKAO", forKey: "LoginType")
+                    print("UserDefaults에 'LOGIN_KAKAO' 저장 완료")
+                                        
+                    print("sendUserInfoToBackend | refreshToken: \(refreshToken), userUniqueId: \(userUniqueId), userIdentifier: \(userIdentifier)")
+                    
+                    // 뒤로가기 요청
+                    DispatchQueue.main.async {
+                         self.delegate?.didCompleteKakaoLogin() // Delegate를 통해 로그인 완료 알림
+                     }
+                }
             } catch {
                 print("JSON 파싱 중 오류 발생: \(error)")
             }
@@ -226,4 +258,3 @@ class KakaoLoginManager {
         }
     }
 }
-

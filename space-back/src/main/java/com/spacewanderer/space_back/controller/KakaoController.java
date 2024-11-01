@@ -50,6 +50,8 @@ public class KakaoController {
             response.put("nickname", userEntity.getNickname());
             response.put("email", userEntity.getEmail());
             response.put("userUniqueId", userEntity.getUserUniqueId()); // userUniqueId 추가
+            System.out.println("유니크 아이디" + userEntity.getUserUniqueId());
+
             // 필요한 다른 필드 추가
             return ResponseEntity.ok(response);
         } else {
@@ -60,7 +62,7 @@ public class KakaoController {
     @PostMapping("/get-kakao-access-token")
     public ResponseEntity<Map<String, String>> getAccessToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
-        
+
         try {
             String accessToken = kakaoService.getAccessToken(refreshToken);
             Map<String, String> response = new HashMap<>();

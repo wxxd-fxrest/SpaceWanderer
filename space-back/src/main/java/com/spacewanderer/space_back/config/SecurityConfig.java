@@ -24,7 +24,8 @@ public class SecurityConfig {
                     "/api/v1/auth/oauth2/auto-login", 
                     "/api/v1/auth/oauth2/kakao-login",
                     "/api/v1/auth/oauth2/get-kakao-user/*",
-                    "/api/v1/auth/oauth2/get-kakao-access-token"
+                    "/api/v1/auth/oauth2/get-kakao-access-token",
+                    "/api/v1/user/profile-update/*"
                 ).permitAll()  // 인증 없이 접근 가능 경로
                 .anyRequest().authenticated()  // 다른 요청은 인증 필요
             );
