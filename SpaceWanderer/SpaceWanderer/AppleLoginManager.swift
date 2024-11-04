@@ -8,6 +8,7 @@
 import Foundation
 
 protocol AppleAutoLoginManagerDelegate: AnyObject {
+    func didCompleteUpdate(userUniqueId: String, userIdentifier: String, accessToken: String)
     func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String)
 }
 
@@ -64,6 +65,8 @@ class AppleLoginManager {
 
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    print("datadata ", data)
+
                     let userIdentifier = json["userIdentifier"] as? String
                     let userUniqueId = json["userUniqueId"] as? String
                     
@@ -137,11 +140,29 @@ class AppleLoginManager {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let accessToken = json["accessToken"] as? String,
                    let userUniqueId = json["userUniqueId"] as? String {
-                    completion(accessToken, userUniqueId) // Access Token 및 userUniqueId 반환
-
-                    DispatchQueue.main.async {
-                        self.autoDelegate?.didCompleteLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+                    
+                    // nickname 가져오기
+                    let nickname = json["nickname"] as? String
+                    
+                    // nickname이 nil인지 체크
+                    if let nickname = nickname, !nickname.isEmpty {
+                        // nickname이 존재할 경우
+                        print("닉네임이 존재합니다: \(nickname)")
+                        // 여기 MainVC로 이동하는 함수 추가
+                        DispatchQueue.main.async {
+                            self.autoDelegate?.didCompleteLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+                            
+                        }
+                    } else {
+                        // nickname이 nil이거나 비어있을 경우
+                        print("닉네임이 존재하지 않거나 비어있습니다.")
+                        // 여기 UpdateVC로 이동하는 함수 추가
+                        DispatchQueue.main.async {
+                            self.autoDelegate?.didCompleteUpdate(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+                        }
                     }
+                        
+                    completion(accessToken, userUniqueId) // Access Token 및 userUniqueId 반환
                 } else {
                     print("응답 데이터가 예상한 형식이 아닙니다.")
                     completion(nil, nil)

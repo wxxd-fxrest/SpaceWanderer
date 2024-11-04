@@ -49,7 +49,6 @@ class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAuto
          
 
         setupButtons() // 버튼 설정
-        // autoLoginIfNeeded() // 자동 로그인 시도
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -85,8 +84,6 @@ class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAuto
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-    
-    
     
     // 자동 로그인 처리
     private func autoLoginIfNeeded() {
@@ -131,9 +128,18 @@ class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAuto
         print("이동 후")
     }
 
+    func didCompleteUpdate(userUniqueId: String, userIdentifier: String, accessToken: String) {
+        print("이동 전")
+        let updateProfileVC = UpdateProfileViewController()
+        updateProfileVC.userUniqueId = userUniqueId // userUniqueId 전달
+        updateProfileVC.userIdentifier = userIdentifier // userIdentifier 전달
+        updateProfileVC.accessToken = accessToken // accessToken 전달
+        navigationController?.pushViewController(updateProfileVC, animated: true)
+        print("이동 후")
+    }
+    
     // userUniqueId를 화면에 표시하는 메서드
     func displayUserUniqueId(_ userUniqueId: String) {
-        // 여기에서 userUniqueId를 표시하는 코드 작성
         print("User Unique ID: \(userUniqueId)")
     }
     

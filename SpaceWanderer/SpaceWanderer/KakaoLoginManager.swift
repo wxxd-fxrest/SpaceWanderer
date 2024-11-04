@@ -15,6 +15,7 @@ protocol KakaoLoginManagerDelegate: AnyObject {
 }
 
 protocol KakaoAutoLoginManagerDelegate: AnyObject {
+    func didCompleteUpdate(userUniqueId: String, userIdentifier: String, accessToken: String)
     func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String)
 }
 
@@ -88,10 +89,47 @@ class KakaoLoginManager {
             do {
                 if let userData = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                     print("사용자 데이터 가져오기 성공: \(userData)")
+                    
                     if let refreshToken = userData["refreshToken"] as? String,
                        let userUniqueId = userData["userUniqueId"] as? String {
                         print("refreshToken | ", refreshToken)
-                        self.getAccessToken(refreshToken: refreshToken, userIdentifier: userIdentifier, userUniqueId: userUniqueId) // userIdentifier 전달
+
+                        // nickname 가져오기
+                        let nickname = userData["nickname"] as? String
+                        
+                        // nickname이 nil인지 체크
+                        if let nickname = nickname, !nickname.isEmpty {
+                            // nickname이 존재할 경우
+                            print("닉네임이 존재합니다: \(nickname)")
+                            // Access Token을 가져오는 함수 호출
+                            self.getAccessToken(refreshToken: refreshToken, userIdentifier: userIdentifier, userUniqueId: userUniqueId) { accessToken in
+                                guard let accessToken = accessToken else {
+                                    print("Access Token을 가져오지 못했습니다.")
+                                    return
+                                }
+                                
+                                print("Access Token을 가져옴.")
+                                // 여기 MainVC로 이동하는 함수 추가
+                                DispatchQueue.main.async {
+                                    self.autoDelegate?.didCompleteLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+                                }
+                            }
+                        } else {
+                            // nickname이 nil이거나 비어있을 경우
+                            print("닉네임이 존재하지 않거나 비어있습니다.")
+                            self.getAccessToken(refreshToken: refreshToken, userIdentifier: userIdentifier, userUniqueId: userUniqueId) { accessToken in
+                                guard let accessToken = accessToken else {
+                                    print("Access Token을 가져오지 못했습니다.")
+                                    return
+                                }
+                                
+                                print("Access Token을 가져옴.")
+                                // 여기 UpdateVC로 이동하는 함수 추가
+                                DispatchQueue.main.async {
+                                    self.autoDelegate?.didCompleteUpdate(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+                                }
+                            }
+                        }
                     }
                 }
             } catch {
@@ -101,7 +139,7 @@ class KakaoLoginManager {
         task.resume()
     }
     
-    func getAccessToken(refreshToken: String, userIdentifier: String, userUniqueId: String) {
+    func getAccessToken(refreshToken: String, userIdentifier: String, userUniqueId: String, completion: @escaping (String?) -> Void) {
         print("Access Token 가져오기")
         print("getAccessToken | userUniqueId: \(userUniqueId), refreshToken: \(refreshToken), userIdentifier: \(userIdentifier)")
         guard let url = URL(string: "\(backendURL)/get-kakao-access-token") else { return }
@@ -149,12 +187,9 @@ class KakaoLoginManager {
                 if let tokenResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let accessToken = tokenResponse["access_token"] as? String {
                     print("Access Token: \(accessToken)")
-                    
-                    // 로그인 성공 시 delegate를 통해 화면 전환 요청
-                    DispatchQueue.main.async {
-                        print("로그인 성공 시 delegate를 통해 화면 전환 요청")
-                        self.autoDelegate?.didCompleteLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
-                    }
+                    completion(accessToken)
+                } else {
+                    completion(nil) // Access Token을 가져오는 데 실패한 경우
                 }
             } catch {
                 print("JSON 파싱 중 오류 발생: \(error)")
