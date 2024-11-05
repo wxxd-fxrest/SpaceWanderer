@@ -56,7 +56,6 @@ class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAuto
         autoLoginIfNeeded() // 여기에서 호출
     }
 
-
     // 로그인 버튼을 설정하는 메서드
     private func setupButtons() {
         // 카카오 로그인 버튼
@@ -119,11 +118,8 @@ class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAuto
     
     // 자동로그인 후 Main View로 이동
     func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String) {
-        print("이동 전")
-        let mainVC = MainViewController()
-        mainVC.userUniqueId = userUniqueId // userUniqueId 전달
-        mainVC.userIdentifier = userIdentifier // userIdentifier 전달
-        mainVC.accessToken = accessToken // accessToken 전달
+        print("이동 전", userUniqueId, userIdentifier, accessToken)
+        let mainVC = TabBarViewController(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
         navigationController?.pushViewController(mainVC, animated: true)
         print("이동 후")
     }
