@@ -27,6 +27,16 @@
 		0B301CA12CC2742C0008804A /* Pretendard-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C972CC2742C0008804A /* Pretendard-Bold.ttf */; };
 		0B301CA22CC2742C0008804A /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C982CC2742C0008804A /* UIFont.swift */; };
 		0B301CA32CC2742C0008804A /* Pretendard-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C992CC2742C0008804A /* Pretendard-Light.ttf */; };
+		0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC1EA2CDA1A650009B553 /* ActivityIndicatorHelper.swift */; };
+		0B8BC1F32CDA1A650009B553 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC1EB2CDA1A650009B553 /* UIView+.swift */; };
+		0B8BC1F52CDA1A650009B553 /* KeyboardTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC1ED2CDA1A650009B553 /* KeyboardTap.swift */; };
+		0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC1F02CDA1A650009B553 /* UIFactory+.swift */; };
+		0B8BC1FC2CDA1AC90009B553 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 0B8BC1FB2CDA1AC90009B553 /* Then */; };
+		0B8BC1FF2CDA1ADA0009B553 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B8BC1FE2CDA1ADA0009B553 /* SnapKit */; };
+		0B8BC2072CDA1D490009B553 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC2062CDA1D490009B553 /* ProfileViewController.swift */; };
+		0B8BC20B2CDA1D860009B553 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC20A2CDA1D860009B553 /* CalendarViewController.swift */; };
+		0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC20D2CDA1DCE0009B553 /* TabBarViewController.swift */; };
+		0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC2102CDA41380009B553 /* UIColor.swift */; };
 		0B9265E32CC7E4FE002270AF /* SpaceInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */; };
 		0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */; };
 		0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */; };
@@ -58,6 +68,14 @@
 		0B301C972CC2742C0008804A /* Pretendard-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.ttf"; sourceTree = "<group>"; };
 		0B301C982CC2742C0008804A /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		0B301C992CC2742C0008804A /* Pretendard-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Light.ttf"; sourceTree = "<group>"; };
+		0B8BC1EA2CDA1A650009B553 /* ActivityIndicatorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorHelper.swift; sourceTree = "<group>"; };
+		0B8BC1EB2CDA1A650009B553 /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		0B8BC1ED2CDA1A650009B553 /* KeyboardTap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardTap.swift; sourceTree = "<group>"; };
+		0B8BC1F02CDA1A650009B553 /* UIFactory+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFactory+.swift"; sourceTree = "<group>"; };
+		0B8BC2062CDA1D490009B553 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		0B8BC20A2CDA1D860009B553 /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		0B8BC20D2CDA1DCE0009B553 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		0B8BC2102CDA41380009B553 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SpaceInfo.plist; sourceTree = "<group>"; };
 		0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpaceWanderer.entitlements; sourceTree = "<group>"; };
 		0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +96,8 @@
 				0B0767772CD276E500866B22 /* KakaoSDKUser in Frameworks */,
 				0B0767752CD2767600866B22 /* KakaoSDKCommon in Frameworks */,
 				0B07676F2CD2767600866B22 /* KakaoSDKAuth in Frameworks */,
+				0B8BC1FC2CDA1AC90009B553 /* Then in Frameworks */,
+				0B8BC1FF2CDA1ADA0009B553 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +134,7 @@
 				0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */,
 				0B301C782CC272530008804A /* AppDelegate.swift */,
 				0B301C7A2CC272530008804A /* SceneDelegate.swift */,
+				0B301C7C2CC272530008804A /* ViewController.swift */,
 				0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */,
 				0B8BC1E32CDA17F90009B553 /* Manager */,
 				0B8BC1E42CDA18000009B553 /* Resource */,
@@ -156,6 +177,8 @@
 		0B8BC1E42CDA18000009B553 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				0B8BC20F2CDA41380009B553 /* Color */,
+				0B8BC1E92CDA1A650009B553 /* UIFactorys */,
 				0B301C8F2CC2742C0008804A /* Fonts */,
 				0B301C842CC272550008804A /* Assets.xcassets */,
 				0B301C862CC272550008804A /* LaunchScreen.storyboard */,
@@ -166,12 +189,12 @@
 		0B8BC1E52CDA180C0009B553 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0B301C7C2CC272530008804A /* ViewController.swift */,
-				0BEC2A322CD8AE97000EC98C /* MainViewController.swift */,
-				0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */,
-				0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */,
-				0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */,
-				0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */,
+				0B8BC20C2CDA1DBB0009B553 /* tab */,
+				0B8BC2022CDA1CEA0009B553 /* auth */,
+				0B8BC2032CDA1D060009B553 /* main */,
+				0B8BC2082CDA1D6C0009B553 /* calendar */,
+				0B8BC2042CDA1D0E0009B553 /* profile */,
+				0B8BC2052CDA1D150009B553 /* setting */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -189,6 +212,75 @@
 				0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		0B8BC1E92CDA1A650009B553 /* UIFactorys */ = {
+			isa = PBXGroup;
+			children = (
+				0B8BC1EB2CDA1A650009B553 /* UIView+.swift */,
+				0B8BC1EA2CDA1A650009B553 /* ActivityIndicatorHelper.swift */,
+				0B8BC1ED2CDA1A650009B553 /* KeyboardTap.swift */,
+				0B8BC1F02CDA1A650009B553 /* UIFactory+.swift */,
+			);
+			path = UIFactorys;
+			sourceTree = "<group>";
+		};
+		0B8BC2022CDA1CEA0009B553 /* auth */ = {
+			isa = PBXGroup;
+			children = (
+				0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */,
+				0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */,
+				0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */,
+				0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */,
+			);
+			path = auth;
+			sourceTree = "<group>";
+		};
+		0B8BC2032CDA1D060009B553 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				0BEC2A322CD8AE97000EC98C /* MainViewController.swift */,
+			);
+			path = main;
+			sourceTree = "<group>";
+		};
+		0B8BC2042CDA1D0E0009B553 /* profile */ = {
+			isa = PBXGroup;
+			children = (
+				0B8BC2062CDA1D490009B553 /* ProfileViewController.swift */,
+			);
+			path = profile;
+			sourceTree = "<group>";
+		};
+		0B8BC2052CDA1D150009B553 /* setting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = setting;
+			sourceTree = "<group>";
+		};
+		0B8BC2082CDA1D6C0009B553 /* calendar */ = {
+			isa = PBXGroup;
+			children = (
+				0B8BC20A2CDA1D860009B553 /* CalendarViewController.swift */,
+			);
+			path = calendar;
+			sourceTree = "<group>";
+		};
+		0B8BC20C2CDA1DBB0009B553 /* tab */ = {
+			isa = PBXGroup;
+			children = (
+				0B8BC20D2CDA1DCE0009B553 /* TabBarViewController.swift */,
+			);
+			path = tab;
+			sourceTree = "<group>";
+		};
+		0B8BC20F2CDA41380009B553 /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				0B8BC2102CDA41380009B553 /* UIColor.swift */,
+			);
+			path = Color;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,6 +303,8 @@
 				0B07676E2CD2767600866B22 /* KakaoSDKAuth */,
 				0B0767742CD2767600866B22 /* KakaoSDKCommon */,
 				0B0767762CD276E500866B22 /* KakaoSDKUser */,
+				0B8BC1FB2CDA1AC90009B553 /* Then */,
+				0B8BC1FE2CDA1ADA0009B553 /* SnapKit */,
 			);
 			productName = SpaceWanderer;
 			productReference = 0B301C752CC272530008804A /* SpaceWanderer.app */;
@@ -242,6 +336,8 @@
 			mainGroup = 0B301C6C2CC272520008804A;
 			packageReferences = (
 				0B07675C2CD2270800866B22 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				0B8BC1FA2CDA1AC90009B553 /* XCRemoteSwiftPackageReference "Then" */,
+				0B8BC1FD2CDA1ADA0009B553 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 0B301C762CC272530008804A /* Products */;
 			projectDirPath = "";
@@ -279,17 +375,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B8BC20B2CDA1D860009B553 /* CalendarViewController.swift in Sources */,
 				0B301C7D2CC272530008804A /* ViewController.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
 				0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */,
+				0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */,
 				0B0767682CD2283000866B22 /* KakaoLoginViewController.swift in Sources */,
 				0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */,
+				0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */,
+				0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */,
 				0BEBD88D2CD3A4CD001590E8 /* AppleLoginViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
+				0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */,
+				0B8BC2072CDA1D490009B553 /* ProfileViewController.swift in Sources */,
 				0BEC2A332CD8AE97000EC98C /* MainViewController.swift in Sources */,
 				0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */,
 				0B301CA22CC2742C0008804A /* UIFont.swift in Sources */,
+				0B8BC1F52CDA1A650009B553 /* KeyboardTap.swift in Sources */,
 				0BEBD8912CD3A63B001590E8 /* AppleLoginResponse.swift in Sources */,
+				0B8BC1F32CDA1A650009B553 /* UIView+.swift in Sources */,
 				0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */,
 				0BEBD8932CD3A686001590E8 /* KakaoLoginManager.swift in Sources */,
 				0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */,
@@ -521,6 +625,22 @@
 				minimumVersion = 2.23.0;
 			};
 		};
+		0B8BC1FA2CDA1AC90009B553 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		0B8BC1FD2CDA1ADA0009B553 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -538,6 +658,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0B07675C2CD2270800866B22 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKUser;
+		};
+		0B8BC1FB2CDA1AC90009B553 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B8BC1FA2CDA1AC90009B553 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+		0B8BC1FE2CDA1ADA0009B553 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B8BC1FD2CDA1ADA0009B553 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 

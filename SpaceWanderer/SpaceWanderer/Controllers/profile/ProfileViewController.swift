@@ -1,13 +1,13 @@
 //
-//  MainViewController.swift
+//  ProfileViewController.swift
 //  SpaceWanderer
 //
-//  Created by 밀가루 on 11/4/24.
+//  Created by 밀가루 on 11/5/24.
 //
 
 import UIKit
 
-class MainViewController: UIViewController {
+class ProfileViewController: UIViewController {
     var userUniqueId: String?
     var accessToken: String?
     var userIdentifier: String?
@@ -17,7 +17,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .green
+        view.backgroundColor = .yellow
         
         setupLogoutButton() // 로그아웃 버튼 설정
     }
@@ -38,7 +38,7 @@ class MainViewController: UIViewController {
         // 버튼 위치 제약 설정 (카카오 로그인 버튼 아래)
         NSLayoutConstraint.activate([
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoutButton.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -80),
+            logoutButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
             logoutButton.widthAnchor.constraint(equalToConstant: 200),
             logoutButton.heightAnchor.constraint(equalToConstant: 50)
         ])
