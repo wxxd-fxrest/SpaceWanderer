@@ -14,7 +14,6 @@
 		0B301C792CC272530008804A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C782CC272530008804A /* AppDelegate.swift */; };
 		0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C7A2CC272530008804A /* SceneDelegate.swift */; };
 		0B301C7D2CC272530008804A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C7C2CC272530008804A /* ViewController.swift */; };
-		0B301C802CC272530008804A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C7E2CC272530008804A /* Main.storyboard */; };
 		0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C812CC272530008804A /* SpaceWanderer.xcdatamodeld */; };
 		0B301C852CC272550008804A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C842CC272550008804A /* Assets.xcassets */; };
 		0B301C882CC272550008804A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B301C862CC272550008804A /* LaunchScreen.storyboard */; };
@@ -45,7 +44,6 @@
 		0B301C782CC272530008804A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B301C7A2CC272530008804A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0B301C7C2CC272530008804A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		0B301C7F2CC272530008804A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0B301C822CC272530008804A /* SpaceWanderer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SpaceWanderer.xcdatamodel; sourceTree = "<group>"; };
 		0B301C842CC272550008804A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0B301C872CC272550008804A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -116,20 +114,12 @@
 				0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */,
 				0B301C782CC272530008804A /* AppDelegate.swift */,
 				0B301C7A2CC272530008804A /* SceneDelegate.swift */,
-				0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */,
-				0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */,
-				0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */,
-				0BEC2A322CD8AE97000EC98C /* MainViewController.swift */,
-				0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */,
 				0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */,
-				0B301C7C2CC272530008804A /* ViewController.swift */,
-				0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */,
-				0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */,
-				0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */,
-				0B301C8F2CC2742C0008804A /* Fonts */,
-				0B301C7E2CC272530008804A /* Main.storyboard */,
-				0B301C842CC272550008804A /* Assets.xcassets */,
-				0B301C862CC272550008804A /* LaunchScreen.storyboard */,
+				0B8BC1E32CDA17F90009B553 /* Manager */,
+				0B8BC1E42CDA18000009B553 /* Resource */,
+				0B8BC1E72CDA181D0009B553 /* Models */,
+				0B8BC1E62CDA18180009B553 /* Views */,
+				0B8BC1E52CDA180C0009B553 /* Controllers */,
 				0B301C892CC272550008804A /* Info.plist */,
 				0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */,
 				0B301C812CC272530008804A /* SpaceWanderer.xcdatamodeld */,
@@ -152,6 +142,53 @@
 				0B301C992CC2742C0008804A /* Pretendard-Light.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		0B8BC1E32CDA17F90009B553 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */,
+				0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		0B8BC1E42CDA18000009B553 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				0B301C8F2CC2742C0008804A /* Fonts */,
+				0B301C842CC272550008804A /* Assets.xcassets */,
+				0B301C862CC272550008804A /* LaunchScreen.storyboard */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		0B8BC1E52CDA180C0009B553 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				0B301C7C2CC272530008804A /* ViewController.swift */,
+				0BEC2A322CD8AE97000EC98C /* MainViewController.swift */,
+				0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */,
+				0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */,
+				0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */,
+				0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		0B8BC1E62CDA18180009B553 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0B8BC1E72CDA181D0009B553 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -225,7 +262,6 @@
 				0B301C882CC272550008804A /* LaunchScreen.storyboard in Resources */,
 				0B301C9C2CC2742C0008804A /* Pretendard-Regular.ttf in Resources */,
 				0B301C852CC272550008804A /* Assets.xcassets in Resources */,
-				0B301C802CC272530008804A /* Main.storyboard in Resources */,
 				0B301CA32CC2742C0008804A /* Pretendard-Light.ttf in Resources */,
 				0B301C9B2CC2742C0008804A /* Pretendard-Black.ttf in Resources */,
 				0B301CA02CC2742C0008804A /* Pretendard-ExtraBold.ttf in Resources */,
@@ -263,14 +299,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		0B301C7E2CC272530008804A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0B301C7F2CC272530008804A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		0B301C862CC272550008804A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -416,7 +444,6 @@
 				INFOPLIST_FILE = SpaceWanderer/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -447,7 +474,6 @@
 				INFOPLIST_FILE = SpaceWanderer/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
