@@ -84,6 +84,7 @@ public class AppleController {
                     Map<String, String> response = new HashMap<>();
                     response.put("accessToken", accessToken); // Access Token 추가
                     response.put("userUniqueId", userEntity.get().getUserUniqueId()); // userUniqueId 추가
+                    response.put("nickname", userEntity.get().getNickname());
 
                     return ResponseEntity.ok(response);
                 } catch(Exception e) {
