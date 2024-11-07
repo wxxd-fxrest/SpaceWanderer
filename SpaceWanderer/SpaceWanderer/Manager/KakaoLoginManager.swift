@@ -213,6 +213,7 @@ class KakaoLoginManager {
     func sendUserInfoToBackend(userIdentifier: String, email: String, refreshToken: String, loginType: String, accessToken: String) {
         guard let url = URL(string: "\(backendURL)/kakao-login") else { return }
         var request = URLRequest(url: url)
+        print("sendUserInfoToBackend: ", url)
         
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -221,7 +222,8 @@ class KakaoLoginManager {
             "userIdentifier": userIdentifier,
             "email": email,
             "refreshToken": refreshToken,
-            "loginType": loginType
+            "loginType": loginType,
+            "inhabitedPlanet": "화성"
         ]
         
         do {
@@ -262,6 +264,10 @@ class KakaoLoginManager {
                    let refreshToken = jsonResponse["refreshToken"] as? String {
                     UserDefaults.standard.set("LOGIN_KAKAO", forKey: "LoginType")
                     print("UserDefaults에 'LOGIN_KAKAO' 저장 완료")
+                    // 불러오기
+                    if let loginType = UserDefaults.standard.string(forKey: "LoginType") {
+                        print("Login Type: \(loginType)")  // 출력: Login Type: LOGIN_KAKAO
+                    }
                                         
                     print("sendUserInfoToBackend | refreshToken: \(refreshToken), userUniqueId: \(userUniqueId), userIdentifier: \(userIdentifier)")
                     

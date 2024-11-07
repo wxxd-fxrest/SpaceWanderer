@@ -1,5 +1,7 @@
 package com.spacewanderer.space_back.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,7 +27,8 @@ public class SecurityConfig {
                     "/api/v1/auth/oauth2/kakao-login",
                     "/api/v1/auth/oauth2/get-kakao-user/*",
                     "/api/v1/auth/oauth2/get-kakao-access-token",
-                    "/api/v1/user/profile-update/*"
+                    "/api/v1/user/profile-update/*",
+                    "/api/v1/user/check-nickname/*"
                 ).permitAll()  // 인증 없이 접근 가능 경로
                 .anyRequest().authenticated()  // 다른 요청은 인증 필요
             );
@@ -36,11 +39,13 @@ public class SecurityConfig {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.addAllowedOrigin("http://localhost:3000"); // 허용할 출처
-        configuration.addAllowedOrigin("*"); // 허용할 출처
-        configuration.addAllowedMethod("*"); // 허용할 메서드
-        configuration.addAllowedHeader("*"); // 허용할 헤더
-        // configuration.setAllowCredentials(true); // 자격 증명 허용
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:1020",           // 로컬 테스트 주소
+            "http://192.168.1.14:1020"        // 실기기에서 접근할 IP 주소
+        ));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);  // 자격 증명 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -29,6 +29,7 @@ public class KakaoController {
     @PostMapping("/kakao-login")
     public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity userEntity) {
         System.out.println("/kakao-login 1");
+        
         UserEntity registeredUser = kakaoService.registerUser(
                 userEntity.getUserIdentifier(),
                 userEntity.getEmail(),

@@ -10,11 +10,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "user")
+@Entity(name = "user")
 public class UserEntity {
     @Id
     @Column(name = "user_unique_id", nullable = false, unique = true)
@@ -23,28 +23,20 @@ public class UserEntity {
     @Column(name = "user_identifier", nullable = false, unique = true)
     private String userIdentifier; 
 
-    @Column(nullable = true)
     private String email;
 
-    @Column(nullable = true)
     private String password;
 
-    @Column(nullable = true)
     private String nickname;
 
-    @Column(nullable = true)
     private String birthDay;
 
-    @Column(nullable = true)
     private String inhabitedPlanet;
 
-    @Column(nullable = true)
     private String profileImage;
 
-    @Column(name = "refresh_token", nullable = false)
     private String refreshToken;  
 
-    @Column(nullable = true)
     private String loginType;
 
     public UserEntity(String userUniqueId, String userIdentifier, String email, String refreshToken, String loginType) {

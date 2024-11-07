@@ -55,6 +55,7 @@ class KakaoLoginViewController: UIViewController, KakaoLoginManagerDelegate {
         ])
     }
     
+    // MARK: - Test kakao talk & kakao account login
     @objc private func handleKakaoLogin() {
         if UserApi.isKakaoTalkLoginAvailable() {
             UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
@@ -126,7 +127,62 @@ class KakaoLoginViewController: UIViewController, KakaoLoginManagerDelegate {
             }
         }
     }
-    
+    // MARK: - only kakao talk login
+//    @objc private func handleKakaoLogin() {
+//        UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
+//            if let error = error {
+//                print("카카오톡 로그인 오류: \(error)")
+//                self.showKakaoTalkInstallAlert()
+//            } else if let oauthToken = oauthToken {
+//                print("카카오톡 로그인 성공")
+//                self.handleLoginSuccess(oauthToken: oauthToken)
+//            }
+//        }
+//    }
+//
+//    private func showKakaoTalkInstallAlert() {
+//        let alert = UIAlertController(title: "카카오톡 설치 필요", message: "카카오톡 로그인을 위해 카카오톡 앱이 설치되어 있어야 합니다. 설치하시겠습니까?", preferredStyle: .alert)
+//        
+//        alert.addAction(UIAlertAction(title: "앱 스토어로 이동", style: .default, handler: { _ in
+//            if let url = URL(string: "https://apps.apple.com/kr/app/kakaotalk/id362057947") {
+//                UIApplication.shared.open(url)
+//            }
+//        }))
+//        
+//        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+//        
+//        if let topController = UIApplication.shared.windows.first?.rootViewController {
+//            topController.present(alert, animated: true, completion: nil)
+//        }
+//    }
+//
+//    private func handleLoginSuccess(oauthToken: OAuthToken) {
+//        self.requestAdditionalAgreement()
+//        print("Access Token: \(oauthToken.accessToken)")
+//        print("Refresh Token: \(oauthToken.refreshToken)")
+//        print("Expires In: \(oauthToken.expiresIn) 초")
+//        print("Refresh Token Expires In: \(oauthToken.refreshTokenExpiresIn) 초")
+//
+//        UserApi.shared.me { (user, error) in
+//            if let error = error {
+//                print("사용자 정보 조회 오류: \(error)")
+//            } else if let user = user {
+//                if let userId = user.id {
+//                    print("사용자 식별자 (id): \(userId)")
+//                    
+//                    UserDefaults.standard.set("\(userId)", forKey: "kakaoUserIdentifier")
+//                    
+//                    let email = user.kakaoAccount?.email ?? "이메일 권한 없음"
+//                    let refreshToken = oauthToken.refreshToken
+//                    let loginType = "kakao"
+//                    let accessToken = oauthToken.accessToken
+//                    
+//                    self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType, accessToken: accessToken)
+//                }
+//            }
+//        }
+//    }
+
     private func requestAdditionalAgreement() {
         UserApi.shared.accessTokenInfo { (accessTokenInfo, error) in
             if let error = error {

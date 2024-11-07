@@ -13,7 +13,6 @@ class SelectProfileImageViewController: UIViewController {
     var userIdentifier: String?
     var nickname: String?
     var birthDay: String?
-    var inhabitedPlanet: String?
 
     private let imageNames = ["faceAlienImage", "standingAlienImage"] // Assets에 있는 이미지 이름
     private var selectedImageName: String?
@@ -33,7 +32,7 @@ class SelectProfileImageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewDidLoad : ", nickname, birthDay, inhabitedPlanet)
+        print("viewDidLoad : ", nickname, birthDay)
         print("viewDidLoad - userIdentifier: ", userIdentifier)
 
         setupUI()
@@ -84,6 +83,7 @@ class SelectProfileImageViewController: UIViewController {
     // 확인 버튼을 눌렀을 때 호출되는 메서드
     @objc private func confirmButtonTapped() {
         guard let selectedImageName = selectedImageName else {
+            showAlert(title: "이미지 선택", message: "프로필 이미지를 선택해주세요.")
             print("이미지를 선택해주세요.")
             return
         }
@@ -92,19 +92,17 @@ class SelectProfileImageViewController: UIViewController {
     
     // 서버로 데이터와 이미지 이름을 업로드하는 메서드
     private func updateProfile(imageName: String) {
-        print("updateProfile : ", imageName)
         guard let nickname = nickname,
-              let birthDay = birthDay,
-              let inhabitedPlanet = inhabitedPlanet else {
+              let birthDay = birthDay else {
             print("Missing user data")
             return
         }
-        print("updateProfile : ", nickname, birthDay, inhabitedPlanet)
+        print("updateProfile : ", nickname, birthDay)
         
         guard let userIdentifier = userIdentifier else { return }
         print("updateProfile : ", userIdentifier)
         
-        // Prepare the request URL
+        // URL 요청 준비
         guard let url = URL(string: "\(backendURL)/profile-update/\(userIdentifier)") else { return }
         var request = URLRequest(url: url)
         print("updateProfile : ", url)
@@ -114,7 +112,7 @@ class SelectProfileImageViewController: UIViewController {
         let requestData: [String: Any] = [
             "nickname": nickname,
             "birthDay": birthDay,
-            "inhabitedPlanet": inhabitedPlanet,
+            "inhabitedPlanet": "화성",
             "profileImage": imageName
         ]
         print("updateProfile - requestData : ", requestData)
@@ -132,6 +130,11 @@ class SelectProfileImageViewController: UIViewController {
                 guard let data = data else { return }
                 if let responseString = String(data: data, encoding: .utf8) {
                     print("Profile updated: \(responseString)")
+                    
+                    // 프로필 업데이트 성공 후 ViewController로 이동
+                   DispatchQueue.main.async {
+                       self.navigateToViewController()
+                   }
                 }
             }
             task.resume()
@@ -139,5 +142,20 @@ class SelectProfileImageViewController: UIViewController {
         } catch {
             print("Error serializing profile data: \(error)")
         }
+    }
+    
+    private func navigateToViewController() {
+        // ViewController를 찾고 이동하는 코드
+        if let viewController = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+    
+    // Alert helper method
+    private func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "확인", style: .default, handler: nil)
+        alertController.addAction(action)
+        present(alertController, animated: true, completion: nil)
     }
 }
