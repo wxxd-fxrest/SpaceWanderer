@@ -9,9 +9,15 @@ import UIKit
 import CoreData
 import KakaoSDKCommon
 import KakaoSDKAuth
+import UserNotifications
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    
+    // 데이터 저장 변수 추가
+    var userUniqueId: String?
+    var walkingDate: String?
+    var daySteps: Int?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Space.plist에서 Kakao app key 가져오기

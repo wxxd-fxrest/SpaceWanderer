@@ -546,6 +546,9 @@
 				ENABLE_TESTING_SEARCH_PATHS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpaceWanderer/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "이 앱은 사용자의 걸음 수 데이터를 보기 위해 HealthKit 접근 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "로컬 네트워크에 접근하여 서버와 통신하기 위함입니다.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "사용자의 걸음 수와 운동 활동을 추적하기 위해 동작 데이터를 사용합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -576,6 +579,9 @@
 				ENABLE_TESTING_SEARCH_PATHS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpaceWanderer/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "이 앱은 사용자의 걸음 수 데이터를 보기 위해 HealthKit 접근 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "로컬 네트워크에 접근하여 서버와 통신하기 위함입니다.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "사용자의 걸음 수와 운동 활동을 추적하기 위해 동작 데이터를 사용합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
