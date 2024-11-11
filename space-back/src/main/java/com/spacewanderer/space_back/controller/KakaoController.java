@@ -63,9 +63,10 @@ public class KakaoController {
     @PostMapping("/get-kakao-access-token")
     public ResponseEntity<Map<String, String>> getAccessToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
+        String userIdentifier = request.get("userIdentifier");
 
         try {
-            String accessToken = kakaoService.getAccessToken(refreshToken);
+            String accessToken = kakaoService.getAccessToken(refreshToken, userIdentifier);
             Map<String, String> response = new HashMap<>();
             response.put("access_token", accessToken);
             return ResponseEntity.ok(response);

@@ -6,21 +6,34 @@
 //
 
 import UIKit
+import KakaoSDKCommon
+import KakaoSDKAuth
+import KakaoSDKUser
 import AuthenticationServices
 
-class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAutoLoginManagerDelegate {
-    let kakaoButton = UIButton(type: .system)
-    let appleButton = UIButton(type: .system)
-
+class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAutoLoginManagerDelegate, KakaoLoginManagerDelegate {
     let kakaoLoginManager = KakaoLoginManager() // KakaoLoginManager 인스턴스 생성
     let appleLoginManager = AppleLoginManager() // AppleLoginManager 인스턴스 생성
+
+    let kakaoLoginButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .gray
         kakaoLoginManager.autoDelegate = self
         appleLoginManager.autoDelegate = self
-
+        
+        kakaoLoginManager.delegate = self
+        
+        // 배경 색상 설정
+        view.backgroundColor = SpecialColors.BlackColor
+        
+        // 별 추가
+        addStars()
+        
+        // 중앙에 이미지 추가
+        addCenterImage()
+        
+        //MARK: Check
 //        KeychainHelper.shared.deleteValue(for: "appleUserIdentifier")
 //        KeychainHelper.shared.deleteValue(for: "kakaoUserIdentifier")
         KeychainHelper.shared.printValue(for: "appleUserIdentifier")
@@ -46,42 +59,24 @@ class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAuto
          } else {
              print("저장된 Kakao 사용자 식별자가 없습니다.")
          }
-         
-
-        setupButtons() // 버튼 설정
+        
+        // MARK: KAKAO LOGIN BUTTON
+        setupKakaoLoginButton()
+        
+        // MARK: APPLE LOGIN
+        // 앱 로딩 시 UserDefaults에서 저장된 userIdentifier로 로그인 상태 확인
+        if let userIdentifier = appleLoginManager.getUserIdentifier() {
+            print("userIdentifier 확인")
+            print("userIdentifier 확인", userIdentifier)
+        }
+        
+        // 애플 로그인 버튼 추가
+        setupAppleSignInButton()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         autoLoginIfNeeded() // 여기에서 호출
-    }
-
-    // 로그인 버튼을 설정하는 메서드
-    private func setupButtons() {
-        // 카카오 로그인 버튼
-        kakaoButton.setTitle("카카오로 로그인", for: .normal)
-        kakaoButton.setTitleColor(.white, for: .normal)
-        kakaoButton.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
-        
-        // 애플 로그인 버튼
-        appleButton.setTitle("애플로 로그인", for: .normal)
-        appleButton.setTitleColor(.white, for: .normal)
-        appleButton.addTarget(self, action: #selector(appleLoginButtonTapped), for: .touchUpInside)
-        
-        // 버튼 레이아웃
-        let stackView = UIStackView(arrangedSubviews: [kakaoButton, appleButton])
-        stackView.axis = .vertical
-        stackView.spacing = 20
-        
-        // 스택 뷰 추가
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
-        
-        // 스택 뷰 제약조건 설정
-        NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
     }
     
     // 자동 로그인 처리
@@ -138,18 +133,293 @@ class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAuto
     func displayUserUniqueId(_ userUniqueId: String) {
         print("User Unique ID: \(userUniqueId)")
     }
-    
-    // 카카오 로그인 버튼 액션
-    @objc private func kakaoLoginButtonTapped() {
-        // 카카오 로그인 화면으로 이동하는 로직 추가
-        let kakaoLoginVC = KakaoLoginViewController() // KakaoLoginViewController를 생성
-        navigationController?.pushViewController(kakaoLoginVC, animated: true) // 뷰 컨트롤러 이동
+
+    func addStars() {
+        let starCount = 100 // 별의 개수
+        for _ in 0..<starCount {
+            let starSize: CGFloat = CGFloat.random(in: 2...5)
+            let star = UIView(frame: CGRect(x: CGFloat.random(in: 0...view.bounds.width),
+                                             y: CGFloat.random(in: 0...view.bounds.height),
+                                             width: starSize,
+                                             height: starSize))
+            star.backgroundColor = UIColor.white
+            star.layer.cornerRadius = starSize / 2
+            view.addSubview(star)
+        }
     }
     
-    // 애플 로그인 버튼 액션
-    @objc private func appleLoginButtonTapped() {
-        // 애플 로그인 화면으로 이동하는 로직 추가
-        let appleLoginVC = AppleLoginViewController() // AppleLoginViewController를 생성
-        navigationController?.pushViewController(appleLoginVC, animated: true) // 뷰 컨트롤러 이동
+    private func addCenterImage() {
+        let centerImageView = UIImageView()
+        centerImageView.image = UIImage(named: "LaunchScreenIcon") // Assets에 있는 이미지 이름으로 변경
+        centerImageView.contentMode = .scaleAspectFit
+        centerImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(centerImageView)
+        
+        // 제약조건 설정
+        NSLayoutConstraint.activate([
+            centerImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            centerImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            centerImageView.widthAnchor.constraint(equalToConstant: 200), // 원하는 너비
+            centerImageView.heightAnchor.constraint(equalToConstant: 200) // 원하는 높이
+        ])
+    }
+    
+    // MARK: - KAKAO LOGIN VIEW CONTROLLER
+    // Delegate 메서드 구현
+    func didRequestReLogin() {
+        handleKakaoLogin() // 재로그인 프로세스 시작
+    }
+    
+    private func setupKakaoLoginButton() {
+        // 버튼 생성 및 속성 설정
+        kakaoLoginButton.setTitle("카카오 로그인", for: .normal)
+        kakaoLoginButton.setTitleColor(.black, for: .normal)
+        kakaoLoginButton.backgroundColor = UIColor(red: 1.0, green: 0.88, blue: 0.12, alpha: 1.0) // 카카오톡 색상
+        kakaoLoginButton.layer.cornerRadius = 8
+        kakaoLoginButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        kakaoLoginButton.addTarget(self, action: #selector(handleKakaoLogin), for: .touchUpInside)
+        
+        // 버튼 레이아웃 설정
+        kakaoLoginButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(kakaoLoginButton)
+        
+        // 버튼 위치 제약 설정 (화면 중앙)
+        NSLayoutConstraint.activate([
+            kakaoLoginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            kakaoLoginButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 160),  // Adjust this value as needed
+            kakaoLoginButton.widthAnchor.constraint(equalToConstant: 200),
+            kakaoLoginButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+    }
+    
+    // MARK: - Test kakao talk & kakao account login
+    @objc private func handleKakaoLogin() {
+        if UserApi.isKakaoTalkLoginAvailable() {
+            UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
+                if let error = error {
+                    print("카카오톡 로그인 오류: \(error)")
+                } else if let oauthToken = oauthToken {
+                    print("카카오톡 로그인 성공")
+                    self.requestAdditionalAgreement()
+                    print("Access Token: \(oauthToken.accessToken)")
+                    print("Refresh Token: \(oauthToken.refreshToken)")
+                    print("Expires In: \(oauthToken.expiresIn) 초")
+                    print("Refresh Token Expires In: \(oauthToken.refreshTokenExpiresIn) 초")
+                    
+                    UserApi.shared.me { (user, error) in
+                        if let error = error {
+                            print("사용자 정보 조회 오류: \(error)")
+                        } else if let user = user {
+                            if let userId = user.id {
+                                print("사용자 식별자 (id): \(userId)")
+                                
+                                // UserDefaults에 사용자 식별자 저장
+                                UserDefaults.standard.set("\(userId)", forKey: "kakaoUserIdentifier")
+                                
+                                let email = user.kakaoAccount?.email ?? "이메일 권한 없음"
+                                let refreshToken = oauthToken.refreshToken
+                                let loginType = "kakao"
+                                let userUniqueId = "\(userId)" // 이 부분을 실제로 사용할 userUniqueId로 수정
+                                let accessToken = oauthToken.accessToken // accessToken도 oauthToken에서 가져옴
+                                
+                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType, accessToken: accessToken)
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
+                if let error = error {
+                    print("카카오 계정 로그인 오류: \(error)")
+                } else if let oauthToken = oauthToken {
+                    print("카카오 계정 로그인 성공")
+                    self.requestAdditionalAgreement()
+                    print("Access Token: \(oauthToken.accessToken)")
+                    print("Refresh Token: \(oauthToken.refreshToken)")
+                    print("Expires In: \(oauthToken.expiresIn) 초")
+                    print("Refresh Token Expires In: \(oauthToken.refreshTokenExpiresIn) 초")
+                    
+                    UserApi.shared.me { (user, error) in
+                        if let error = error {
+                            print("사용자 정보 조회 오류: \(error)")
+                        } else if let user = user {
+                            if let userId = user.id {
+                                print("사용자 식별자 (id): \(userId)")
+                                
+                                // UserDefaults에 사용자 식별자 저장
+                                UserDefaults.standard.set("\(userId)", forKey: "kakaoUserIdentifier")
+                                
+                                let email = user.kakaoAccount?.email ?? "이메일 권한 없음"
+                                let refreshToken = oauthToken.refreshToken
+                                let loginType = "kakao"
+                                
+                                let accessToken = oauthToken.accessToken // accessToken도 oauthToken에서 가져옴
+                                
+                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType, accessToken: accessToken)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // MARK: - only kakao talk login
+//    @objc private func handleKakaoLogin() {
+//        UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
+//            if let error = error {
+//                print("카카오톡 로그인 오류: \(error)")
+//                self.showKakaoTalkInstallAlert()
+//            } else if let oauthToken = oauthToken {
+//                print("카카오톡 로그인 성공")
+//                self.handleLoginSuccess(oauthToken: oauthToken)
+//            }
+//        }
+//    }
+//
+//    private func showKakaoTalkInstallAlert() {
+//        let alert = UIAlertController(title: "카카오톡 설치 필요", message: "카카오톡 로그인을 위해 카카오톡 앱이 설치되어 있어야 합니다. 설치하시겠습니까?", preferredStyle: .alert)
+//
+//        alert.addAction(UIAlertAction(title: "앱 스토어로 이동", style: .default, handler: { _ in
+//            if let url = URL(string: "https://apps.apple.com/kr/app/kakaotalk/id362057947") {
+//                UIApplication.shared.open(url)
+//            }
+//        }))
+//
+//        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+//
+//        if let topController = UIApplication.shared.windows.first?.rootViewController {
+//            topController.present(alert, animated: true, completion: nil)
+//        }
+//    }
+//
+//    private func handleLoginSuccess(oauthToken: OAuthToken) {
+//        self.requestAdditionalAgreement()
+//        print("Access Token: \(oauthToken.accessToken)")
+//        print("Refresh Token: \(oauthToken.refreshToken)")
+//        print("Expires In: \(oauthToken.expiresIn) 초")
+//        print("Refresh Token Expires In: \(oauthToken.refreshTokenExpiresIn) 초")
+//
+//        UserApi.shared.me { (user, error) in
+//            if let error = error {
+//                print("사용자 정보 조회 오류: \(error)")
+//            } else if let user = user {
+//                if let userId = user.id {
+//                    print("사용자 식별자 (id): \(userId)")
+//
+//                    UserDefaults.standard.set("\(userId)", forKey: "kakaoUserIdentifier")
+//
+//                    let email = user.kakaoAccount?.email ?? "이메일 권한 없음"
+//                    let refreshToken = oauthToken.refreshToken
+//                    let loginType = "kakao"
+//                    let accessToken = oauthToken.accessToken
+//
+//                    self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType, accessToken: accessToken)
+//                }
+//            }
+//        }
+//    }
+
+    private func requestAdditionalAgreement() {
+        UserApi.shared.accessTokenInfo { (accessTokenInfo, error) in
+            if let error = error {
+                print("Access Token 오류: \(error)")
+            } else if let accessTokenInfo = accessTokenInfo {
+                print("Access Token 정보: \(accessTokenInfo)")
+            }
+        }
+    }
+    
+    // 최초 로그인 후 main 화면으로 뒤로가기
+    func didCompleteKakaoLogin() {
+        self.navigationController?.popViewController(animated: true) // 뒤로가기
+    }
+    
+    // MARK: - APPLE LOGIN VIEW CONTROLLER
+    // 애플 로그인 요청 처리
+    @objc func handleAppleSignIn() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+
+        let authController = ASAuthorizationController(authorizationRequests: [request])
+        authController.delegate = self
+        authController.presentationContextProvider = self
+        authController.performRequests()
+    }
+
+    private func setupAppleSignInButton() {
+        let appleSignInButton = UIButton(type: .system)
+        appleSignInButton.setTitle("Sign in with Apple", for: .normal)
+        appleSignInButton.setTitleColor(.black, for: .normal) // Text color
+        appleSignInButton.backgroundColor = .white // White background
+        appleSignInButton.layer.cornerRadius = 10 // Optional: Rounded corners
+        appleSignInButton.addTarget(self, action: #selector(handleAppleSignIn), for: .touchUpInside)
+        appleSignInButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(appleSignInButton)
+        
+        NSLayoutConstraint.activate([
+            appleSignInButton.topAnchor.constraint(equalTo: kakaoLoginButton.bottomAnchor, constant: 20),
+            appleSignInButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            appleSignInButton.widthAnchor.constraint(equalToConstant: 200),
+            appleSignInButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+}
+
+// ASAuthorizationControllerDelegate 및 ASAuthorizationControllerPresentationContextProviding 준수
+extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        guard let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential else {
+            return
+        }
+
+        guard let idToken = appleIDCredential.identityToken,
+              let idTokenString = String(data: idToken, encoding: .utf8) else {
+            return
+        }
+
+        var appleResponse: [String: Any] = [:]
+        
+        if let authorizationCodeData = appleIDCredential.authorizationCode,
+           let authorizationCodeString = String(data: authorizationCodeData, encoding: .utf8) {
+            appleResponse["authorizationCode"] = authorizationCodeString
+        } else {
+            print("authorizationCode를 가져오는 데 실패했습니다.")
+        }
+        
+        appleResponse["email"] = appleIDCredential.email
+        appleResponse["fullName"] = appleIDCredential.fullName?.givenName ?? ""
+        appleResponse["familyName"] = appleIDCredential.fullName?.familyName ?? ""
+        appleResponse["user"] = appleIDCredential.user
+
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: appleResponse, options: []),
+              let appleResponseString = String(data: jsonData, encoding: .utf8) else {
+            print("애플 응답 JSON 변환 오류")
+            return
+        }
+
+        appleLoginManager.loginWithApple(idToken: idTokenString, appleResponse: appleResponseString) { response in
+            if let userIdentifier = response.userIdentifier, let userUniqueId = response.userUniqueId {
+                self.appleLoginManager.saveUserIdentifier(userIdentifier)
+                print("로그인 성공, userIdentifier: \(userIdentifier), userUniqueId: \(userUniqueId)")
+                
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true) // 뒤로가기
+               }
+            } else {
+                print("로그인 실패")
+            }
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print("로그인 오류: \(error.localizedDescription)")
+    }
+
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
     }
 }

@@ -14,7 +14,7 @@ class SelectProfileImageViewController: UIViewController {
     var nickname: String?
     var birthDay: String?
 
-    private let imageNames = ["faceAlienImage", "standingAlienImage"] // Assets에 있는 이미지 이름
+    private let imageNames = ["spaceProfile1", "spaceProfile2"] // Assets에 있는 이미지 이름
     private var selectedImageName: String?
     
     lazy var backendURL: String = {

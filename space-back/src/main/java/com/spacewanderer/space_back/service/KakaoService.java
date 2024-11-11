@@ -1,8 +1,6 @@
 package com.spacewanderer.space_back.service;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -69,6 +67,7 @@ public class KakaoService {
 
     // function: 리프레시 토큰만 업데이트
     public UserEntity updateRefreshToken(String userIdentifier, String newRefreshToken) {
+        System.out.println("newRefreshToken: " + newRefreshToken);
         UserEntity user = userRepository.findByUserIdentifier(userIdentifier)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -86,7 +85,7 @@ public class KakaoService {
     }
 
     // function: Access Token 가져오기 (리프레시 토큰 만료 시 예외 처리 추가)
-    public String getAccessToken(String refreshToken) {
+    public String getAccessToken(String refreshToken, String userIdentifier) {
         System.out.println("복호화 전 refreshToken | " + refreshToken);
         // 리프레시 토큰 복호화
         String decryptedRefreshToken;
@@ -121,12 +120,59 @@ public class KakaoService {
             }
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                throw new RuntimeException("Refresh Token이 만료되었습니다.");
+                // 리프레시 토큰이 만료된 경우, 새 리프레시 토큰을 받아와 갱신
+                String newRefreshToken = refreshAndSaveNewRefreshToken(userIdentifier, refreshToken);
+                return getAccessToken(newRefreshToken, userIdentifier);
             } else {
                 throw new RuntimeException("액세스 토큰을 검색하지 못했습니다. " + e.getStatusCode());
             }
         } catch (Exception e) {
             throw new RuntimeException("액세스 토큰을 검색하지 못했습니다: " + e.getMessage());
+        }
+    }
+
+    // function: 새 리프레시 토큰 갱신
+    public String refreshAndSaveNewRefreshToken(String userIdentifier, String currentRefreshToken) {
+        // 현재 리프레시 토큰을 복호화
+        String decryptedRefreshToken;
+        try {
+            decryptedRefreshToken = encryptionUtil.decrypt(currentRefreshToken);
+        } catch (Exception e) {
+            throw new RuntimeException("리프레시 토큰 복호화에 실패했습니다.", e);
+        }
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "refresh_token");
+        params.add("client_id", kakaoAppKey);
+        params.add("refresh_token", decryptedRefreshToken);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(kakaoTokenUrl, HttpMethod.POST, requestEntity, Map.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                String newRefreshToken = (String) response.getBody().get("refresh_token");
+                
+                // 새로운 리프레시 토큰이 있다면 암호화하고 DB에 업데이트
+                if (newRefreshToken != null) {
+                    return updateRefreshToken(userIdentifier, newRefreshToken).getRefreshToken();
+                } else {
+                    throw new RuntimeException("새로운 리프레시 토큰을 받지 못했습니다.");
+                }
+            } else {
+                throw new RuntimeException("리프레시 토큰 갱신 요청 실패: " + response.getStatusCode());
+            }
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                throw new RuntimeException("리프레시 토큰이 만료되었습니다.");
+            } else {
+                throw new RuntimeException("리프레시 토큰 갱신 중 오류 발생: " + e.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("리프레시 토큰 갱신 중 예기치 않은 오류 발생: " + e.getMessage());
         }
     }
 }

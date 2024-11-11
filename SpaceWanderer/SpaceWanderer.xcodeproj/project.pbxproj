@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B0767682CD2283000866B22 /* KakaoLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */; };
 		0B07676F2CD2767600866B22 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0B07676E2CD2767600866B22 /* KakaoSDKAuth */; };
 		0B0767752CD2767600866B22 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0767742CD2767600866B22 /* KakaoSDKCommon */; };
 		0B0767772CD276E500866B22 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0767762CD276E500866B22 /* KakaoSDKUser */; };
@@ -40,7 +39,6 @@
 		0B9265E32CC7E4FE002270AF /* SpaceInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */; };
 		0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */; };
 		0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */; };
-		0BEBD88D2CD3A4CD001590E8 /* AppleLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */; };
 		0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */; };
 		0BEBD8912CD3A63B001590E8 /* AppleLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */; };
 		0BEBD8932CD3A686001590E8 /* KakaoLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */; };
@@ -49,7 +47,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginViewController.swift; sourceTree = "<group>"; };
 		0B301C752CC272530008804A /* SpaceWanderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceWanderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B301C782CC272530008804A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B301C7A2CC272530008804A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -80,7 +77,6 @@
 		0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpaceWanderer.entitlements; sourceTree = "<group>"; };
 		0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileViewController.swift; sourceTree = "<group>"; };
 		0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
-		0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginViewController.swift; sourceTree = "<group>"; };
 		0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginManager.swift; sourceTree = "<group>"; };
 		0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginResponse.swift; sourceTree = "<group>"; };
 		0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginManager.swift; sourceTree = "<group>"; };
@@ -228,8 +224,6 @@
 		0B8BC2022CDA1CEA0009B553 /* auth */ = {
 			isa = PBXGroup;
 			children = (
-				0BEBD88C2CD3A4CD001590E8 /* AppleLoginViewController.swift */,
-				0B0767672CD2283000866B22 /* KakaoLoginViewController.swift */,
 				0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */,
 				0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */,
 			);
@@ -380,11 +374,9 @@
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
 				0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */,
 				0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */,
-				0B0767682CD2283000866B22 /* KakaoLoginViewController.swift in Sources */,
 				0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */,
 				0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */,
 				0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */,
-				0BEBD88D2CD3A4CD001590E8 /* AppleLoginViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
 				0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */,
 				0B8BC2072CDA1D490009B553 /* ProfileViewController.swift in Sources */,
