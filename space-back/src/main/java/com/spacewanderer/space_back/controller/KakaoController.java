@@ -34,7 +34,8 @@ public class KakaoController {
                 userEntity.getUserIdentifier(),
                 userEntity.getEmail(),
                 userEntity.getRefreshToken(),
-                userEntity.getLoginType()
+                userEntity.getLoginType(),
+                userEntity.getDestinationPlanet()
         );
         System.out.println("/kakao-login 2");
         System.out.println("registeredUser | " + registeredUser);

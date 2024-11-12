@@ -23,4 +23,16 @@ public class UserService {
         // 이미 존재하는 닉네임이 있으면 false 반환, 없으면 true 반환
         return !user.isPresent();
     }
+
+    public void updatePlanet(String userIdentifier, String destinationPlanet) {
+        // userId를 통해 사용자를 검색
+        UserEntity userEntity = userRepository.findByUserIdentifier(userIdentifier)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userIdentifier));
+        
+        // 행성 이름 업데이트
+        userEntity.setDestinationPlanet(destinationPlanet);
+        
+        // 변경 사항 저장
+        userRepository.save(userEntity);
+    }
 }

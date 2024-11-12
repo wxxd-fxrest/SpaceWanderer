@@ -24,13 +24,6 @@ public class StepController {
 
     private final StepService stepService;
 
-    // 하루 걸음 수 조회
-    // @GetMapping("/day-walking/{userUniqueId}")
-    // public ResponseEntity<StepResponse> getDaySteps(@PathVariable String userUniqueId, @RequestParam String walkingDate) {
-    //     StepResponse stepResponse = stepService.getDaySteps(userUniqueId, walkingDate);
-    //     return ResponseEntity.ok(stepResponse);
-    // }
-
     // 하루 걸음 수 저장
     @PostMapping("/day-walking")
     public ResponseEntity<Void> saveDaySteps(@RequestBody StepRequest stepRequest) {
@@ -39,16 +32,10 @@ public class StepController {
     }
 
     // 마지막 기록된 날짜 가져오기
-    @GetMapping("/last-recorded-date/{userUniqueId}")
-    public ResponseEntity<StepResponse> getLastStepDay(@PathVariable("userUniqueId") String userUniqueId) {
+    @GetMapping("/last-recorded-date/{userIdentifier}")
+    public ResponseEntity<StepResponse> getLastStepDay(@PathVariable("userIdentifier") String userUniqueId) {
         StepResponse lastStepResponse = stepService.getLastStepDay(userUniqueId);
         return ResponseEntity.ok(lastStepResponse);
     }
-
-    // @PutMapping("/day-walking/{userUniqueId}/{date}")
-    // public ResponseEntity<Void> updateDaySteps(@PathVariable String userUniqueId, @PathVariable String date, @RequestBody StepRequest stepRequest) {
-    //     stepService.saveDaySteps(userUniqueId, date, stepRequest.getDaySteps(), stepRequest.getDayDestination()); // 같은 로직으로 업데이트
-    //     return ResponseEntity.ok().build();
-    // }
 }
 

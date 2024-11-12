@@ -45,7 +45,7 @@ class TabBarViewController: UITabBarController {
         super.viewDidLoad()
         setUpTabBar()
         setUpVCs()
-        print("TabBarViewController Props: ", userUniqueId ?? "nil", accessToken ?? "nil", userIdentifier ?? "nil")
+        print("TabBarViewController Props: ", userUniqueId ?? "nil", accessToken ?? "nil", userIdentifier ?? "nil")        
     }
     
     override func viewWillAppear(_ animated: Bool) {

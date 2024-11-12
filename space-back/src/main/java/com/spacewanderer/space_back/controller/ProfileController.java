@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spacewanderer.space_back.entity.UserEntity;
 import com.spacewanderer.space_back.repository.UserRepository;
 import com.spacewanderer.space_back.service.UserService;
 
@@ -23,6 +24,28 @@ public class ProfileController {
     
     private final UserRepository userRepository;
     private final UserService userService;
+
+    // 프로필 조회
+    @GetMapping("/{userIdentifier}")
+    public ResponseEntity<UserEntity> getUserById(@PathVariable("userIdentifier") String userIdentifier) {
+        return userRepository.findByUserIdentifier(userIdentifier)
+        .map(user -> {
+            // 사용자 정보를 출력
+            System.out.println("사용자 ID: " + user.getUserIdentifier());
+            System.out.println("이메일: " + user.getEmail());
+            System.out.println("닉네임: " + user.getNickname());
+            System.out.println("생일: " + user.getBirthDay());
+            System.out.println("거주 행성: " + user.getInhabitedPlanet());
+            System.out.println("프로필 이미지: " + user.getProfileImage());
+            System.out.println("리프레시 토큰: " + user.getRefreshToken());
+            System.out.println("로그인 타입: " + user.getLoginType());
+            System.out.println("목표 일 수: " + user.getDayGoalCount());
+            System.out.println("목적지 행성: " + user.getDestinationPlanet());
+
+            return ResponseEntity.ok(user);
+        })
+        .orElse(ResponseEntity.notFound().build());
+    }
 
     // 프로필 업데이트
     @PutMapping("/profile-update/{userIdentifier}")
@@ -63,4 +86,22 @@ public class ProfileController {
         boolean isUnique = userService.isNicknameUnique(nickname);
         return ResponseEntity.ok(isUnique); // true/false 값 그대로 반환
     }    
+
+    // 목표행성 업데이트 
+    @PutMapping("/update-planet/{userIdentifier}")
+    public ResponseEntity<Void> updatePlanet(@PathVariable("userIdentifier") String userIdentifier, @RequestBody Map<String, String> requestBody) {
+        String destinationPlanet = requestBody.get("destinationPlanet"); // 행성 이름 가져오기
+
+        // userId를 통해 사용자를 검색
+        UserEntity userEntity = userRepository.findByUserIdentifier(userIdentifier)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userIdentifier));
+        
+        // 행성 이름 업데이트
+        userEntity.setDestinationPlanet(destinationPlanet);
+        
+        // 변경 사항 저장
+        userRepository.save(userEntity);
+        
+        return ResponseEntity.ok().build(); // 성공적인 응답 반환
+    }
 }

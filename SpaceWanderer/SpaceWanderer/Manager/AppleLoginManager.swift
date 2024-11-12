@@ -41,7 +41,7 @@ class AppleLoginManager {
     }
     
     // 애플 로그인 처리 및 백엔드에 idToken 전송
-    func loginWithApple(idToken: String, appleResponse: String, completion: @escaping (AppleLoginResponse) -> Void) {
+    func loginWithApple(idToken: String, appleResponse: String, completion: @escaping (AppleLoginModel) -> Void) {
         let url = URL(string: "\(backendURL)/apple-login")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -53,13 +53,13 @@ class AppleLoginManager {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("서버 오류: \(error.localizedDescription)")
-                completion(AppleLoginResponse(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
+                completion(AppleLoginModel(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
                 return
             }
 
             guard let data = data else {
                 print("데이터가 없습니다.")
-                completion(AppleLoginResponse(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
+                completion(AppleLoginModel(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
                 return
             }
 
@@ -81,18 +81,18 @@ class AppleLoginManager {
                         UserDefaults.standard.set("LOGIN_APPLE", forKey: "LoginType")
                         print("UserDefaults에 'LOGIN_APPLE' 저장 완료")
 
-                        completion(AppleLoginResponse(userIdentifier: userIdentifier, refreshToken: nil, userUniqueId: userUniqueId))
+                        completion(AppleLoginModel(userIdentifier: userIdentifier, refreshToken: nil, userUniqueId: userUniqueId))
                     } else {
                         print("userIdentifier 또는 userUniqueId가 없습니다.")
-                        completion(AppleLoginResponse(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
+                        completion(AppleLoginModel(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
                     }
                 } else {
                     print("유효하지 않은 JSON 형식입니다.")
-                    completion(AppleLoginResponse(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
+                    completion(AppleLoginModel(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
                 }
             } catch {
                 print("JSON 파싱 오류: \(error.localizedDescription)")
-                completion(AppleLoginResponse(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
+                completion(AppleLoginModel(userIdentifier: nil, refreshToken: nil, userUniqueId: nil))
             }
         }
         task.resume()

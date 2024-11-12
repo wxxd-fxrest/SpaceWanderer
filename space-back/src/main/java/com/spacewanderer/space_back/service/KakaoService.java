@@ -36,7 +36,7 @@ public class KakaoService {
     private String kakaoAppKey;
 
     // function: 사용자 정보 DB 저장
-    public UserEntity registerUser(String userIdentifier, String email, String refreshToken, String loginType) {
+    public UserEntity registerUser(String userIdentifier, String email, String refreshToken, String loginType, String destinationPlanet) {
         // 기존 사용자 조회
         UserEntity existingUser = userRepository.findByUserIdentifier(userIdentifier).orElse(null);
 
@@ -60,7 +60,7 @@ public class KakaoService {
 
         System.out.println("암호화 후 refreshToken | " + encryptedRefreshToken);
 
-        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, encryptedRefreshToken, loginType);
+        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, encryptedRefreshToken, loginType, "지구");
         System.out.println("registerUser | " + newUser);
         return userRepository.save(newUser);
     }

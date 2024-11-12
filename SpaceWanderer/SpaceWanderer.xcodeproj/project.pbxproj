@@ -37,10 +37,14 @@
 		0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC20D2CDA1DCE0009B553 /* TabBarViewController.swift */; };
 		0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC2102CDA41380009B553 /* UIColor.swift */; };
 		0B9265E32CC7E4FE002270AF /* SpaceInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */; };
+		0BB0AFCF2CE3461B008272B2 /* StepModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFCE2CE3461B008272B2 /* StepModel.swift */; };
+		0BB0AFD12CE348F6008272B2 /* DestinationSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */; };
+		0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */; };
+		0BB0AFD52CE3A235008272B2 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD42CE3A235008272B2 /* UserManager.swift */; };
 		0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */; };
 		0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */; };
 		0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */; };
-		0BEBD8912CD3A63B001590E8 /* AppleLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */; };
+		0BEBD8912CD3A63B001590E8 /* AppleLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8902CD3A63B001590E8 /* AppleLoginModel.swift */; };
 		0BEBD8932CD3A686001590E8 /* KakaoLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */; };
 		0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */; };
 		0BEC2A332CD8AE97000EC98C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC2A322CD8AE97000EC98C /* MainViewController.swift */; };
@@ -74,11 +78,15 @@
 		0B8BC20D2CDA1DCE0009B553 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		0B8BC2102CDA41380009B553 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SpaceInfo.plist; sourceTree = "<group>"; };
+		0BB0AFCE2CE3461B008272B2 /* StepModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepModel.swift; sourceTree = "<group>"; };
+		0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSelectionViewController.swift; sourceTree = "<group>"; };
+		0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		0BB0AFD42CE3A235008272B2 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpaceWanderer.entitlements; sourceTree = "<group>"; };
 		0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileViewController.swift; sourceTree = "<group>"; };
 		0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginManager.swift; sourceTree = "<group>"; };
-		0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginResponse.swift; sourceTree = "<group>"; };
+		0BEBD8902CD3A63B001590E8 /* AppleLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginModel.swift; sourceTree = "<group>"; };
 		0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginManager.swift; sourceTree = "<group>"; };
 		0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectProfileImageViewController.swift; sourceTree = "<group>"; };
 		0BEC2A322CD8AE97000EC98C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -166,6 +174,7 @@
 			children = (
 				0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */,
 				0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */,
+				0BB0AFD42CE3A235008272B2 /* UserManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -205,7 +214,9 @@
 		0B8BC1E72CDA181D0009B553 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				0BEBD8902CD3A63B001590E8 /* AppleLoginResponse.swift */,
+				0BEBD8902CD3A63B001590E8 /* AppleLoginModel.swift */,
+				0BB0AFCE2CE3461B008272B2 /* StepModel.swift */,
+				0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -234,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				0BEC2A322CD8AE97000EC98C /* MainViewController.swift */,
+				0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -375,19 +387,23 @@
 				0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */,
 				0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */,
 				0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */,
+				0BB0AFD52CE3A235008272B2 /* UserManager.swift in Sources */,
 				0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */,
 				0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */,
+				0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
 				0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */,
 				0B8BC2072CDA1D490009B553 /* ProfileViewController.swift in Sources */,
 				0BEC2A332CD8AE97000EC98C /* MainViewController.swift in Sources */,
 				0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */,
+				0BB0AFCF2CE3461B008272B2 /* StepModel.swift in Sources */,
 				0B301CA22CC2742C0008804A /* UIFont.swift in Sources */,
 				0B8BC1F52CDA1A650009B553 /* KeyboardTap.swift in Sources */,
-				0BEBD8912CD3A63B001590E8 /* AppleLoginResponse.swift in Sources */,
+				0BEBD8912CD3A63B001590E8 /* AppleLoginModel.swift in Sources */,
 				0B8BC1F32CDA1A650009B553 /* UIView+.swift in Sources */,
 				0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */,
 				0BEBD8932CD3A686001590E8 /* KakaoLoginManager.swift in Sources */,
+				0BB0AFD12CE348F6008272B2 /* DestinationSelectionViewController.swift in Sources */,
 				0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

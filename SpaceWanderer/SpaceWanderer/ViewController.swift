@@ -76,6 +76,7 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         autoLoginIfNeeded() // 여기에서 호출
     }
     
@@ -333,8 +334,8 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
     }
     
     // 최초 로그인 후 main 화면으로 뒤로가기
-    func didCompleteKakaoLogin() {
-        self.navigationController?.popViewController(animated: true) // 뒤로가기
+    func didCompleteAutoLogin() {
+        self.autoLoginIfNeeded()
     }
     
     // MARK: - APPLE LOGIN VIEW CONTROLLER
@@ -407,7 +408,7 @@ extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationCont
                 print("로그인 성공, userIdentifier: \(userIdentifier), userUniqueId: \(userUniqueId)")
                 
                 DispatchQueue.main.async {
-                    self.navigationController?.popViewController(animated: true) // 뒤로가기
+                    self.didCompleteAutoLogin()
                }
             } else {
                 print("로그인 실패")

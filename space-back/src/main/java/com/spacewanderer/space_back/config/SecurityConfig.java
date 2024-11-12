@@ -31,7 +31,10 @@ public class SecurityConfig {
                     "/api/v1/user/check-nickname/*",
                     "/api/v1/walk/day-walking",
                     // "/api/v1/walk/day-walking/**",
-                    "/api/v1/walk/last-recorded-date/*"
+                    "/api/v1/walk/last-recorded-date/*",
+                    "/api/v1/planet/*",
+                    "/api/v1/user/update-planet/*",
+                    "/api/v1/user/*"
                 ).permitAll()  // 인증 없이 접근 가능 경로
                 .anyRequest().authenticated()  // 다른 요청은 인증 필요
             );

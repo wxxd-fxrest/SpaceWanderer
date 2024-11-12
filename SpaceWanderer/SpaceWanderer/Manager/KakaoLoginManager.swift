@@ -11,7 +11,7 @@ import KakaoSDKUser
 
 protocol KakaoLoginManagerDelegate: AnyObject {
     func didRequestReLogin()
-    func didCompleteKakaoLogin()
+    func didCompleteAutoLogin()
 }
 
 protocol KakaoAutoLoginManagerDelegate: AnyObject {
@@ -223,7 +223,9 @@ class KakaoLoginManager {
             "email": email,
             "refreshToken": refreshToken,
             "loginType": loginType,
-            "inhabitedPlanet": "화성"
+            "inhabitedPlanet": "천행성",
+            "dayGoalCount": 0,
+            "destinationPlanet": "지구"
         ]
         
         do {
@@ -273,7 +275,7 @@ class KakaoLoginManager {
                     
                     // 뒤로가기 요청
                     DispatchQueue.main.async {
-                         self.delegate?.didCompleteKakaoLogin() // Delegate를 통해 로그인 완료 알림
+                         self.delegate?.didCompleteAutoLogin() // Delegate를 통해 로그인 완료 알림
                      }
                 }
             } catch {

@@ -1,10 +1,12 @@
 package com.spacewanderer.space_back.entity;
 
+import java.util.List;
 import java.util.Random;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,12 +41,18 @@ public class UserEntity {
 
     private String loginType;
 
-    public UserEntity(String userUniqueId, String userIdentifier, String email, String refreshToken, String loginType) {
+    private int dayGoalCount;
+
+    @Column(name = "destination_planet")
+    private String destinationPlanet;
+
+    public UserEntity(String userUniqueId, String userIdentifier, String email, String refreshToken, String loginType, String destinationPlanet) {
         this.userUniqueId = userUniqueId;
         this.userIdentifier = userIdentifier;
         this.email = email;
         this.refreshToken = refreshToken;
         this.loginType = loginType;
+        this.destinationPlanet = destinationPlanet;
     }
 
     // 고유 ID 생성 메서드

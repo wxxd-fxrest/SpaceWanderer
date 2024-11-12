@@ -94,13 +94,13 @@ public class AppleService {
     private static final Logger logger = LoggerFactory.getLogger(AppleService.class);
 
     // function: 사용자 정보 DB 저장 
-    public UserEntity registerUser(String userIdentifier, String email, String refreshToken, String lginType) {
+    public UserEntity registerUser(String userIdentifier, String email, String refreshToken, String lginType, String destinationPlanet) {
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("유효하지 않은 이메일 주소입니다.");
         }
 
         String userUniqueId = UserEntity.generateUserUniqueId();
-        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, refreshToken, "apple"); 
+        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, refreshToken, "apple", "지구"); 
             
         return userRepository.save(newUser);
     }
@@ -162,7 +162,7 @@ public class AppleService {
             userRepository.save(userEntity);
             userUniqueId = userEntity.getUserUniqueId();
         } else  {
-            UserEntity newUser = registerUser(userIdentifier, email, encryptedRefreshToken, "apple");
+            UserEntity newUser = registerUser(userIdentifier, email, encryptedRefreshToken, "apple", "지구");
             userUniqueId = newUser.getUserUniqueId();
         }
 

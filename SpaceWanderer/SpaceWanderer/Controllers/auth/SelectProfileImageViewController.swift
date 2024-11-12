@@ -145,10 +145,8 @@ class SelectProfileImageViewController: UIViewController {
     }
     
     private func navigateToViewController() {
-        // ViewController를 찾고 이동하는 코드
-        if let viewController = self.storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
-            self.navigationController?.pushViewController(viewController, animated: true)
-        }
+        let viewController = ViewController()
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
     
     // Alert helper method
