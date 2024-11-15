@@ -8,13 +8,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class StepRequest {
-
     private String userUniqueId;
     private String walkingDate;
     private int daySteps;
     private String dayDestination; // 예시로 명왕성
 
-    public void setUserUniqueId(String userUniqueId, String walkingDate, int daySteps, String dayDestination) {
+    public void setStepRequest(String userUniqueId, String walkingDate, int daySteps, String dayDestination) {
         this.userUniqueId = userUniqueId;
         this.walkingDate = walkingDate;
         this.daySteps = daySteps;

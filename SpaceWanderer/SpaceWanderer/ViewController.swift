@@ -25,7 +25,7 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
         kakaoLoginManager.delegate = self
         
         // 배경 색상 설정
-        view.backgroundColor = SpecialColors.BlackColor
+        view.backgroundColor = SpecialColors.PupleColor
         
         // 별 추가
         addStars()
@@ -136,14 +136,23 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
     }
 
     func addStars() {
-        let starCount = 100 // 별의 개수
+        let starCount = 100
+        // 세 가지 색상 정의
+        let colors: [UIColor] = [
+            SpecialColors.PinkStarColor,      // 첫 번째 색상
+            SpecialColors.BlueStarColor,      // 두 번째 색상
+            SpecialColors.GreenStarColor,     // 세 번째 색상
+            SpecialColors.WhiteStarColor      // 네 번째 색상
+        ]
+        
         for _ in 0..<starCount {
-            let starSize: CGFloat = CGFloat.random(in: 2...5)
+            let starSize: CGFloat = CGFloat.random(in: 1...6)
             let star = UIView(frame: CGRect(x: CGFloat.random(in: 0...view.bounds.width),
-                                             y: CGFloat.random(in: 0...view.bounds.height),
-                                             width: starSize,
-                                             height: starSize))
-            star.backgroundColor = UIColor.white
+                                            y: CGFloat.random(in: 0...view.bounds.height),
+                                            width: starSize,
+                                            height: starSize))
+            // 랜덤 색상 선택
+            star.backgroundColor = colors.randomElement() // 배열에서 랜덤 색상 선택
             star.layer.cornerRadius = starSize / 2
             view.addSubview(star)
         }

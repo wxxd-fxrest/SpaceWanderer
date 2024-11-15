@@ -56,7 +56,7 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = SpecialColors.GearGray
+        view.backgroundColor = SpecialColors.PupleColor
         addStars()
         addPlanets()
         
@@ -162,9 +162,9 @@ class MainViewController: UIViewController {
     
     // 마지막 기록된 날짜를 가져와서 누락된 날짜들을 처리하고, 마지막 날짜가 이미 저장된 경우 업데이트
     func fetchLastRecordedDate() {
-        guard let userIdentifier = userIdentifier else { return }
+        guard let userUniqueId = userUniqueId else { return }
         
-        let url = URL(string: "\(backendURL)/last-recorded-date/\(userIdentifier)")!
+        let url = URL(string: "\(backendURL)/last-recorded-date/\(userUniqueId)")!
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
@@ -177,24 +177,20 @@ class MainViewController: UIViewController {
             do {
                 let decoder = JSONDecoder()
                 let lastStepResponse = try decoder.decode(StepResponse.self, from: data)
-                print("마지막 날짜: ", lastStepResponse.walkingDate)
+                let lastRecordedDate = lastStepResponse.walkingDate ?? self.getTodayDate()  // nil일 경우 오늘 날짜로 설정
+                print("마지막 날짜: ", lastRecordedDate)
                 
                 // 마지막 기록된 날짜가 없으면 (최신 회원) 오늘 날짜만 업데이트
-                if lastStepResponse.walkingDate.isEmpty {
+                if lastRecordedDate.isEmpty {
+                    print("마지막 기록된 날짜가 없으면 (최신 회원) 오늘 날짜만 업데이트")
                     // 오늘 날짜만 업데이트
                     self.fetchAndSendSteps(forDate: self.getTodayDate())
                 } else {
-                    // 마지막 기록된 날짜가 존재하면, 그 이후 날짜만 처리
-                    let lastRecordedDate = lastStepResponse.walkingDate
-                    let todayDate = self.getTodayDate()
-                    
-                    // 만약 마지막 날짜가 오늘 날짜라면, 아무 것도 하지 않고 리턴
-                    if lastRecordedDate == todayDate {
-                        return
-                    }
+                    print("마지막 기록된 날짜가 존재하면, 그 이후 날짜만 처리")
                     
                     // 마지막 기록된 날짜가 오늘 날짜가 아니라면, 누락된 날짜들을 처리
                     self.handleMissingDates(lastRecordedDate: lastRecordedDate)
+                    print("마지막 기록된 날짜가 오늘 날짜가 아니라면, 누락된 날짜들을 처리")
                 }
             } catch {
                 print("데이터 파싱 오류: \(error)")
@@ -340,7 +336,7 @@ class MainViewController: UIViewController {
         trackLayer = CAShapeLayer()
         let trackPath = UIBezierPath(arcCenter: center, radius: radius, startAngle: -CGFloat.pi / 2, endAngle: 2 * CGFloat.pi - CGFloat.pi / 2, clockwise: true)
         trackLayer.path = trackPath.cgPath
-        trackLayer.strokeColor = UIColor.lightGray.cgColor
+        trackLayer.strokeColor = SpecialColors.GearGray.cgColor.copy(alpha: 0.6)
         trackLayer.lineWidth = lineWidth
         trackLayer.fillColor = UIColor.clear.cgColor
         trackLayer.lineCap = .round
@@ -349,7 +345,7 @@ class MainViewController: UIViewController {
         progressLayer = CAShapeLayer()
         let progressPath = UIBezierPath(arcCenter: center, radius: radius, startAngle: -CGFloat.pi / 2, endAngle: -CGFloat.pi / 2, clockwise: true)
         progressLayer.path = progressPath.cgPath
-        progressLayer.strokeColor = SpecialColors.GreenColor.cgColor
+        progressLayer.strokeColor = SpecialColors.GreenStarColor.cgColor
         progressLayer.lineWidth = lineWidth
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.lineCap = .round
@@ -360,18 +356,26 @@ class MainViewController: UIViewController {
     func updateCircularProgressBar() {
         // 누적 걸음 수와 실시간 걸음 수를 합산
         let totalSteps = totalStepsToday + realTimeSteps
-        let maxStepCount = 10000.0
+        let maxStepCount = 1000.0
         let progress = totalSteps / maxStepCount
         
         // 배경 원형 뷰의 크기를 상수로 정의
-        let backgroundDiameter: CGFloat = 60
+        let backgroundDiameter: CGFloat = 34
 
         // 흰색 배경 원형 뷰가 없으면 생성
         if progressBackgroundView == nil {
+            // 배경 원 생성
             progressBackgroundView = UIView(frame: CGRect(x: 0, y: 0, width: backgroundDiameter, height: backgroundDiameter))
-            progressBackgroundView.backgroundColor = SpecialColors.WhiteColor
+            progressBackgroundView.backgroundColor = SpecialColors.GreenStarColor
             progressBackgroundView.layer.cornerRadius = backgroundDiameter / 2
             view.addSubview(progressBackgroundView)
+
+            // 안쪽 원의 크기 계산
+            let innerDiameter = backgroundDiameter - 6 // 3px 여유 공간을 양쪽에 두기 위해 6px 감소
+            let innerCircleView = UIView(frame: CGRect(x: 3, y: 3, width: innerDiameter, height: innerDiameter)) // 3px 여유 공간을 두기 위해 x, y에 3px 추가
+            innerCircleView.backgroundColor = SpecialColors.WhiteColor // 원하는 색상으로 설정
+            innerCircleView.layer.cornerRadius = innerDiameter / 2
+            progressBackgroundView.addSubview(innerCircleView)
         }
         
         // 진행 경로 계산
@@ -392,15 +396,15 @@ class MainViewController: UIViewController {
         let progressPercentage = Int(progress * 100)
         
         // 끝 지점에 이미지 추가
-        if progressImageView == nil {
-            let progressImage = UIImage(named: "spaceProgress") // 원하는 이미지 이름
-            progressImageView = UIImageView(image: progressImage)
-            progressImageView.contentMode = .scaleAspectFit
-            let imageSize: CGFloat = 45
-            progressImageView.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
-            progressBackgroundView.addSubview(progressImageView)
-            progressImageView.center = CGPoint(x: backgroundDiameter / 2, y: backgroundDiameter / 2) // 이미지 중앙 배치
-        }
+//        if progressImageView == nil {
+//            let progressImage = UIImage(named: "spaceProgress") // 원하는 이미지 이름
+//            progressImageView = UIImageView(image: progressImage)
+//            progressImageView.contentMode = .scaleAspectFit
+//            let imageSize: CGFloat = 45
+//            progressImageView.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
+//            progressBackgroundView.addSubview(progressImageView)
+//            progressImageView.center = CGPoint(x: backgroundDiameter / 2, y: backgroundDiameter / 2) // 이미지 중앙 배치
+//        }
         
         // 위치 설정 - 진행 경로의 끝 지점에 맞게 설정
         let labelRadius: CGFloat = 150
@@ -413,23 +417,30 @@ class MainViewController: UIViewController {
         // 초기 텍스트 설정
         updateStepLabel()
     }
-
     
-    // 다른 UI 요소들...
     func addStars() {
         let starCount = 100
+        // 세 가지 색상 정의
+        let colors: [UIColor] = [
+            SpecialColors.PinkStarColor,      // 첫 번째 색상
+            SpecialColors.BlueStarColor,      // 두 번째 색상
+            SpecialColors.GreenStarColor,     // 세 번째 색상
+            SpecialColors.WhiteStarColor      // 네 번째 색상
+        ]
+        
         for _ in 0..<starCount {
-            let starSize: CGFloat = CGFloat.random(in: 2...5)
+            let starSize: CGFloat = CGFloat.random(in: 1...6)
             let star = UIView(frame: CGRect(x: CGFloat.random(in: 0...view.bounds.width),
                                             y: CGFloat.random(in: 0...view.bounds.height),
                                             width: starSize,
                                             height: starSize))
-            star.backgroundColor = UIColor.white
+            // 랜덤 색상 선택
+            star.backgroundColor = colors.randomElement() // 배열에서 랜덤 색상 선택
             star.layer.cornerRadius = starSize / 2
             view.addSubview(star)
         }
     }
-    
+
     func addPlanets() {
         let planetCount = 5
         for i in 0..<planetCount {

@@ -1,12 +1,10 @@
 package com.spacewanderer.space_back.entity;
 
-import java.util.List;
 import java.util.Random;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

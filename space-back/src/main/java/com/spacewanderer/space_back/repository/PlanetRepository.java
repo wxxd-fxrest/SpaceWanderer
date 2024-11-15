@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.spacewanderer.space_back.entity.PlanetEntity;
 
 @Repository
-public interface PlanetRepository extends JpaRepository<PlanetEntity, Long> {
+public interface PlanetRepository extends JpaRepository<PlanetEntity, String> {
     
 }

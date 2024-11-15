@@ -17,6 +17,12 @@ struct StepRequest: Codable {
 
 // 서버 응답을 위한 StepResponse 구조체
 struct StepResponse: Codable {
-    var walkingDate: String
-    var daySteps: Double
+    var walkingDate: String?
+    var daySteps: Double?
+}
+
+// 만보 달성 정보를 서버에 보낼 때 사용할 AchievementRequest 구조체
+struct SuccessCountRequest: Codable {
+    var userUniqueId: String  // 사용자 고유 ID
+    var walkingDate: String  // 성취 날짜
 }

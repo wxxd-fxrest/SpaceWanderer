@@ -9,5 +9,4 @@ public class SpaceBackApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpaceBackApplication.class, args);
 	}
-
 }
