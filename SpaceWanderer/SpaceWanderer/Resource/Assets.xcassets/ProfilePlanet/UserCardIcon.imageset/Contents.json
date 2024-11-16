@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "User_Card_ID.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

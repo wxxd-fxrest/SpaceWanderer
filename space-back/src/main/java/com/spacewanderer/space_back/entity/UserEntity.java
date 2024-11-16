@@ -39,18 +39,19 @@ public class UserEntity {
 
     private String loginType;
 
-    private int dayGoalCount;
+    private long dayGoalCount;
 
     @Column(name = "destination_planet")
     private String destinationPlanet;
 
-    public UserEntity(String userUniqueId, String userIdentifier, String email, String refreshToken, String loginType, String destinationPlanet) {
+    public UserEntity(String userUniqueId, String userIdentifier, String email, String refreshToken, String loginType, String destinationPlanet, long dayGoalCount) {
         this.userUniqueId = userUniqueId;
         this.userIdentifier = userIdentifier;
         this.email = email;
         this.refreshToken = refreshToken;
         this.loginType = loginType;
         this.destinationPlanet = destinationPlanet;
+        this.dayGoalCount = dayGoalCount;
     }
 
     // 고유 ID 생성 메서드

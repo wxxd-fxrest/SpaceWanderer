@@ -78,6 +78,30 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
         super.viewDidAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         autoLoginIfNeeded() // 여기에서 호출
+        
+        printMemoryUsage()
+    }
+    func printMemoryUsage() {
+        let memoryUsage = report_memory()
+        print("Memory usage: \(memoryUsage) MB")
+    }
+
+    func report_memory() -> Double {
+        var taskInfo = mach_task_basic_info()
+        var count = mach_msg_type_number_t(MemoryLayout<mach_task_basic_info>.size) / 4
+
+        let kerr: kern_return_t = withUnsafeMutablePointer(to: &taskInfo) {
+            $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
+                task_info(mach_task_self_, task_flavor_t(MACH_TASK_BASIC_INFO), $0, &count)
+            }
+        }
+
+        if kerr == KERN_SUCCESS {
+            return Double(taskInfo.resident_size) / 1024.0 / 1024.0 // MB 단위
+        } else {
+            print("Error with task_info: \(kerr)")
+            return -1
+        }
     }
     
     // 자동 로그인 처리

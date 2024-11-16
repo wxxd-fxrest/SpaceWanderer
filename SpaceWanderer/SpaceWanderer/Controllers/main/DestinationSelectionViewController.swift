@@ -121,7 +121,6 @@ class DestinationSelectionViewController: UIViewController, UITableViewDelegate,
     }
     
     // UITableViewDelegate & UITableViewDataSource 구현
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return planets.count
     }
@@ -221,5 +220,3 @@ class PlanetCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-

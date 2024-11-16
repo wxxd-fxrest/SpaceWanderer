@@ -224,8 +224,8 @@ class KakaoLoginManager {
             "refreshToken": refreshToken,
             "loginType": loginType,
             "inhabitedPlanet": "천행성",
+            "destinationPlanet": "지구",
             "dayGoalCount": 0,
-            "destinationPlanet": "지구"
         ]
         
         do {

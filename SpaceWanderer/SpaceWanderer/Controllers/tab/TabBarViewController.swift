@@ -7,71 +7,33 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController {
+class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     var userUniqueId: String?
     var accessToken: String?
     var userIdentifier: String?
-    
-    class CustomHeightTabBar: UITabBar {
-      override func sizeThatFits(_ size: CGSize) -> CGSize {
-        var sizeThatFits = super.sizeThatFits(size)
-
-        guard let window = UIApplication.shared.connectedScenes
-                .compactMap({$0 as? UIWindowScene})
-                .first?.windows
-                .filter( { $0.isKeyWindow } ).first
-        else { return sizeThatFits }
-
-        let tabBarHeight: CGFloat = 36
-        sizeThatFits.height = tabBarHeight + window.safeAreaInsets.bottom
-
-        return sizeThatFits
-      }
-    }
 
     init(userUniqueId: String?, userIdentifier: String?, accessToken: String?) {
         self.userUniqueId = userUniqueId
         self.userIdentifier = userIdentifier
         self.accessToken = accessToken
         super.init(nibName: nil, bundle: nil)
-        object_setClass(self.tabBar, CustomHeightTabBar.self)
+        self.delegate = self
     }
 
     required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTabBar()
         setUpVCs()
-        print("TabBarViewController Props: ", userUniqueId ?? "nil", accessToken ?? "nil", userIdentifier ?? "nil")        
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        // 탭바 위치 및 크기 조정
-        let padding: CGFloat = 20 // 양쪽 여백
-        var tabBarFrame = tabBar.frame
-        tabBarFrame.origin.x = padding
-        tabBarFrame.origin.y = view.frame.height - tabBarFrame.height - 24
-        tabBarFrame.size.width = view.frame.width - (2 * padding)
-        tabBar.frame = tabBarFrame
-    }
-
     func setUpTabBar() {
         tabBar.unselectedItemTintColor = SpecialColors.TabUnSelectColor.withAlphaComponent(0.54)
         tabBar.tintColor = SpecialColors.TabSelectColor
-        tabBar.backgroundColor = SpecialColors.WhiteColor.withAlphaComponent(0.18)
-
-        tabBar.layer.cornerRadius = tabBar.frame.height * 0.60
-        tabBar.clipsToBounds = true
+        tabBar.backgroundColor = SpecialColors.WhiteColor.withAlphaComponent(0.0)
     }
 
     func setUpVCs() {
@@ -90,11 +52,16 @@ class TabBarViewController: UITabBarController {
         profileVC.accessToken = accessToken
         profileVC.userIdentifier = userIdentifier
 
-        viewControllers = [
-            createNavController(for: mainVC, title: NSLocalizedString("Main", comment: ""), image: UIImage(named: "home")!),
-            createNavController(for: calendarVC, title: NSLocalizedString("Calender", comment: ""), image: UIImage(named: "calendar")!),
-            createNavController(for: profileVC, title: NSLocalizedString("Profile", comment: ""), image: UIImage(named: "profile")!)
-        ]
+        let mainNavController = createNavController(for: mainVC, title: NSLocalizedString("Main", comment: ""), image: UIImage(named: "HouseIcon")!)
+        let calendarNavController = createNavController(for: calendarVC, title: NSLocalizedString("Calendar", comment: ""), image: UIImage(named: "CalendarIcon")!)
+        let profileNavController = createNavController(for: profileVC, title: NSLocalizedString("Profile", comment: ""), image: UIImage(named: "UserIcon")!)
+
+        // 여백 추가
+        mainNavController.tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -8, right: 0) // 위쪽 여백
+        calendarNavController.tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -8, right: 0) // 위쪽 여백
+        profileNavController.tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -8, right: 0) // 위쪽 여백
+
+        viewControllers = [mainNavController, calendarNavController, profileNavController]
     }
 
     private func createNavController(for rootViewController: UIViewController,
@@ -103,8 +70,10 @@ class TabBarViewController: UITabBarController {
         let navController = UINavigationController(rootViewController: rootViewController)
         navController.tabBarItem.title = title
         navController.tabBarItem.image = image
-        navController.setNavigationBarHidden(true, animated: false)
-
         return navController
+    }
+
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        UIView.transition(with: tabBarController.view, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
     }
 }

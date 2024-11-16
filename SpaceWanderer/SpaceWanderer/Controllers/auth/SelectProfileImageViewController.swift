@@ -103,7 +103,7 @@ class SelectProfileImageViewController: UIViewController {
         print("updateProfile : ", userIdentifier)
         
         // URL 요청 준비
-        guard let url = URL(string: "\(backendURL)/profile-update/\(userIdentifier)") else { return }
+        guard let url = URL(string: "\(backendURL)/profile-write/\(userIdentifier)") else { return }
         var request = URLRequest(url: url)
         print("updateProfile : ", url)
         request.httpMethod = "PUT"

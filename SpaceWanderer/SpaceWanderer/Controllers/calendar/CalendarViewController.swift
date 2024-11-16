@@ -12,10 +12,14 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
     var accessToken: String?
     var userIdentifier: String?
 
+    // MARK: - 캘린더 컬렉션
     private let calendar = Calendar.current
     private var dates = [Date]() // 달력에 표시할 날짜 목록
     private var stepData: [Date: Int] = [:] // 날짜별 걸음 수 데이터
     private var selectedDate = Date()
+    
+    //MARK: - 행성 컬렉션
+    private var planets = ["수성", "금성", "지구", "화성", "목성", "토성", "천왕성", "해왕성"] // 행성 목록
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -44,6 +48,14 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
         return label
     }()
     
+    private let planetLabel: UILabel = {
+        let label = UILabel()
+        label.font = .boldSystemFont(ofSize: 18)
+        label.textColor = .white
+        label.isUserInteractionEnabled = true
+        return label
+    }()
+    
     lazy var backendURL: String = {
         // Space.plist에서 BackendURL 가져오기
         if let path = Bundle.main.path(forResource: "SpaceInfo", ofType: "plist"),
@@ -65,7 +77,8 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
         setupDates()
         updateMonthLabel()
         updateTotalStepsLabel()
-                
+        updatePlanetLabel()
+
         let year = calendar.component(.year, from: selectedDate)
         let month = calendar.component(.month, from: selectedDate)
         
@@ -80,27 +93,67 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showMonthSelectionModal))
         monthLabel.addGestureRecognizer(tapGesture)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    // MARK: - planetCollectionView
+    private lazy var planetCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let itemsPerRow: CGFloat = 4 // 한 줄에 4개
+        let spacing: CGFloat = 10   // 셀 간 간격
+        let totalSpacing = spacing * (itemsPerRow - 1) + 32 // 양쪽 여백(16 + 16)
+        let itemWidth = (view.frame.width - totalSpacing) / itemsPerRow
+
+        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+        layout.minimumInteritemSpacing = spacing
+        layout.minimumLineSpacing = spacing
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+        layout.scrollDirection = .vertical // 세로 방향으로 설정
+
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(PlanetCell2.self, forCellWithReuseIdentifier: "PlanetCell2")
+        collectionView.backgroundColor = SpecialColors.MainViewBackGroundColor
+        collectionView.isScrollEnabled = false // 스크롤 비활성화
+        return collectionView
+    }()
 
     private func setupViews() {
         view.addSubview(monthLabel)
         view.addSubview(totalStepsLabel)
         view.addSubview(collectionView)
+        view.addSubview(planetCollectionView) // 행성 컬렉션 뷰 추가
+        view.addSubview(planetLabel) // 행성 라벨 추가
         
         monthLabel.translatesAutoresizingMaskIntoConstraints = false
         totalStepsLabel.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        planetCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        planetLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             monthLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             monthLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             
-            totalStepsLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            totalStepsLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 14),
             totalStepsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             collectionView.topAnchor.constraint(equalTo: monthLabel.bottomAnchor, constant: 10),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.heightAnchor.constraint(equalToConstant: 300), // collectionView 높이 설정
+            
+            planetLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 10),
+            planetLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+
+            planetCollectionView.topAnchor.constraint(equalTo: planetLabel.bottomAnchor, constant: 20),
+            planetCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            planetCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            planetCollectionView.heightAnchor.constraint(equalToConstant: 200) // 높이 직접 지정
         ])
     }
     
@@ -178,6 +231,10 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
         totalStepsLabel.text = "총 걸음 수: \(totalSteps)"
     }
     
+    private func updatePlanetLabel() {
+        planetLabel.text = "Planet"
+    }
+    
     @objc private func showMonthSelectionModal() {
         let monthSelectionVC = MonthSelectionViewController()
         monthSelectionVC.delegate = self
@@ -190,15 +247,31 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
     
     // MARK: - UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dates.count
+        if collectionView == self.planetCollectionView {
+            return planets.count // Ensure this returns the correct count
+        } else {
+            return dates.count
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CalendarDayCell", for: indexPath) as! CalendarDayCell
-        let date = dates[indexPath.item]
-        let steps = stepData[date] ?? 0
-        cell.configure(date: date, steps: steps)
-        return cell
+        if collectionView == self.collectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CalendarDayCell", for: indexPath) as! CalendarDayCell
+            let date = dates[indexPath.item]
+            let steps = stepData[date] ?? 0
+            cell.configure(date: date, steps: steps)
+            return cell
+        } else if collectionView == self.planetCollectionView {
+            // Check if the index is within bounds
+            guard indexPath.item < planets.count else {
+                fatalError("Index out of range: \(indexPath.item) for planets array.")
+            }
+            let planet = planets[indexPath.item]
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PlanetCell2", for: indexPath) as! PlanetCell2
+            cell.configure(planet: planet)
+            return cell
+        }
+        fatalError("Unexpected collection view")
     }
 
     // MARK: - UICollectionViewDelegateFlowLayout
@@ -209,14 +282,21 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
 
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedDate = dates[indexPath.item]
-        navigateToDetailPage(for: selectedDate)
+        if collectionView == self.collectionView {
+          let selectedDate = dates[indexPath.item]
+          navigateToDetailPage(for: selectedDate)
+        } else if collectionView == self.planetCollectionView {
+            let selectedPlanet = planets[indexPath.item]
+            print("Selected planet: \(selectedPlanet)")
+            // 선택된 행성을 처리하는 로직 추가
+        }
     }
     
     private func navigateToDetailPage(for date: Date) {
         let detailVC = StepDetailViewController()
         detailVC.date = date
         detailVC.steps = stepData[date] ?? 0
+        detailVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
@@ -239,5 +319,39 @@ extension CalendarViewController: UIViewControllerTransitioningDelegate, MonthSe
         
         updateMonthLabel()
         updateTotalStepsLabel()
+    }
+}
+
+// PlanetCell 클래스 추가
+class PlanetCell2: UICollectionViewCell {
+    private let planetLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textAlignment = .center
+        label.textColor = .white
+        return label
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.addSubview(planetLabel)
+        contentView.layer.cornerRadius = 8
+        contentView.layer.borderWidth = 1
+        contentView.layer.borderColor = UIColor.lightGray.cgColor
+        contentView.backgroundColor = SpecialColors.MainViewBackGroundColor
+        
+        planetLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            planetLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            planetLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(planet: String) {
+        planetLabel.text = planet
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spacewanderer.space_back.entity.UserEntity;
@@ -47,9 +48,9 @@ public class ProfileController {
         .orElse(ResponseEntity.notFound().build());
     }
 
-    // 프로필 업데이트
-    @PutMapping("/profile-update/{userIdentifier}")
-    public ResponseEntity<String> updateProfile(@PathVariable("userIdentifier") String userIdentifier, @RequestBody Map<String, Object> updates) {
+    // 회원 가입 시 프로필 업데이트
+    @PutMapping("/profile-write/{userIdentifier}")
+    public ResponseEntity<String> signInUpdateProfile(@PathVariable("userIdentifier") String userIdentifier, @RequestBody Map<String, Object> updates) {
         System.out.println("userIdentifier에 대한 프로필 업데이트 시작: " + userIdentifier);
 
         // 사용자 찾기
@@ -103,5 +104,34 @@ public class ProfileController {
         userRepository.save(userEntity);
         
         return ResponseEntity.ok().build(); // 성공적인 응답 반환
+    }
+
+    @PutMapping("/profile-update/{userIdentifier}")
+    public ResponseEntity<String> updateProfile(@PathVariable("userIdentifier") String userIdentifier, @RequestBody Map<String, Object> updates) {
+        System.out.println("userIdentifier에 대한 프로필 업데이트 시작: " + userIdentifier);
+
+        // 사용자 찾기
+        return userRepository.findByUserIdentifier(userIdentifier)
+            .map(user -> {
+                // 요청 데이터에 따라 프로필 업데이트
+                updates.forEach((key, value) -> {
+                    switch (key) {
+                        case "nickname":
+                            user.setNickname((String) value);
+                            break;
+                        case "inhabitedPlanet":
+                            user.setInhabitedPlanet((String) value);
+                            break;
+                        case "profileImage":
+                            user.setProfileImage((String) value);
+                            break;
+                    }
+                });
+
+                // 업데이트된 사용자 객체 저장
+                userRepository.save(user);
+                return ResponseEntity.ok("프로필이 업데이트되었습니다.");
+            })
+            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"));
     }
 }

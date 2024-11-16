@@ -101,7 +101,8 @@ class MainViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+
         // 유저 데이터 가져오기
         fetchUserData()
     }
@@ -114,6 +115,7 @@ class MainViewController: UIViewController {
     @objc private func navigateToDestinationSelection() {
         let destinationVC = DestinationSelectionViewController()
         destinationVC.userIdentifier = userIdentifier // userIdentifier 전달
+        destinationVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
         navigationController?.pushViewController(destinationVC, animated: true)
     }
     
