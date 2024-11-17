@@ -9,7 +9,6 @@ import UIKit
 
 class UpdateProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var userUniqueId: String?
-    var accessToken: String?
     var userIdentifier: String?
     
     lazy var backendURL: String = {
@@ -61,10 +60,6 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         }
         if let userIdentifier = userIdentifier {
             print("받은 userIdentifier: \(userIdentifier)")
-            // 추가 작업 수행
-        }
-        if let accessToken = accessToken {
-            print("받은 accessToken: \(accessToken)")
             // 추가 작업 수행
         }
         

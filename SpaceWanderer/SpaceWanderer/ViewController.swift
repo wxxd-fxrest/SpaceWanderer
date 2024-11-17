@@ -12,6 +12,7 @@ import KakaoSDKUser
 import AuthenticationServices
 
 class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAutoLoginManagerDelegate, KakaoLoginManagerDelegate {
+    
     let kakaoLoginManager = KakaoLoginManager() // KakaoLoginManager 인스턴스 생성
     let appleLoginManager = AppleLoginManager() // AppleLoginManager 인스턴스 생성
 
@@ -52,7 +53,7 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
          } else {
              print("저장된 apple 사용자 식별자가 없습니다.")
          }
-         
+        
         // UserDefaults에서 저장된 값 출력
          if let kakaoUserIdentifier = UserDefaults.standard.string(forKey: "kakaoUserIdentifier") {
              print("저장된 Kakao 사용자 식별자: \(kakaoUserIdentifier)")
@@ -112,9 +113,9 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
             
             if loginType == "LOGIN_KAKAO" {
                 // Kakao 자동 로그인 시도
-                kakaoLoginManager.attemptAutoLogin { accessToken, userUniqueId in
-                    if let accessToken = accessToken, let userUniqueId = userUniqueId {
-                        print("kakaoLoginManager Access Token: \(accessToken)")
+                kakaoLoginManager.attemptAutoLogin { userUniqueId in
+                    if let userUniqueId = userUniqueId {
+                        print("kakaoLoginManager Access Token")
                     } else {
                         print("자동 로그인 실패")
                     }
@@ -122,7 +123,7 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
             } else if loginType == "LOGIN_APPLE" {
                 // Apple 자동 로그인 처리
                 appleLoginManager.autoLogin { accessToken, userUniqueId in
-                    if let accessToken = accessToken, let userUniqueId = userUniqueId {
+                    if let userUniqueId = userUniqueId {
                         print("appleLoginManager Access Token: \(accessToken)")
                     } else {
                         print("자동 로그인 실패")
@@ -137,19 +138,34 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
     }
     
     // 자동로그인 후 Main View로 이동
-    func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String) {
-        print("이동 전", userUniqueId, userIdentifier, accessToken)
-        let mainVC = TabBarViewController(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+    func didCompleteKakaoLogin(userUniqueId: String, userIdentifier: String) {
+        print("이동 전", userUniqueId, userIdentifier)
+        let mainVC = TabBarViewController(userUniqueId: userUniqueId, userIdentifier: userIdentifier)
         navigationController?.pushViewController(mainVC, animated: true)
         print("이동 후")
     }
 
-    func didCompleteUpdate(userUniqueId: String, userIdentifier: String, accessToken: String) {
+    func didCompleteKakaoUpdate(userUniqueId: String, userIdentifier: String) {
         print("이동 전")
         let updateProfileVC = UpdateProfileViewController()
         updateProfileVC.userUniqueId = userUniqueId // userUniqueId 전달
         updateProfileVC.userIdentifier = userIdentifier // userIdentifier 전달
-        updateProfileVC.accessToken = accessToken // accessToken 전달
+        navigationController?.pushViewController(updateProfileVC, animated: true)
+        print("이동 후")
+    }
+    
+    func didCompleteAppleLogin(userUniqueId: String, userIdentifier: String, accessToken: String?) {
+        print("이동 전", userUniqueId, userIdentifier)
+        let mainVC = TabBarViewController(userUniqueId: userUniqueId, userIdentifier: userIdentifier)
+        navigationController?.pushViewController(mainVC, animated: true)
+        print("이동 후")
+    }
+
+    func didCompleteAppleUpdate(userUniqueId: String, userIdentifier: String, accessToken: String?) {
+        print("이동 전")
+        let updateProfileVC = UpdateProfileViewController()
+        updateProfileVC.userUniqueId = userUniqueId // userUniqueId 전달
+        updateProfileVC.userIdentifier = userIdentifier // userIdentifier 전달
         navigationController?.pushViewController(updateProfileVC, animated: true)
         print("이동 후")
     }
@@ -236,8 +252,7 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
                     print("카카오톡 로그인 오류: \(error)")
                 } else if let oauthToken = oauthToken {
                     print("카카오톡 로그인 성공")
-                    self.requestAdditionalAgreement()
-                    print("Access Token: \(oauthToken.accessToken)")
+//                    self.requestAdditionalAgreement()
                     print("Refresh Token: \(oauthToken.refreshToken)")
                     print("Expires In: \(oauthToken.expiresIn) 초")
                     print("Refresh Token Expires In: \(oauthToken.refreshTokenExpiresIn) 초")
@@ -256,9 +271,9 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
                                 let refreshToken = oauthToken.refreshToken
                                 let loginType = "kakao"
                                 let userUniqueId = "\(userId)" // 이 부분을 실제로 사용할 userUniqueId로 수정
-                                let accessToken = oauthToken.accessToken // accessToken도 oauthToken에서 가져옴
+//                                let accessToken = oauthToken.accessToken // accessToken도 oauthToken에서 가져옴
                                 
-                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType, accessToken: accessToken)
+                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType)
                             }
                         }
                     }
@@ -270,8 +285,8 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
                     print("카카오 계정 로그인 오류: \(error)")
                 } else if let oauthToken = oauthToken {
                     print("카카오 계정 로그인 성공")
-                    self.requestAdditionalAgreement()
-                    print("Access Token: \(oauthToken.accessToken)")
+//                    self.requestAdditionalAgreement()
+//                    print("Access Token: \(oauthToken.accessToken)")
                     print("Refresh Token: \(oauthToken.refreshToken)")
                     print("Expires In: \(oauthToken.expiresIn) 초")
                     print("Refresh Token Expires In: \(oauthToken.refreshTokenExpiresIn) 초")
@@ -290,9 +305,9 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
                                 let refreshToken = oauthToken.refreshToken
                                 let loginType = "kakao"
                                 
-                                let accessToken = oauthToken.accessToken // accessToken도 oauthToken에서 가져옴
+//                                let accessToken = oauthToken.accessToken // accessToken도 oauthToken에서 가져옴
                                 
-                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType, accessToken: accessToken)
+                                self.kakaoLoginManager.sendUserInfoToBackend(userIdentifier: "\(userId)", email: email, refreshToken: refreshToken, loginType: loginType)
                             }
                         }
                     }
@@ -356,15 +371,15 @@ class ViewController: UIViewController,  KakaoAutoLoginManagerDelegate, AppleAut
 //        }
 //    }
 
-    private func requestAdditionalAgreement() {
-        UserApi.shared.accessTokenInfo { (accessTokenInfo, error) in
-            if let error = error {
-                print("Access Token 오류: \(error)")
-            } else if let accessTokenInfo = accessTokenInfo {
-                print("Access Token 정보: \(accessTokenInfo)")
-            }
-        }
-    }
+//    private func requestAdditionalAgreement() {
+//        UserApi.shared.accessTokenInfo { (accessTokenInfo, error) in
+//            if let error = error {
+//                print("Access Token 오류: \(error)")
+//            } else if let accessTokenInfo = accessTokenInfo {
+//                print("Access Token 정보: \(accessTokenInfo)")
+//            }
+//        }
+//    }
     
     // 최초 로그인 후 main 화면으로 뒤로가기
     func didCompleteAutoLogin() {

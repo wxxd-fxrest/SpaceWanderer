@@ -8,6 +8,8 @@
 import UIKit
 import Foundation
 import KakaoSDKUser
+import KakaoSDKAuth
+import KakaoSDKCommon
 
 protocol KakaoLoginManagerDelegate: AnyObject {
     func didRequestReLogin()
@@ -15,8 +17,8 @@ protocol KakaoLoginManagerDelegate: AnyObject {
 }
 
 protocol KakaoAutoLoginManagerDelegate: AnyObject {
-    func didCompleteUpdate(userUniqueId: String, userIdentifier: String, accessToken: String)
-    func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String)
+    func didCompleteKakaoUpdate(userUniqueId: String, userIdentifier: String)
+    func didCompleteKakaoLogin(userUniqueId: String, userIdentifier: String)
 }
 
 class KakaoLoginManager {
@@ -41,24 +43,56 @@ class KakaoLoginManager {
         print("Backend URL: \(backendURL)")
     }
     
-    func attemptAutoLogin(completion: @escaping (String?, String?) -> Void) {
+    func attemptAutoLogin(completion: @escaping (String?) -> Void) {
         print("자동 로그인 시도")
         
         // UserDefaults에서 userIdentifier 가져오기
         if let userIdentifier = UserDefaults.standard.string(forKey: "kakaoUserIdentifier") {
             print("자동 로그인 시도: ", userIdentifier)
-            fetchUserDataFromBackend(userIdentifier: userIdentifier) { accessToken, userUniqueId, kakaoUserId in
-                // 백엔드에서 사용자 데이터 가져오기 완료 후 클로저 호출
-                completion(accessToken, userUniqueId)
+            
+            // ✅ 유효한 토큰 검사
+            if AuthApi.hasToken() {
+                // 토큰이 존재하면 유효성 검사
+                UserApi.shared.accessTokenInfo { (_, error) in
+                    if let error = error {
+                        if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true {
+                            // 토큰이 유효하지 않거나 만료됨, 재로그인 필요
+                            print("토큰 만료, 재로그인 필요")
+                            DispatchQueue.main.async {
+                                self.showReLoginAlert() // 사용자에게 재로그인 요청
+                            }
+                            completion(nil)
+                        } else {
+                            // 기타 오류 처리
+                            print("기타 오류 발생: \(error.localizedDescription)")
+                            completion(nil)
+                        }
+                    } else {
+                        // 토큰 유효성 체크 성공, 자동 로그인 진행
+                        print("토큰 유효성 검사 성공")
+                        // 백엔드에서 사용자 데이터 가져오기
+                        self.fetchUserDataFromBackend(userIdentifier: userIdentifier) { userUniqueId, kakaoUserId in
+                            // 자동 로그인 성공 후 클로저 호출
+                            completion(userUniqueId)
+                        }
+                    }
+                }
+            } else {
+                // 토큰이 존재하지 않음, 재로그인 필요
+                print("토큰이 존재하지 않음, 재로그인 필요")
+                DispatchQueue.main.async {
+                    self.showReLoginAlert() // 사용자에게 재로그인 요청
+                }
+                completion(nil)
             }
         } else {
+            // UserDefaults에 userIdentifier가 없으면 로그인 필요
             print("kakaoUserIdentifier가 UserDefaults에 저장되어 있지 않습니다.")
-            // 실패 시 nil 반환
-            completion(nil, nil)
+            completion(nil)
         }
     }
     
-    private func fetchUserDataFromBackend(userIdentifier: String, completion: @escaping (String?, String?, String?) -> Void) {
+    private func fetchUserDataFromBackend(userIdentifier: String, completion: @escaping (String?, String?) -> Void) {
         guard let url = URL(string: "\(backendURL)/get-kakao-user/\(userIdentifier)?limit=10") else { return }
         var request = URLRequest(url: url)
 
@@ -102,94 +136,17 @@ class KakaoLoginManager {
                             // nickname이 존재할 경우
                             print("닉네임이 존재합니다: \(nickname)")
                             // Access Token을 가져오는 함수 호출
-                            self.getAccessToken(refreshToken: refreshToken, userIdentifier: userIdentifier, userUniqueId: userUniqueId) { accessToken in
-                                guard let accessToken = accessToken else {
-                                    print("Access Token을 가져오지 못했습니다.")
-                                    return
-                                }
-                                
-                                print("Access Token을 가져옴.")
-                                // 여기 MainVC로 이동하는 함수 추가
-                                DispatchQueue.main.async {
-                                    self.autoDelegate?.didCompleteLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
-                                }
+                            DispatchQueue.main.async {
+                                self.autoDelegate?.didCompleteKakaoLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier)
                             }
                         } else {
                             // nickname이 nil이거나 비어있을 경우
                             print("닉네임이 존재하지 않거나 비어있습니다.")
-                            self.getAccessToken(refreshToken: refreshToken, userIdentifier: userIdentifier, userUniqueId: userUniqueId) { accessToken in
-                                guard let accessToken = accessToken else {
-                                    print("Access Token을 가져오지 못했습니다.")
-                                    return
-                                }
-                                
-                                print("Access Token을 가져옴.")
-                                // 여기 UpdateVC로 이동하는 함수 추가
-                                DispatchQueue.main.async {
-                                    self.autoDelegate?.didCompleteUpdate(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
-                                }
+                            DispatchQueue.main.async {
+                                self.autoDelegate?.didCompleteKakaoUpdate(userUniqueId: userUniqueId, userIdentifier: userIdentifier)
                             }
                         }
                     }
-                }
-            } catch {
-                print("JSON 파싱 중 오류 발생: \(error)")
-            }
-        }
-        task.resume()
-    }
-    
-    func getAccessToken(refreshToken: String, userIdentifier: String, userUniqueId: String, completion: @escaping (String?) -> Void) {
-        print("Access Token 가져오기")
-        print("getAccessToken | userUniqueId: \(userUniqueId), refreshToken: \(refreshToken), userIdentifier: \(userIdentifier)")
-        guard let url = URL(string: "\(backendURL)/get-kakao-access-token") else { return }
-        var request = URLRequest(url: url)
-
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let parameters: [String: Any] = ["refreshToken": refreshToken]
-
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
-        } catch {
-            print("매개변수를 JSON으로 변환하는 중 오류 발생: \(error)")
-            return
-        }
-
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Access Token 가져오는 중 오류 발생: \(error)")
-                return
-            }
-
-            guard let response = response as? HTTPURLResponse else {
-                print("유효하지 않은 응답")
-                return
-            }
-
-            guard (200...299).contains(response.statusCode) else {
-                print("Server error: \(response.statusCode)")
-                if response.statusCode == 401 { // Unauthorized error
-                    DispatchQueue.main.async {
-                        self.showReLoginAlert() // 재로그인 알림 표시
-                    }
-                }
-                return
-            }
-
-            guard let data = data else {
-                print("서버에서 빈 데이터를 받았습니다.")
-                return
-            }
-
-            do {
-                if let tokenResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                   let accessToken = tokenResponse["access_token"] as? String {
-                    print("Access Token: \(accessToken)")
-                    completion(accessToken)
-                } else {
-                    completion(nil) // Access Token을 가져오는 데 실패한 경우
                 }
             } catch {
                 print("JSON 파싱 중 오류 발생: \(error)")
@@ -210,7 +167,7 @@ class KakaoLoginManager {
         }
     }
     
-    func sendUserInfoToBackend(userIdentifier: String, email: String, refreshToken: String, loginType: String, accessToken: String) {
+    func sendUserInfoToBackend(userIdentifier: String, email: String, refreshToken: String, loginType: String) {
         guard let url = URL(string: "\(backendURL)/kakao-login") else { return }
         var request = URLRequest(url: url)
         print("sendUserInfoToBackend: ", url)
@@ -292,12 +249,42 @@ class KakaoLoginManager {
                 print("로그아웃 오류: \(error)")
                 completion(false)
             } else {
-                print("로그아웃 성공")
-                // UserDefaults에서 kakaoUserIdentifier 삭제
-                UserDefaults.standard.removeObject(forKey: "kakaoUserIdentifier")
-                UserDefaults.standard.removeObject(forKey: "LoginType")
-                completion(true)
+                // 로그아웃이 정상적으로 완료된 후에 UserDefaults에서 데이터 삭제
+                DispatchQueue.main.async {
+                    // UserDefaults에서 kakaoUserIdentifier 삭제
+                    UserDefaults.standard.removeObject(forKey: "kakaoUserIdentifier")
+                    UserDefaults.standard.removeObject(forKey: "LoginType")
+                    
+                    print("로그아웃 성공")
+                    completion(true)
+                }
             }
         }
     }
+    
+    // 사용자 데이터 삭제를 위한 백엔드 요청
+    func deleteUserDataFromBackend(userIdentifier: String, completion: @escaping (Bool) -> Void) {
+        // 서버에서 사용자 데이터를 삭제하는 API 호출 (예시)
+        
+        guard let url = URL(string: "\(backendURL)/kakao-delete/\(userIdentifier)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("백엔드 사용자 데이터 삭제 실패: \(error)")
+                completion(false)
+                return
+            }
+            
+            // 서버에서 성공적으로 데이터를 삭제했을 때
+            if let data = data, let _ = String(data: data, encoding: .utf8) {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+        task.resume()
+    }
 }
+

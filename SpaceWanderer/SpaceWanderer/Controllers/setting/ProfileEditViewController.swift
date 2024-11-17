@@ -7,220 +7,222 @@
 
 import UIKit
 
-class ProfileEditViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileEditViewController: CustomNavigationController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var userUniqueId: String?
-    var accessToken: String?
     var userIdentifier: String?
     
+    var previousNickname: String? // 기존 닉네임
+    var previousProfileImage: String? // 기존 프로필 이미지
+    var selectedImageName: String? // 선택된 이미지
+    var previousOrigin: String? // 기존 행성
+    var selectedPlanet: String? // 선택된 행성
+    
+    var selectedImageIndex: Int? // 선택된 이미지 인덱스
+    private var imageButtons: [UIButton] = [] // 버튼 참조 배열
+    
     private let imageNames = ["spaceProfile1", "spaceProfile2"] // Assets에 있는 이미지 이름
-    private var selectedImageName: String?
-    private var previousNickname: String? // 추가된 변수
 
     lazy var backendURL: String = {
-        // Space.plist에서 BackendURL 가져오기
         if let path = Bundle.main.path(forResource: "SpaceInfo", ofType: "plist"),
            let spaceDict = NSDictionary(contentsOfFile: path) as? [String: Any],
            let backendURL = spaceDict["PROFILE_BASE_URL"] as? String {
-            print("PROFILE_BASE_URL", backendURL)
             return backendURL
         } else {
-            print("Backend URL을 가져올 수 없습니다. 기본값 사용.")
             return "http://localhost:1020" // 기본값 설정
         }
     }()
     
     let nicknameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Enter Nickname"
         textField.borderStyle = .roundedRect
+        textField.textColor = SpecialColors.WhiteColor
+        textField.tintColor = SpecialColors.WhiteColor
         return textField
     }()
+    
+    private let planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
 
-    let nicknameCheckButton: UIButton = {
+    let originButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("NEXT", for: .normal)
-        button.addTarget(self, action: #selector(nicknameCheckButtonTapped), for: .touchUpInside)
+        button.setTitle("출신 행성 선택", for: .normal)
+        button.addTarget(self, action: #selector(selectPlanetTapped), for: .touchUpInside)
         return button
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        
-        // userUniqueId와 accessToken, userIdentifier를 사용하여 필요한 작업 수행
-        if let uniqueId = userUniqueId {
-            print("받은 userUniqueId: \(uniqueId)")
-            // 추가 작업 수행
-        }
-        if let userIdentifier = userIdentifier {
-            print("받은 userIdentifier: \(userIdentifier)")
-            // 추가 작업 수행
-        }
-        if let accessToken = accessToken {
-            print("받은 accessToken: \(accessToken)")
-            // 추가 작업 수행
-        }
-        
+        view.backgroundColor = SpecialColors.MainViewBackGroundColor
         setupUI()
+        populatePreviousData() // 기존 데이터 초기화
+        
+        // placeholder를 previousNickname으로 설정
+        nicknameTextField.placeholder = previousNickname ?? "닉네임을 입력하세요"
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        // 인스턴스 메서드로 호출
+        setupNavigationBar(withTitle: "프로필 수정", backButtonImage: "LargeLeftIcon")
     }
     
     func setupUI() {
-        // TextField와 Button을 뷰에 추가
-        [nicknameTextField, nicknameCheckButton].forEach {
+        [nicknameTextField].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
         
-        // 이미지 버튼 생성
-        let imageButton1 = createImageButton(named: imageNames[0], tag: 0)
-        imageButton1.frame = CGRect(x: 50, y: 200, width: 100, height: 100)
-        view.addSubview(imageButton1)
+        // 프로필 이미지 버튼 생성
+        for (index, imageName) in imageNames.enumerated() {
+            let imageButton = createImageButton(named: imageName, tag: index)
+            imageButton.frame = CGRect(x: 50 + (150 * index), y: 200, width: 100, height: 100)
+            imageButtons.append(imageButton)
+            view.addSubview(imageButton)
+        }
         
-        let imageButton2 = createImageButton(named: imageNames[1], tag: 1)
-        imageButton2.frame = CGRect(x: 200, y: 200, width: 100, height: 100)
-        view.addSubview(imageButton2)
-        
-        // 확인 버튼 추가
         let confirmButton = UIButton(type: .system)
         confirmButton.setTitle("확인", for: .normal)
-        confirmButton.frame = CGRect(x: 125, y: 350, width: 100, height: 50)
+        confirmButton.frame = CGRect(x: 125, y: 400, width: 100, height: 50)
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         view.addSubview(confirmButton)
         
-        // 버튼이 항상 가장 위에 오도록 설정
-        view.bringSubviewToFront(imageButton1)
-        view.bringSubviewToFront(imageButton2)
-        view.bringSubviewToFront(confirmButton)
+        // 출신 행성 버튼 추가
+       originButton.translatesAutoresizingMaskIntoConstraints = false
+       view.addSubview(originButton)
         
-        // Set up constraints
         NSLayoutConstraint.activate([
             nicknameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             nicknameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nicknameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                   
-            nicknameCheckButton.topAnchor.constraint(equalTo: nicknameTextField.bottomAnchor, constant: 20),
-            nicknameCheckButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            originButton.topAnchor.constraint(equalTo: nicknameTextField.bottomAnchor, constant: 20),
+            originButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
     
-    @objc func nicknameCheckButtonTapped() {
-        let nickname = nicknameTextField.text ?? ""
+    private func createImageButton(named imageName: String, tag: Int) -> UIButton {
+         let button = UIButton(type: .custom)
+         button.setImage(UIImage(named: imageName), for: .normal)
+         button.tag = tag
+         button.imageView?.contentMode = .scaleAspectFit
+         button.layer.borderWidth = 2.0
+         button.layer.borderColor = UIColor.clear.cgColor // 초기 테두리는 없음
+         button.layer.cornerRadius = 8.0 // 모서리 둥글게
+         button.clipsToBounds = true
+         button.addTarget(self, action: #selector(imageButtonTapped(_:)), for: .touchUpInside)
+         return button
+    }
+    
+    @objc private func imageButtonTapped(_ sender: UIButton) {
+        // 선택된 이미지 인덱스를 업데이트
+          selectedImageIndex = sender.tag
+          selectedImageName = imageNames[sender.tag]
 
-        // nickname 유효성 검사
-        let nicknamePattern = "^[a-zA-Z가-힣0-9]{3,12}$" // 영어, 한글, 숫자만 허용
-        let nicknamePredicate = NSPredicate(format: "SELF MATCHES %@", nicknamePattern)
+          // 모든 버튼 테두리 초기화 후, 선택된 버튼만 테두리 추가
+          updateImageBorders()
+    }
+
+    private func updateImageBorders() {
+        for (index, button) in imageButtons.enumerated() {
+            if index == selectedImageIndex {
+                button.layer.borderColor = UIColor.red.cgColor // 선택된 이미지에 빨간 테두리
+            } else {
+                button.layer.borderColor = UIColor.clear.cgColor // 다른 이미지는 테두리 제거
+            }
+        }
+    }
+    
+    func populatePreviousData() {
+        nicknameTextField.placeholder = previousNickname
+        selectedImageName = previousProfileImage
+        selectedPlanet = previousOrigin
+    }
         
-        guard nicknamePredicate.evaluate(with: nickname) else {
-            showAlert(title: "유효하지 않은 닉네임", message: "닉네임은 3자 이상, 12자 이하이며 특수문자를 포함할 수 없습니다.")
-            return
+    @objc func selectPlanetTapped() {
+        // 태양계 행성 리스트 모달 표시
+        let alertController = UIAlertController(title: "출신 행성 선택", message: "출신 행성을 선택하세요.", preferredStyle: .actionSheet)
+        
+        for planet in planets {
+            alertController.addAction(UIAlertAction(title: planet, style: .default, handler: { [weak self] _ in
+                self?.selectedPlanet = planet
+                self?.originButton.setTitle("선택된 행성: \(planet)", for: .normal)
+                print("선택된 출신 행성: \(planet)")
+            }))
         }
         
-        // 닉네임 중복 확인
-        checkNicknameUniqueness(nickname) { [weak self] isUnique in
-            DispatchQueue.main.async {
+        alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+
+    @objc private func confirmButtonTapped() {
+        var requestData: [String: Any] = [:]
+        
+        if let nickname = nicknameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !nickname.isEmpty,
+           nickname != previousNickname {
+            // 닉네임 형식 검증
+            let nicknamePattern = "^[a-zA-Z가-힣0-9]{3,12}$"
+            let nicknamePredicate = NSPredicate(format: "SELF MATCHES %@", nicknamePattern)
+            
+            guard nicknamePredicate.evaluate(with: nickname) else {
+                showAlert(title: "유효하지 않은 닉네임", message: "닉네임은 3자 이상, 12자 이하이며 특수문자를 포함할 수 없습니다.")
+                return
+            }
+            
+            // 중복 확인 로직 추가
+            checkNicknameUniqueness(nickname) { [weak self] isUnique in
                 guard let self = self else { return }
                 
-                if isUnique {
-                    self.showAlert(title: "사용 가능 닉네임", message: "사용이 가능한 닉네임입니다.")
-                } else {
-                    self.showAlert(title: "중복된 닉네임", message: "이미 존재하는 닉네임입니다. 다른 닉네임을 입력해주세요.") {
-                        self.nicknameTextField.text = ""
+                DispatchQueue.main.async {
+                    if isUnique {
+                        // 닉네임 추가
+                        requestData["nickname"] = nickname
+                        
+                        // 다른 필드 확인 및 데이터 추가
+                        self.appendOtherUpdateData(to: &requestData)
+                        
+                        // 요청 데이터 처리
+                        self.handleUpdate(requestData: requestData)
+                    } else {
+                        // 닉네임 중복 경고
+                        self.showAlert(title: "닉네임 중복", message: "이미 존재하는 닉네임입니다. 다른 닉네임을 입력해주세요.")
                     }
                 }
             }
+            return // 중복 확인 결과를 기다리므로 이후 작업 중단
+        }
+
+        // 다른 데이터 추가
+        appendOtherUpdateData(to: &requestData)
+
+        guard !requestData.isEmpty else {
+            // 변경 사항 없음 처리
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
+            }
+            return
+        }
+
+        // 업데이트 요청 처리
+        handleUpdate(requestData: requestData)
+    }
+
+    private func appendOtherUpdateData(to requestData: inout [String: Any]) {
+        if let selectedImageName = selectedImageName, selectedImageName != previousProfileImage {
+            requestData["profileImage"] = selectedImageName
+        }
+        if let selectedPlanet = selectedPlanet, selectedPlanet != previousOrigin {
+            requestData["inhabitedPlanet"] = selectedPlanet
         }
     }
 
-    // 서버에서 닉네임 중복 확인
-    private func checkNicknameUniqueness(_ nickname: String, completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "\(backendURL)/check-nickname/\(nickname)") else {
-            completion(false)
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error checking nickname uniqueness: \(error)")
-                completion(false)
-                return
-            }
-            
-            guard let data = data else {
-                completion(false)
-                return
-            }
-            
-            do {
-                let responseObject = try JSONDecoder().decode(Bool.self, from: data)
-                completion(responseObject)
-            } catch {
-                print("Error decoding response: \(error)")
-                completion(false)
-            }
-        }
-        task.resume()
-    }
-    
-    private func createImageButton(named imageName: String, tag: Int) -> UIButton {
-        let button = UIButton(type: .custom)
-        button.setImage(UIImage(named: imageName), for: .normal)
-        button.tag = tag
-        button.imageView?.contentMode = .scaleAspectFit
-        button.addTarget(self, action: #selector(imageButtonTapped(_:)), for: .touchUpInside)
-        
-        // 버튼이 상호작용할 수 있도록 설정
-        button.isUserInteractionEnabled = true
-        return button
+    private func handleUpdate(requestData: [String: Any]) {
+        updateProfile(requestData: requestData)
     }
 
-    @objc private func imageButtonTapped(_ sender: UIButton) {
-        print("Image button tapped with tag: \(sender.tag)")
-        selectedImageName = imageNames[sender.tag]
-        print("selectedImageName: ", selectedImageName)
-    }
-    
-    // 확인 버튼을 눌렀을 때 호출되는 메서드
-    @objc private func confirmButtonTapped() {
-        guard let nickname = nicknameTextField.text, !nickname.isEmpty else {
-            showAlert(title: "닉네임 입력", message: "닉네임을 입력해주세요.")
-            return
-        }
-        
-        // 닉네임 중복 확인을 아직 하지 않았다면 알림을 표시하고 중복 확인을 하도록 함
-        if nickname != previousNickname, !nickname.isEmpty {
-            showAlert(title: "닉네임 중복 확인", message: "먼저 닉네임 중복 확인을 해주세요.")
-            return
-        }
-        
-        // 이미지만 선택한 경우
-        if let selectedImageName = selectedImageName {
-            updateProfile(imageName: selectedImageName, nickname: nickname)
-        } else {
-            // 이미지가 변경되지 않은 경우 닉네임만 업데이트
-            updateProfile(nickname: nickname)
-        }
-    }
-
-    private func updateProfile(imageName: String? = nil, nickname: String) {
+    private func updateProfile(requestData: [String: Any]) {
         guard let userIdentifier = userIdentifier else { return }
         
-        var requestData: [String: Any] = ["nickname": nickname]
-        
-        // 이미지가 선택되었으면 함께 전달
-        if let imageName = imageName {
-            requestData["profileImage"] = imageName
-        }
-        
-        // URL 요청 준비
-        guard let url = URL(string: "\(backendURL)/profile-update/\(userIdentifier)") else { return }
+        guard !requestData.isEmpty, let url = URL(string: "\(backendURL)/profile-update/\(userIdentifier)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -235,43 +237,41 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
                     return
                 }
                 
-                guard let data = data else { return }
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("Profile updated: \(responseString)")
-                    DispatchQueue.main.async {
-                        // 뒤로가기 구현
-                        self.navigationController?.popViewController(animated: true)
-                    }
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
                 }
             }
             task.resume()
-            
         } catch {
-            print("Error serializing profile data: \(error)")
+            print("Error serializing data: \(error)")
         }
     }
     
-    // Alert helper method
-    private func showAlert(title: String, message: String) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "확인", style: .default, handler: nil)
-        alertController.addAction(action)
-        present(alertController, animated: true, completion: nil)
+    private func checkNicknameUniqueness(_ nickname: String, completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(backendURL)/check-nickname/\(nickname)") else {
+            completion(false)
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            if let _ = error {
+                completion(false)
+                return
+            }
+            
+            guard let data = data, let isUnique = try? JSONDecoder().decode(Bool.self, from: data) else {
+                completion(false)
+                return
+            }
+            
+            completion(isUnique)
+        }
+        task.resume()
     }
     
-    // Date를 "YYYY-MM-DD" 형식으로 변환하는 메서드
-    private func formatDateToString(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
-    }
-
-    // 경고창 표시 메서드
-    private func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
+    private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-            completion?()
-        })
-        present(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        present(alert, animated: true)
     }
 }

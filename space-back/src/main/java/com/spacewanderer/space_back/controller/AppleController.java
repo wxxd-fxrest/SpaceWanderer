@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,4 +99,15 @@ public class AppleController {
         
         return null;
     }
+
+    // function: 회원 탈퇴 API
+    @DeleteMapping("/apple-delete/{userIdentifier}")
+    public ResponseEntity<String> deleteUser(@PathVariable("userIdentifier") String userIdentifier) {
+        try {
+            appleService.deleteUserAccount(userIdentifier);  // 서비스 호출
+            return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 탈퇴에 실패했습니다: " + e.getMessage());
+        }
+    }    
 }

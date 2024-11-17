@@ -9,7 +9,6 @@ import UIKit
 
 class CalendarViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPopoverPresentationControllerDelegate {
     var userUniqueId: String?
-    var accessToken: String?
     var userIdentifier: String?
 
     // MARK: - 캘린더 컬렉션

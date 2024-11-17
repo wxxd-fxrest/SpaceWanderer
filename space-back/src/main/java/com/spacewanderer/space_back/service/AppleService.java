@@ -1,9 +1,15 @@
 package com.spacewanderer.space_back.service;
 
 import com.spacewanderer.space_back.entity.UserEntity;
+import com.spacewanderer.space_back.repository.GuestBookFavoriteRepository;
+import com.spacewanderer.space_back.repository.GuestBookRepository;
+import com.spacewanderer.space_back.repository.PlanetVisitsRepository;
+import com.spacewanderer.space_back.repository.StepRepository;
+import com.spacewanderer.space_back.repository.SuccessRepository;
 import com.spacewanderer.space_back.repository.UserRepository;
 import com.spacewanderer.space_back.utils.EncryptionUtil;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.nimbusds.jwt.JWT;
@@ -65,6 +71,11 @@ import org.slf4j.LoggerFactory;
 @RequiredArgsConstructor
 public class AppleService {    
     private final UserRepository userRepository; 
+    private final GuestBookFavoriteRepository guestBookFavoriteRepository;
+    private final GuestBookRepository guestBookRepository;
+    private final PlanetVisitsRepository planetVisitsRepository;
+    private final SuccessRepository successRepository;
+    private final StepRepository stepRepository;
     private final EncryptionUtil encryptionUtil;
 
     @Value("${APPLE.AUTH.TOKEN.URL}")
@@ -461,5 +472,41 @@ public class AppleService {
         } catch (Exception e) {
             throw new RuntimeException("액세스 토큰을 검색하지 못함", e);
         }
+    }
+
+    // function: 사용자 탈퇴 처리
+    @Transactional
+    public void deleteUserAccount(String userIdentifier) {
+        // 1. 주어진 userIdentifier로 사용자 정보 찾기
+        UserEntity user = userRepository.findByUserIdentifier(userIdentifier)
+                                        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        System.out.println("user : " + user);
+        String userUniqueId = user.getUserUniqueId();
+        System.out.println("userUniqueId : " + userUniqueId);
+        
+        // 2. 관련된 데이터 삭제
+        // 2.1 guest_book_favorite 테이블에서 사용자 관련 데이터 삭제
+        guestBookFavoriteRepository.deleteByUserUniqueId(user);
+        System.out.println("guestBookFavoriteRepository 삭제");
+        
+        // 2.2 planet_visits 테이블에서 사용자 관련 데이터 삭제
+        planetVisitsRepository.deleteByUserUniqueId(userUniqueId);
+        System.out.println("planetVisitsRepository 삭제");
+        
+        // 2.3 success_count 테이블에서 사용자 관련 데이터 삭제
+        successRepository.deleteByUserUniqueId(userUniqueId);
+        System.out.println("successRepository 삭제");
+        
+        // 2.4 guest_book 테이블에서 작성한 게시물 삭제
+        guestBookRepository.deleteByAuthor_UserUniqueId(userUniqueId);
+        System.out.println("guestBookRepository 삭제");
+        
+        // 2.5 day_walking 테이블에서 사용자 관련 데이터 삭제
+        stepRepository.deleteByUserUniqueId(userUniqueId);
+        System.out.println("stepRepository 삭제");
+    
+        // 3. 사용자 정보 삭제
+        userRepository.delete(user);
+        System.out.println("userRepository 삭제");
     }
 }

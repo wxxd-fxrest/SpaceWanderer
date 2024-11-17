@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spacewanderer.space_back.entity.UserEntity;
@@ -16,6 +15,7 @@ import com.spacewanderer.space_back.repository.UserRepository;
 import com.spacewanderer.space_back.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -106,6 +106,7 @@ public class ProfileController {
         return ResponseEntity.ok().build(); // 성공적인 응답 반환
     }
 
+    // 프로필 업데이트 
     @PutMapping("/profile-update/{userIdentifier}")
     public ResponseEntity<String> updateProfile(@PathVariable("userIdentifier") String userIdentifier, @RequestBody Map<String, Object> updates) {
         System.out.println("userIdentifier에 대한 프로필 업데이트 시작: " + userIdentifier);

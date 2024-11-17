@@ -10,7 +10,6 @@ import Photos
 
 class ProfileViewController: UIViewController {
     var userUniqueId: String?
-    var accessToken: String?
     var userIdentifier: String?
     
     let kakaoLoginManager = KakaoLoginManager() // KakaoLoginManager 인스턴스 생성
@@ -48,6 +47,15 @@ class ProfileViewController: UIViewController {
     // 로딩 인디케이터
     var loadingIndicator: UIActivityIndicatorView!
     
+    // label & profile image
+    var id: String?
+    var nickname: String?
+    var origin: String?
+    var birthday: String?
+    var profileImage: String?
+    var location: String?
+    var totalSteps: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = SpecialColors.MainViewBackGroundColor
@@ -57,7 +65,6 @@ class ProfileViewController: UIViewController {
         setupStackView()
         setupProfileCard()
         setupETCStack()
-        setupLogoutButton() // 로그아웃 버튼 설정
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -99,14 +106,22 @@ class ProfileViewController: UIViewController {
                     print("사용자 ID: \(userEntity.userIdentifier)")
                     print("userEntity:", userEntity)
                     // 목적지 업데이트
-                    self.nameLabel.text = userEntity.nickname ?? "정보 없음" // destinationPlanet 업데이트
-                    self.idLabel.text = "#\(userEntity.userUniqueId ?? "정보 없음")"
-                    self.originLabel.text = "출신 · \(userEntity.inhabitedPlanet ?? "정보 없음")"
-                    self.birthdayLabel.text = "생일 · \(userEntity.birthDay ?? "정보 없음")"
-                    self.profileImageView.image = UIImage(named: userEntity.profileImage ?? "LaunchScreenIcon")
-                    self.locationLabel.text = "\(userEntity.destinationPlanet ?? "정보 없음")"
-                    self.starLabel.text = "\(userEntity.dayGoalCount ?? 0)"
-                    self.totalStepsLabel.text = "\(userEntity.dayGoalCount ?? 0)"
+                    self.nickname = userEntity.nickname ?? "정보 없음" // destinationPlanet 업데이트
+                    self.id = "#\(userEntity.userUniqueId ?? "정보 없음")"
+                    self.origin = "출신 · \(userEntity.inhabitedPlanet ?? "정보 없음")"
+                    self.birthday = "생일 · \(userEntity.birthDay ?? "정보 없음")"
+                    self.profileImage = "\(userEntity.profileImage ?? "LaunchScreenIcon")"
+                    self.location = "\(userEntity.destinationPlanet ?? "정보 없음")"
+                    self.totalSteps = "\(userEntity.dayGoalCount ?? 0)"
+                    
+                    self.nameLabel.text = self.nickname
+                    self.idLabel.text = self.id
+                    self.originLabel.text = self.origin
+                    self.birthdayLabel.text = self.birthday
+                    self.profileImageView.image = UIImage(named: self.profileImage ?? "LaunchScreenIcon")
+                    self.locationLabel.text = self.location
+                    self.starLabel.text = self.totalSteps
+                    self.totalStepsLabel.text = self.totalSteps
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -340,28 +355,6 @@ class ProfileViewController: UIViewController {
         ])
     }
     
-    private func setupLogoutButton() {
-        // 로그아웃 버튼 생성 및 속성 설정
-        let logoutButton = UIButton(type: .system)
-        logoutButton.setTitle("로그아웃", for: .normal)
-        logoutButton.setTitleColor(.red, for: .normal)
-        logoutButton.layer.cornerRadius = 8
-        logoutButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
-        
-        // 버튼 레이아웃 설정
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(logoutButton)
-        
-        // 버튼 위치 제약 설정 (카카오 로그인 버튼 아래)
-        NSLayoutConstraint.activate([
-            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoutButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80),
-            logoutButton.widthAnchor.constraint(equalToConstant: 200),
-            logoutButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
     // downloadIcon 클릭 시 호출될 메서드
     @objc private func downloadIconTapped() {
         print("Download Icon Tapped")
@@ -382,6 +375,9 @@ class ProfileViewController: UIViewController {
             if let navigationController = self.navigationController {
                 let profileEditVC = ProfileEditViewController()  // 프로필 수정 화면을 나타내는 뷰 컨트롤러
                 profileEditVC.userIdentifier = self.userIdentifier
+                profileEditVC.previousNickname = self.nickname
+                profileEditVC.previousProfileImage = self.profileImage
+                profileEditVC.previousOrigin = self.origin
                 profileEditVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
                 navigationController.pushViewController(profileEditVC, animated: true)
             }
@@ -393,6 +389,7 @@ class ProfileViewController: UIViewController {
             // 설정 화면으로 이동
             if let navigationController = self.navigationController {
                 let settingsVC = SettingViewController()  // 설정 화면을 나타내는 뷰 컨트롤러
+                settingsVC.userIdentifier = self.userIdentifier
                 settingsVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
                 navigationController.pushViewController(settingsVC, animated: true)
             }
@@ -447,33 +444,6 @@ class ProfileViewController: UIViewController {
             print("이미지 저장 실패: \(error.localizedDescription)")
         } else {
             print("이미지가 앨범에 저장되었습니다.")
-        }
-    }
-    
-    @objc private func handleLogout() {
-        // UserDefaults에서 로그인 타입 확인
-        if let loginType = UserDefaults.standard.string(forKey: "LoginType") {
-            switch loginType {
-            case "LOGIN_APPLE":
-                appleLoginManager.logout()
-                print("애플 로그아웃 완료")
-                // 애플 로그아웃 후 UI 업데이트 등 필요한 추가 작업 수행
-                
-            case "LOGIN_KAKAO":
-                kakaoLoginManager.logout { success in
-                    if success {
-                        print("카카오 로그아웃 완료")
-                        // 카카오 로그아웃 후 UI 업데이트 등 필요한 추가 작업 수행
-                    } else {
-                        print("카카오 로그아웃 실패")
-                    }
-                }
-                
-            default:
-                print("알 수 없는 로그인 타입입니다.")
-            }
-        } else {
-            print("로그인 타입이 UserDefaults에 저장되어 있지 않습니다.")
         }
     }
 }

@@ -1,29 +1,29 @@
 package com.spacewanderer.space_back.service;
 
-import java.util.Map;
-
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import com.spacewanderer.space_back.entity.UserEntity;
+import com.spacewanderer.space_back.repository.GuestBookFavoriteRepository;
+import com.spacewanderer.space_back.repository.GuestBookRepository;
+import com.spacewanderer.space_back.repository.PlanetVisitsRepository;
+import com.spacewanderer.space_back.repository.StepRepository;
+import com.spacewanderer.space_back.repository.SuccessRepository;
 import com.spacewanderer.space_back.repository.UserRepository;
 import com.spacewanderer.space_back.utils.EncryptionUtil;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class KakaoService {
     private final UserRepository userRepository;
+    private final GuestBookFavoriteRepository guestBookFavoriteRepository;
+    private final GuestBookRepository guestBookRepository;
+    private final PlanetVisitsRepository planetVisitsRepository;
+    private final SuccessRepository successRepository;
+    private final StepRepository stepRepository;
     private final EncryptionUtil encryptionUtil;
 
     @Value("${KAKAO.TOKEN.URL}")
@@ -84,95 +84,38 @@ public class KakaoService {
         return userRepository.save(user); // 변경된 사용자 정보 저장
     }
 
-    // function: Access Token 가져오기 (리프레시 토큰 만료 시 예외 처리 추가)
-    public String getAccessToken(String refreshToken, String userIdentifier) {
-        System.out.println("복호화 전 refreshToken | " + refreshToken);
-        // 리프레시 토큰 복호화
-        String decryptedRefreshToken;
-        try {
-            decryptedRefreshToken = encryptionUtil.decrypt(refreshToken);
-        } catch (Exception e) {
-            throw new RuntimeException("리프레시 토큰 복호화에 실패했습니다.", e);
-        }
-        System.out.println("복호화 후 refreshToken | " + decryptedRefreshToken);
+    // function: 회원 탈퇴 
+    @Transactional
+    public void deleteKakaoAccount(String userIdentifier) {
+        UserEntity user = userRepository.findByUserIdentifier(userIdentifier)
+                                        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        String userUniqueId = user.getUserUniqueId(); // userUniqueId를 가져옵니다.
+        System.out.println("user : " + user);
+        System.out.println("userUniqueId : " + userUniqueId);
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "refresh_token");
-        params.add("client_id", kakaoAppKey);
-        params.add("refresh_token", decryptedRefreshToken);
-        params.add("redirect_uri", kakaoRedirectUrl);
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
-
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
-
-        try {
-            ResponseEntity<Map> response = restTemplate.exchange(kakaoTokenUrl, HttpMethod.POST, requestEntity, Map.class);
-            System.out.println("Response String | " + response);
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return (String) response.getBody().get("access_token");
-            } else {
-                throw new RuntimeException("액세스 토큰을 검색하지 못했습니다. " + response.getStatusCode());
-            }
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                // 리프레시 토큰이 만료된 경우, 새 리프레시 토큰을 받아와 갱신
-                String newRefreshToken = refreshAndSaveNewRefreshToken(userIdentifier, refreshToken);
-                return getAccessToken(newRefreshToken, userIdentifier);
-            } else {
-                throw new RuntimeException("액세스 토큰을 검색하지 못했습니다. " + e.getStatusCode());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("액세스 토큰을 검색하지 못했습니다: " + e.getMessage());
-        }
-    }
-
-    // function: 새 리프레시 토큰 갱신
-    public String refreshAndSaveNewRefreshToken(String userIdentifier, String currentRefreshToken) {
-        // 현재 리프레시 토큰을 복호화
-        String decryptedRefreshToken;
-        try {
-            decryptedRefreshToken = encryptionUtil.decrypt(currentRefreshToken);
-        } catch (Exception e) {
-            throw new RuntimeException("리프레시 토큰 복호화에 실패했습니다.", e);
-        }
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "refresh_token");
-        params.add("client_id", kakaoAppKey);
-        params.add("refresh_token", decryptedRefreshToken);
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
-
-        try {
-            ResponseEntity<Map> response = restTemplate.exchange(kakaoTokenUrl, HttpMethod.POST, requestEntity, Map.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                String newRefreshToken = (String) response.getBody().get("refresh_token");
-                
-                // 새로운 리프레시 토큰이 있다면 암호화하고 DB에 업데이트
-                if (newRefreshToken != null) {
-                    return updateRefreshToken(userIdentifier, newRefreshToken).getRefreshToken();
-                } else {
-                    throw new RuntimeException("새로운 리프레시 토큰을 받지 못했습니다.");
-                }
-            } else {
-                throw new RuntimeException("리프레시 토큰 갱신 요청 실패: " + response.getStatusCode());
-            }
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                throw new RuntimeException("리프레시 토큰이 만료되었습니다.");
-            } else {
-                throw new RuntimeException("리프레시 토큰 갱신 중 오류 발생: " + e.getStatusCode());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("리프레시 토큰 갱신 중 예기치 않은 오류 발생: " + e.getMessage());
-        }
-    }
+        // 2. 관련된 데이터 삭제
+        // 2.1 guest_book_favorite 테이블에서 사용자 관련 데이터 삭제
+        guestBookFavoriteRepository.deleteByUserUniqueId(user);
+        System.out.println("guestBookFavoriteRepository 삭제");
+        
+        // 2.2 planet_visits 테이블에서 사용자 관련 데이터 삭제
+        planetVisitsRepository.deleteByUserUniqueId(userUniqueId);
+        System.out.println("planetVisitsRepository 삭제");
+        
+        // 2.3 success_count 테이블에서 사용자 관련 데이터 삭제
+        successRepository.deleteByUserUniqueId(userUniqueId);
+        System.out.println("successRepository 삭제");
+        
+        // 2.4 guest_book 테이블에서 작성한 게시물 삭제
+        guestBookRepository.deleteByAuthor_UserUniqueId(userUniqueId);
+        System.out.println("guestBookRepository 삭제");
+        
+        // 2.5 day_walking 테이블에서 사용자 관련 데이터 삭제
+        stepRepository.deleteByUserUniqueId(userUniqueId);
+        System.out.println("stepRepository 삭제");
+        
+        // 3. 사용자 정보 삭제
+        userRepository.delete(user);
+        System.out.println("userRepository 삭제");
+    }    
 }

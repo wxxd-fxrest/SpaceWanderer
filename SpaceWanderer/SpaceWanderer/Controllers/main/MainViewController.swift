@@ -11,7 +11,6 @@ import UserNotifications
 
 class MainViewController: UIViewController {
     var userUniqueId: String?
-    var accessToken: String?
     var userIdentifier: String?
     
     // CMPedometer 인스턴스

@@ -21,7 +21,7 @@ struct PlanetUpdateRequest: Codable {
     let planetName: String
 }
 
-class DestinationSelectionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class DestinationSelectionViewController: CustomNavigationController, UITableViewDelegate, UITableViewDataSource {
     var userIdentifier: String?
     
     var tableView: UITableView!
@@ -65,6 +65,8 @@ class DestinationSelectionViewController: UIViewController, UITableViewDelegate,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        // 인스턴스 메서드로 호출
+        setupNavigationBar(withTitle: "목적지 선택", backButtonImage: "LargeLeftIcon")
     }
     
     // 테이블 뷰 설정

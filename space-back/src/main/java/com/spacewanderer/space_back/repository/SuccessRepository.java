@@ -12,4 +12,7 @@ public interface SuccessRepository extends JpaRepository<SuccessEntity, Long> {
         
     // 특정 사용자의 성공 기록 개수를 조회하기 위한 메서드
     long countByUserUniqueId(String userUniqueId);
+
+    // 회원 탈퇴 시 특정 사용자의 데이터를 삭제하기 위한 메서드
+    long deleteByUserUniqueId(String userUniqueId);
 }

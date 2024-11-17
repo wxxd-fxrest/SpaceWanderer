@@ -8,8 +8,8 @@
 import Foundation
 
 protocol AppleAutoLoginManagerDelegate: AnyObject {
-    func didCompleteUpdate(userUniqueId: String, userIdentifier: String, accessToken: String)
-    func didCompleteLogin(userUniqueId: String, userIdentifier: String, accessToken: String)
+    func didCompleteAppleUpdate(userUniqueId: String, userIdentifier: String, accessToken: String?)
+    func didCompleteAppleLogin(userUniqueId: String, userIdentifier: String, accessToken: String?)
 }
 
 class AppleLoginManager {
@@ -150,7 +150,7 @@ class AppleLoginManager {
                         print("닉네임이 존재합니다: \(nickname)")
                         // 여기 MainVC로 이동하는 함수 추가
                         DispatchQueue.main.async {
-                            self.autoDelegate?.didCompleteLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+                            self.autoDelegate?.didCompleteAppleLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
                             
                         }
                     } else {
@@ -158,7 +158,7 @@ class AppleLoginManager {
                         print("닉네임이 존재하지 않거나 비어있습니다.")
                         // 여기 UpdateVC로 이동하는 함수 추가
                         DispatchQueue.main.async {
-                            self.autoDelegate?.didCompleteUpdate(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
+                            self.autoDelegate?.didCompleteAppleUpdate(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
                         }
                     }
                         
@@ -181,7 +181,19 @@ class AppleLoginManager {
         userDefaults.removeObject(forKey: "appleUserIdentifier")
         userDefaults.removeObject(forKey: "LoginType")
         
-        // 필요 시 추가적인 정리 작업 수행
+        // 삭제된 값 확인 로그
+        if userDefaults.object(forKey: "appleUserIdentifier") == nil {
+            print("애플 사용자 식별자 삭제 완료")
+        } else {
+            print("애플 사용자 식별자 삭제 실패")
+        }
+
+        if userDefaults.object(forKey: "LoginType") == nil {
+            print("로그인 타입 삭제 완료")
+        } else {
+            print("로그인 타입 삭제 실패")
+        }
+        
         print("애플 로그아웃 성공")
     }
 }

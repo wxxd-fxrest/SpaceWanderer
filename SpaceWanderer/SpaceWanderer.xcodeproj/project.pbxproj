@@ -42,6 +42,8 @@
 		0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC20D2CDA1DCE0009B553 /* TabBarViewController.swift */; };
 		0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC2102CDA41380009B553 /* UIColor.swift */; };
 		0B9265E32CC7E4FE002270AF /* SpaceInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */; };
+		0BA08E642CE9DF0D00D2633F /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA08E632CE9DF0D00D2633F /* CustomNavigationController.swift */; };
+		0BA08E662CE9E05800D2633F /* StepDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA08E652CE9E05800D2633F /* StepDetailViewController.swift */; };
 		0BB0AFCF2CE3461B008272B2 /* StepModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFCE2CE3461B008272B2 /* StepModel.swift */; };
 		0BB0AFD12CE348F6008272B2 /* DestinationSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */; };
 		0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */; };
@@ -88,6 +90,8 @@
 		0B8BC20D2CDA1DCE0009B553 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		0B8BC2102CDA41380009B553 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		0B9265E22CC7E4FE002270AF /* SpaceInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SpaceInfo.plist; sourceTree = "<group>"; };
+		0BA08E632CE9DF0D00D2633F /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
+		0BA08E652CE9E05800D2633F /* StepDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailViewController.swift; sourceTree = "<group>"; };
 		0BB0AFCE2CE3461B008272B2 /* StepModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepModel.swift; sourceTree = "<group>"; };
 		0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSelectionViewController.swift; sourceTree = "<group>"; };
 		0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -238,6 +242,7 @@
 				0B8BC1EA2CDA1A650009B553 /* ActivityIndicatorHelper.swift */,
 				0B8BC1ED2CDA1A650009B553 /* KeyboardTap.swift */,
 				0B8BC1F02CDA1A650009B553 /* UIFactory+.swift */,
+				0BA08E632CE9DF0D00D2633F /* CustomNavigationController.swift */,
 			);
 			path = UIFactorys;
 			sourceTree = "<group>";
@@ -284,6 +289,7 @@
 				0B44F9DC2CE75D9300435FFC /* BottomSheetPresentationController.swift */,
 				0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */,
 				0B44F9D82CE75D4C00435FFC /* CalendarDayCell.swift */,
+				0BA08E652CE9E05800D2633F /* StepDetailViewController.swift */,
 			);
 			path = calendar;
 			sourceTree = "<group>";
@@ -402,6 +408,7 @@
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
 				0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */,
 				0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */,
+				0BA08E642CE9DF0D00D2633F /* CustomNavigationController.swift in Sources */,
 				0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */,
 				0BB0AFD52CE3A235008272B2 /* UserManager.swift in Sources */,
 				0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */,
@@ -409,6 +416,7 @@
 				0B44F9DD2CE75D9300435FFC /* BottomSheetPresentationController.swift in Sources */,
 				0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */,
 				0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */,
+				0BA08E662CE9E05800D2633F /* StepDetailViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
 				0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */,
 				0B44F9DB2CE75D6A00435FFC /* MonthSelectionViewController.swift in Sources */,

@@ -9,13 +9,11 @@ import UIKit
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     var userUniqueId: String?
-    var accessToken: String?
     var userIdentifier: String?
 
-    init(userUniqueId: String?, userIdentifier: String?, accessToken: String?) {
+    init(userUniqueId: String?, userIdentifier: String?) {
         self.userUniqueId = userUniqueId
         self.userIdentifier = userIdentifier
-        self.accessToken = accessToken
         super.init(nibName: nil, bundle: nil)
         self.delegate = self
     }
@@ -39,17 +37,14 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     func setUpVCs() {
         let mainVC = MainViewController()
         mainVC.userUniqueId = userUniqueId
-        mainVC.accessToken = accessToken
         mainVC.userIdentifier = userIdentifier
         
         let calendarVC = CalendarViewController()
         calendarVC.userUniqueId = userUniqueId
-        calendarVC.accessToken = accessToken
         calendarVC.userIdentifier = userIdentifier
         
         let profileVC = ProfileViewController()
         profileVC.userUniqueId = userUniqueId
-        profileVC.accessToken = accessToken
         profileVC.userIdentifier = userIdentifier
 
         let mainNavController = createNavController(for: mainVC, title: NSLocalizedString("Main", comment: ""), image: UIImage(named: "HouseIcon")!)
