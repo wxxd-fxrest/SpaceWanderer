@@ -10,34 +10,74 @@ import CoreData
 import KakaoSDKCommon
 import KakaoSDKAuth
 import UserNotifications
+import CoreMotion
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
-    // 데이터 저장 변수 추가
-    var userUniqueId: String?
-    var walkingDate: String?
-    var daySteps: Int?
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Space.plist에서 Kakao app key 가져오기
+        
+        // 기존 Kakao 초기화 코드
         if let path = Bundle.main.path(forResource: "SpaceInfo", ofType: "plist"),
            let spaceDict = NSDictionary(contentsOfFile: path) as? [String: Any],
-           let kakaoAppKey = spaceDict["KAKAO_APP_KEY"] as? String { // 여기에 맞는 키를 사용해야 함
+           let kakaoAppKey = spaceDict["KAKAO_APP_KEY"] as? String {
             KakaoSDK.initSDK(appKey: kakaoAppKey)
         } else {
             print("Kakao app key를 가져올 수 없습니다.")
         }
         
+        // UNUserNotificationCenter delegate 설정
+        UNUserNotificationCenter.current().delegate = self
+
+        registerForRemoteNotifications()
         return true
     }
     
+    // kakao
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         if (AuthApi.isKakaoTalkLoginUrl(url)) {
             return AuthController.handleOpenUrl(url: url)
         }
 
         return false
+    }
+    
+    // notification 권한 요청
+    func registerForRemoteNotifications() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            if granted {
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            } else {
+                print("푸시 알림 권한이 허용되지 않았습니다: \(String(describing: error?.localizedDescription))")
+            }
+        }
+    }
+    
+    // notification 권한 없음
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("푸시 알림 등록 실패: \(error.localizedDescription)")
+    }
+
+    // 푸시 알림이 도착했을 때 처리
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        // 알림을 눌렀을 때의 처리
+        let userInfo = response.notification.request.content.userInfo
+        // 필요한 데이터 처리
+        print("User Info: \(userInfo)")
+        
+        completionHandler()
+    }
+
+    // 포그라운드에서 알림을 수신했을 때 처리
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // 포그라운드에서 알림을 표시할지 여부 설정
+        completionHandler([.alert, .badge, .sound])
     }
 
     // MARK: UISceneSession Lifecycle
@@ -100,4 +140,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
 }
-

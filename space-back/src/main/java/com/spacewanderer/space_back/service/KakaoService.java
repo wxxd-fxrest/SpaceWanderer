@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import com.spacewanderer.space_back.entity.UserEntity;
 import com.spacewanderer.space_back.repository.GuestBookFavoriteRepository;
 import com.spacewanderer.space_back.repository.GuestBookRepository;
-import com.spacewanderer.space_back.repository.PlanetVisitsRepository;
 import com.spacewanderer.space_back.repository.StepRepository;
 import com.spacewanderer.space_back.repository.SuccessRepository;
 import com.spacewanderer.space_back.repository.UserRepository;
@@ -21,18 +20,17 @@ public class KakaoService {
     private final UserRepository userRepository;
     private final GuestBookFavoriteRepository guestBookFavoriteRepository;
     private final GuestBookRepository guestBookRepository;
-    private final PlanetVisitsRepository planetVisitsRepository;
     private final SuccessRepository successRepository;
     private final StepRepository stepRepository;
     private final EncryptionUtil encryptionUtil;
 
-    @Value("${KAKAO.TOKEN.URL}")
+    @Value("${kakao.token.url}")
     private String kakaoTokenUrl;
 
-    @Value("${KAKAO.REDIRECT.URL}")
+    @Value("${kakao.redirect.url}")
     private String kakaoRedirectUrl;
 
-    @Value("${KAKAO.REST.API.KEY}")
+    @Value("${kakao.rest.api.key}")
     private String kakaoAppKey;
 
     // function: 사용자 정보 DB 저장
@@ -98,19 +96,15 @@ public class KakaoService {
         guestBookFavoriteRepository.deleteByUserUniqueId(user);
         System.out.println("guestBookFavoriteRepository 삭제");
         
-        // 2.2 planet_visits 테이블에서 사용자 관련 데이터 삭제
-        planetVisitsRepository.deleteByUserUniqueId(userUniqueId);
-        System.out.println("planetVisitsRepository 삭제");
-        
-        // 2.3 success_count 테이블에서 사용자 관련 데이터 삭제
+        // 2.2 success_count 테이블에서 사용자 관련 데이터 삭제
         successRepository.deleteByUserUniqueId(userUniqueId);
         System.out.println("successRepository 삭제");
         
-        // 2.4 guest_book 테이블에서 작성한 게시물 삭제
+        // 2.3 guest_book 테이블에서 작성한 게시물 삭제
         guestBookRepository.deleteByAuthor_UserUniqueId(userUniqueId);
         System.out.println("guestBookRepository 삭제");
         
-        // 2.5 day_walking 테이블에서 사용자 관련 데이터 삭제
+        // 2.4 day_walking 테이블에서 사용자 관련 데이터 삭제
         stepRepository.deleteByUserUniqueId(userUniqueId);
         System.out.println("stepRepository 삭제");
         

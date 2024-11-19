@@ -34,6 +34,7 @@ public class AppleController {
     public String appleLogin(@RequestBody Map<String, String> body) throws ParseException {
         String idToken = body.get("idToken");
         String appleResponse = body.get("appleResponse"); 
+        String deviceToken = body.get("deviceToken");
 
         if(idToken == null || idToken.isEmpty()) {
             throw new IllegalArgumentException("idToken이 null이거나 비어있습니다.");
@@ -44,7 +45,7 @@ public class AppleController {
         }
 
         // function: Apple Login 요청 처리 
-        Map<String, String> loginResult = appleService.handleAppleLogin(idToken, appleResponse);
+        Map<String, String> loginResult = appleService.handleAppleLogin(idToken, appleResponse, deviceToken);
 
         String userIdentifier = loginResult.get("userIdentifier");
         String userUniqueId = loginResult.get("userUniqueId");

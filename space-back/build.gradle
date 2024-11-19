@@ -65,6 +65,13 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
     implementation 'org.json:json:20210307' 
+
+   implementation 'com.eatthepath:pushy-apns:0.16.0' // Pushy APNs 라이브러리
+    implementation 'io.netty:netty-all:4.1.96.Final' // Netty 라이브러리
+
+        implementation 'com.auth0:java-jwt:3.18.2' // 최신 버전 확인 후 사용
+
+
 }
 
 tasks.named('test') {

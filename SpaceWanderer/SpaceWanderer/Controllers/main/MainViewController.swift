@@ -35,6 +35,7 @@ class MainViewController: UIViewController {
     // 목적지
     var selectDestinationButton: UIButton!
     var destinationLabel: UILabel!
+    var destination: String?
 
     // 로딩 인디케이터
     var loadingIndicator: UIActivityIndicatorView!
@@ -62,9 +63,6 @@ class MainViewController: UIViewController {
         // 로딩 인디케이터 초기화
         setupLoadingIndicator()
         
-        // 사용자 고유 ID 및 마지막 기록된 날짜 가져오기
-        fetchLastRecordedDate()
-        
         // 자정부터 현재 시점까지의 걸음 수 가져오기
         fetchTotalStepsForToday()
         
@@ -75,27 +73,8 @@ class MainViewController: UIViewController {
         setupCircularProgressBar()
         addMarsImage()
         
-        // stepLabel 초기화 및 설정
-        stepLabel = UILabel()
-        stepLabel.textAlignment = .center
-        stepLabel.frame = CGRect(x: (view.frame.width - 200) / 2, y: (view.frame.height - 80) / 2, width: 200, height: 50) // 가로 200, 세로 50
-        stepLabel.textColor = .blue // 텍스트 색상 설정
-        view.addSubview(stepLabel)
-        
-        // selectDestinationButton 초기화 및 설정
-        selectDestinationButton = UIButton()
-        selectDestinationButton.setTitle("목적지 선택", for: .normal)
-        selectDestinationButton.frame = CGRect(x: (view.frame.width - 120) / 2, y: 40, width: 200, height: 50) // 가로 200, 세로 50
-        selectDestinationButton.tintColor = .blue // 텍스트 색상 설정
-        selectDestinationButton.addTarget(self, action: #selector(navigateToDestinationSelection), for: .touchUpInside)
-        view.addSubview(selectDestinationButton)
-        
-        // destinationLabel 초기화 및 설정
-        destinationLabel = UILabel()
-        destinationLabel.textAlignment = .center
-        destinationLabel.frame = CGRect(x: (view.frame.width - 300) / 2, y: 40, width: 200, height: 50) // 가로 200, 세로 50
-        destinationLabel.textColor = .blue // 텍스트 색상 설정
-        view.addSubview(destinationLabel)
+        // 목적지 선택 버튼 및 라벨 초기화
+        setDestinationUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -150,7 +129,11 @@ class MainViewController: UIViewController {
                     print("사용자 ID: \(userEntity.userIdentifier)")
                     print("userEntity:", userEntity)
                     // 목적지 업데이트
-                    self.destinationLabel.text = userEntity.destinationPlanet ?? "정보 없음" // destinationPlanet 업데이트
+                    self.destination = userEntity.destinationPlanet ?? "정보 없음"
+                    self.destinationLabel.text = self.destination
+                    
+                    // 사용자 고유 ID 및 마지막 기록된 날짜 가져오기
+                    self.fetchLastRecordedDate()
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -256,12 +239,13 @@ class MainViewController: UIViewController {
     // 걸음 수 데이터를 서버에 전송 (새로 기록)
     func sendStepsToServer(steps: Double, date: String) {
         guard let userUniqueId = userUniqueId else { return }
+        guard let destination = destination else { return } // UILabel의 text를 가져옴
 
         let url = URL(string: "\(backendURL)/day-walking")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST" // 새로운 데이터 전송
 
-        let stepRequest = StepRequest(userUniqueId: userUniqueId, walkingDate: date, daySteps: steps, dayDestination: "천왕성")
+        let stepRequest = StepRequest(userUniqueId: userUniqueId, walkingDate: date, daySteps: steps, dayDestination: destination)
         print("stepRequest: ", stepRequest)
         do {
             let encoder = JSONEncoder()
@@ -302,6 +286,7 @@ class MainViewController: UIViewController {
             self.totalStepsToday = data.numberOfSteps.doubleValue
             DispatchQueue.main.async {
                 print("오늘 걸음 수(자정부터): \(self.totalStepsToday)")
+                self.checkForStepGoal()
                 self.updateCircularProgressBar()
             }
         }
@@ -323,11 +308,78 @@ class MainViewController: UIViewController {
             self.realTimeSteps = data.numberOfSteps.doubleValue
             DispatchQueue.main.async {
                 print("실시간 걸음 수: \(self.realTimeSteps)")
+                self.checkForStepGoal()
                 self.updateCircularProgressBar()
             }
         }
     }
+    
+    // 누적 걸음 수 + 실시간 걸음 수 합산 후 푸시 알림 전송
+    func checkForStepGoal() {
+        let totalSteps = self.totalStepsToday + self.realTimeSteps
+        print("totalSteps: ", totalSteps)
+        
+        // 오늘 날짜를 UserDefaults에 저장된 날짜와 비교
+        let lastNotificationDate = UserDefaults.standard.object(forKey: "lastNotificationDate") as? Date ?? Date.distantPast
+        let calendar = Calendar.current
+        let currentDate = Date()
 
+        // 신규 유저 또는 첫 실행일 때, 초기값 설정
+        if UserDefaults.standard.object(forKey: "notificationSentFor8k") == nil {
+            UserDefaults.standard.set(false, forKey: "notificationSentFor8k")
+        }
+        if UserDefaults.standard.object(forKey: "notificationSentFor10k") == nil {
+            UserDefaults.standard.set(false, forKey: "notificationSentFor10k")
+        }
+
+        // 날짜가 다르면 알림 상태를 리셋
+        if !calendar.isDate(lastNotificationDate, inSameDayAs: currentDate) {
+            UserDefaults.standard.set(false, forKey: "notificationSentFor8k")
+            UserDefaults.standard.set(false, forKey: "notificationSentFor10k")
+            UserDefaults.standard.set(currentDate, forKey: "lastNotificationDate")
+        }
+
+        // 8,000보 이상이면 응원 알림
+        if totalSteps >= 166, !UserDefaults.standard.bool(forKey: "notificationSentFor8k") {
+            // 팔천보 응원 푸시 알림 보내기
+            schedulePushNotification(message: "대단해요! 이제 조금만 더 가면 목표 달성입니다!")
+            
+            // 알림을 보냈다고 UserDefaults에 기록
+            UserDefaults.standard.set(true, forKey: "notificationSentFor8k")
+        }
+        
+        // 12,000보 이상이면 목표 달성 알림
+        if totalSteps >= 177, !UserDefaults.standard.bool(forKey: "notificationSentFor10k") {
+            // 목표 달성 푸시 알림 보내기
+            schedulePushNotification(message: "축하합니다! 오늘 10,000걸음 목표를 달성하셨습니다!")
+            
+            // 알림을 보냈다고 UserDefaults에 기록
+            UserDefaults.standard.set(true, forKey: "notificationSentFor10k")
+        }
+    }
+
+    func schedulePushNotification(message: String) {
+        let content = UNMutableNotificationContent()
+        content.title = "왹져의 여행"
+        content.body = message
+        content.sound = .default
+
+        // 알림을 즉시 보냄
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+
+        // 알림 요청 생성
+        let request = UNNotificationRequest(identifier: "stepGoalNotification", content: content, trigger: trigger)
+
+        // 알림을 등록
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("알림 등록 실패: \(error.localizedDescription)")
+            } else {
+                print("푸시 알림이 성공적으로 전송되었습니다.")
+            }
+        }
+    }
+    
     // 원형 프로그레스 바 설정
     func setupCircularProgressBar() {
         let radius = CGFloat(150)
@@ -475,5 +527,29 @@ class MainViewController: UIViewController {
         marsImageView.frame = CGRect(x: view.center.x - 90, y: view.center.y - 90, width: 180, height: 180)
         marsImageView.contentMode = .scaleAspectFit
         view.addSubview(marsImageView)
+    }
+    
+    func setDestinationUI() {
+        // stepLabel 초기화 및 설정
+        stepLabel = UILabel()
+        stepLabel.textAlignment = .center
+        stepLabel.frame = CGRect(x: (view.frame.width - 200) / 2, y: (view.frame.height - 80) / 2, width: 200, height: 50) // 가로 200, 세로 50
+        stepLabel.textColor = .blue // 텍스트 색상 설정
+        view.addSubview(stepLabel)
+        
+        // selectDestinationButton 초기화 및 설정
+        selectDestinationButton = UIButton()
+        selectDestinationButton.setTitle("목적지 선택", for: .normal)
+        selectDestinationButton.frame = CGRect(x: (view.frame.width - 120) / 2, y: 40, width: 200, height: 50) // 가로 200, 세로 50
+        selectDestinationButton.tintColor = .blue // 텍스트 색상 설정
+        selectDestinationButton.addTarget(self, action: #selector(navigateToDestinationSelection), for: .touchUpInside)
+        view.addSubview(selectDestinationButton)
+        
+        // destinationLabel 초기화 및 설정
+        destinationLabel = UILabel()
+        destinationLabel.textAlignment = .center
+        destinationLabel.frame = CGRect(x: (view.frame.width - 300) / 2, y: 40, width: 200, height: 50) // 가로 200, 세로 50
+        destinationLabel.textColor = .blue // 텍스트 색상 설정
+        view.addSubview(destinationLabel)
     }
 }

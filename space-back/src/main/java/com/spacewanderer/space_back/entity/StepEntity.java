@@ -41,4 +41,8 @@ public class StepEntity {
     public String getWalkingDate() {
         return walkingDate;
     }
+
+    public String getDayDestination() {
+        return dayDestination;
+    }
 }

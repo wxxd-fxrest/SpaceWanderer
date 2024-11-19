@@ -151,7 +151,6 @@ class AppleLoginManager {
                         // 여기 MainVC로 이동하는 함수 추가
                         DispatchQueue.main.async {
                             self.autoDelegate?.didCompleteAppleLogin(userUniqueId: userUniqueId, userIdentifier: userIdentifier, accessToken: accessToken)
-                            
                         }
                     } else {
                         // nickname이 nil이거나 비어있을 경우

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@Entity(name = "planet")
+@Table(name = "planet")
 public class PlanetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,19 +22,19 @@ public class PlanetEntity {
     private String id;
     private String name;
     private String description;
-    private String imageUrl;
-    private int requiredSteps;  // 이 행성을 방문하기 위해 필요한 만보기 성공 횟수
-
-    public PlanetEntity(String id, String name, String description, String imageUrl, int requiredSteps) {
+    private String planetImage;
+    private int stepsRequired;  // 이 행성을 방문하기 위해 필요한 만보기 성공 횟수
+    
+    public PlanetEntity(String id, String name, String description, String planetImage, int stepsRequired) {
         this.id = id; 
         this.name = name;
         this.description = description;
-        this.imageUrl = imageUrl;
-        this.requiredSteps = requiredSteps;
+        this.planetImage = planetImage;
+        this.stepsRequired = stepsRequired;
     }
 
     // Getter와 Setter 메서드 추가
-    public String getId() {
+    public String getPlanetId() {
         return id;
     }
 
@@ -45,10 +47,10 @@ public class PlanetEntity {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return planetImage;
     }
 
     public int getRequiredSteps() {
-        return requiredSteps;
+        return stepsRequired;
     }
 }

@@ -3,7 +3,6 @@ package com.spacewanderer.space_back.service;
 import com.spacewanderer.space_back.entity.UserEntity;
 import com.spacewanderer.space_back.repository.GuestBookFavoriteRepository;
 import com.spacewanderer.space_back.repository.GuestBookRepository;
-import com.spacewanderer.space_back.repository.PlanetVisitsRepository;
 import com.spacewanderer.space_back.repository.StepRepository;
 import com.spacewanderer.space_back.repository.SuccessRepository;
 import com.spacewanderer.space_back.repository.UserRepository;
@@ -73,35 +72,34 @@ public class AppleService {
     private final UserRepository userRepository; 
     private final GuestBookFavoriteRepository guestBookFavoriteRepository;
     private final GuestBookRepository guestBookRepository;
-    private final PlanetVisitsRepository planetVisitsRepository;
     private final SuccessRepository successRepository;
     private final StepRepository stepRepository;
     private final EncryptionUtil encryptionUtil;
 
-    @Value("${APPLE.AUTH.TOKEN.URL}")
+    @Value("${apple.auth-token-url}")
     private String appleAuthTokenUrl;
 
-    @Value("${APPLE.PUBLICKEY.URL}")
+    @Value("${apple.publickey-url}")
     private String applePublicKeyUrl;
 
-    @Value("${APPLE.ISS}")
+    @Value("${apple.iss}")
     private String appleIss;
 
-    @Value("${APPLE.TEAM.ID}")
+    @Value("${apple.team-id}")
     private String appleTeamId;
 
-    @Value("${APPLE.WEBSITE.URL}")
+    @Value("${apple.website-url}")
     private String appleWebsiteUrl;
 
-    @Value("${APPLE.AUD}")
+    @Value("${apple.aud}")
     private String appleAud;
 
-    @Value("${APPLE.KEY.ID}")
+    @Value("${apple.key-id}")
     private String appleKeyId;
 
-    @Value("${APPLE.KEY.PATH}")
+    @Value("${apple.key-path}")
     private String appleKeyPath;
-
+    
     private static final Logger logger = LoggerFactory.getLogger(AppleService.class);
 
     // function: 사용자 정보 DB 저장 
@@ -143,7 +141,7 @@ public class AppleService {
     }
 
     // function: Apple Login 요청 처리 
-    public Map<String, String> handleAppleLogin(String idToken, String appleResponse) {
+    public Map<String, String> handleAppleLogin(String idToken, String appleResponse, String deviceToken) {
         if(!validateAppleToken(idToken)) {
             throw new RuntimeException("유효하지 않은 ID 토큰");
         }
@@ -489,19 +487,15 @@ public class AppleService {
         guestBookFavoriteRepository.deleteByUserUniqueId(user);
         System.out.println("guestBookFavoriteRepository 삭제");
         
-        // 2.2 planet_visits 테이블에서 사용자 관련 데이터 삭제
-        planetVisitsRepository.deleteByUserUniqueId(userUniqueId);
-        System.out.println("planetVisitsRepository 삭제");
-        
-        // 2.3 success_count 테이블에서 사용자 관련 데이터 삭제
+        // 2.2 success_count 테이블에서 사용자 관련 데이터 삭제
         successRepository.deleteByUserUniqueId(userUniqueId);
         System.out.println("successRepository 삭제");
         
-        // 2.4 guest_book 테이블에서 작성한 게시물 삭제
+        // 2.3 guest_book 테이블에서 작성한 게시물 삭제
         guestBookRepository.deleteByAuthor_UserUniqueId(userUniqueId);
         System.out.println("guestBookRepository 삭제");
         
-        // 2.5 day_walking 테이블에서 사용자 관련 데이터 삭제
+        // 2.4 day_walking 테이블에서 사용자 관련 데이터 삭제
         stepRepository.deleteByUserUniqueId(userUniqueId);
         System.out.println("stepRepository 삭제");
     

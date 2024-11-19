@@ -50,7 +50,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
             "http://localhost:1020",           // 로컬 테스트 주소
-            "http://192.168.1.14:1020"        // 실기기에서 접근할 IP 주소
+            "http://192.168.1.14:1020"         // 실기기에서 접근할 IP 주소
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
