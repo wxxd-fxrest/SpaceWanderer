@@ -8,21 +8,9 @@
 import UIKit
 import Foundation
 
-struct Planet: Decodable {
-    let id: String
-    let name: String
-    let description: String
-    let imageUrl: String
-    let requiredSteps: Int
-}
-
-// 서버에서 받는 요청을 위해 planetName을 감싸는 구조체 생성
-struct PlanetUpdateRequest: Codable {
-    let planetName: String
-}
-
 class DestinationSelectionViewController: CustomNavigationController, UITableViewDelegate, UITableViewDataSource {
     var userIdentifier: String?
+    var totalGoals: String?
     
     var tableView: UITableView!
     var planets: [Planet] = [] // 서버에서 받아올 행성 목록
@@ -57,7 +45,10 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("행성 선택 userIdentifier", userIdentifier)
+        print("DestinationSelectionViewController userIdentifier: ", userIdentifier)
+        print("DestinationSelectionViewController totalGoals: ", totalGoals)
+        print("totalGoals: \(totalGoals ?? "nil")")
+        
         setupTableView()
         fetchPlanets()
     }
@@ -113,6 +104,8 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
                 DispatchQueue.main.async {
                     self.planets = planets
                     self.tableView.reloadData() // 데이터 갱신 후 테이블 뷰 업데이트
+                    
+                    print("planet.requiredSteps: \(planets)")
                 }
             } catch {
                 print("Error decoding planets: \(error)")
@@ -133,7 +126,17 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
         
         // 셀 데이터 설정
         cell.planetNameLabel.text = planet.name
-        print("planet.name", planet.id)
+        
+        // totalGoals와 steps_required 비교
+        if let totalGoalsInt = Int(totalGoals ?? "0"), totalGoalsInt >= planet.requiredSteps {
+            // 조건 만족: 클릭 가능
+            cell.planetNameLabel.textColor = .black // 기본 색상
+            cell.isUserInteractionEnabled = true
+        } else {
+            // 조건 불만족: 클릭 불가능
+            cell.planetNameLabel.textColor = .lightGray // 빨간색
+            cell.isUserInteractionEnabled = false
+        }
         
         return cell
     }

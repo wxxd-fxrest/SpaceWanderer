@@ -10,6 +10,10 @@
 		0B07676F2CD2767600866B22 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0B07676E2CD2767600866B22 /* KakaoSDKAuth */; };
 		0B0767752CD2767600866B22 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0767742CD2767600866B22 /* KakaoSDKCommon */; };
 		0B0767772CD276E500866B22 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0767762CD276E500866B22 /* KakaoSDKUser */; };
+		0B1FC1322CEF13DA00DC0CFF /* GuestBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */; };
+		0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */; };
+		0B1FC1382CEF25BC00DC0CFF /* PlanetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */; };
+		0B1FC13C2CEF9C9E00DC0CFF /* SolarSystemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC13B2CEF9C9E00DC0CFF /* SolarSystemViewController.swift */; };
 		0B2CED882CE8AAA200F19FD5 /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2CED872CE8AAA200F19FD5 /* ProfileEditViewController.swift */; };
 		0B2CED8A2CE8AAAD00F19FD5 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2CED892CE8AAAD00F19FD5 /* SettingViewController.swift */; };
 		0B301C792CC272530008804A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C782CC272530008804A /* AppDelegate.swift */; };
@@ -58,6 +62,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestBookViewController.swift; sourceTree = "<group>"; };
+		0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPlanetCell.swift; sourceTree = "<group>"; };
+		0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetModel.swift; sourceTree = "<group>"; };
+		0B1FC13B2CEF9C9E00DC0CFF /* SolarSystemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolarSystemViewController.swift; sourceTree = "<group>"; };
 		0B2CED872CE8AAA200F19FD5 /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
 		0B2CED892CE8AAAD00F19FD5 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		0B301C752CC272530008804A /* SpaceWanderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceWanderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,6 +135,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0B1FC1302CEF13C400DC0CFF /* guest */ = {
+			isa = PBXGroup;
+			children = (
+				0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */,
+			);
+			path = guest;
 			sourceTree = "<group>";
 		};
 		0B301C6C2CC272520008804A = {
@@ -212,6 +228,7 @@
 				0B8BC2022CDA1CEA0009B553 /* auth */,
 				0B8BC2032CDA1D060009B553 /* main */,
 				0B8BC2082CDA1D6C0009B553 /* calendar */,
+				0B1FC1302CEF13C400DC0CFF /* guest */,
 				0B8BC2042CDA1D0E0009B553 /* profile */,
 				0B8BC2052CDA1D150009B553 /* setting */,
 			);
@@ -231,6 +248,7 @@
 				0BEBD8902CD3A63B001590E8 /* AppleLoginModel.swift */,
 				0BB0AFCE2CE3461B008272B2 /* StepModel.swift */,
 				0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */,
+				0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -261,6 +279,7 @@
 			children = (
 				0BEC2A322CD8AE97000EC98C /* MainViewController.swift */,
 				0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */,
+				0B1FC13B2CEF9C9E00DC0CFF /* SolarSystemViewController.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -290,6 +309,7 @@
 				0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */,
 				0B44F9D82CE75D4C00435FFC /* CalendarDayCell.swift */,
 				0BA08E652CE9E05800D2633F /* StepDetailViewController.swift */,
+				0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */,
 			);
 			path = calendar;
 			sourceTree = "<group>";
@@ -403,6 +423,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B2CED8A2CE8AAAD00F19FD5 /* SettingViewController.swift in Sources */,
+				0B1FC13C2CEF9C9E00DC0CFF /* SolarSystemViewController.swift in Sources */,
 				0B8BC20B2CDA1D860009B553 /* CalendarViewController.swift in Sources */,
 				0B301C7D2CC272530008804A /* ViewController.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
@@ -412,6 +433,7 @@
 				0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */,
 				0BB0AFD52CE3A235008272B2 /* UserManager.swift in Sources */,
 				0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */,
+				0B1FC1322CEF13DA00DC0CFF /* GuestBookViewController.swift in Sources */,
 				0B2CED882CE8AAA200F19FD5 /* ProfileEditViewController.swift in Sources */,
 				0B44F9DD2CE75D9300435FFC /* BottomSheetPresentationController.swift in Sources */,
 				0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */,
@@ -419,12 +441,14 @@
 				0BA08E662CE9E05800D2633F /* StepDetailViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
 				0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */,
+				0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */,
 				0B44F9DB2CE75D6A00435FFC /* MonthSelectionViewController.swift in Sources */,
 				0B8BC2072CDA1D490009B553 /* ProfileViewController.swift in Sources */,
 				0BEC2A332CD8AE97000EC98C /* MainViewController.swift in Sources */,
 				0B44F9D92CE75D4C00435FFC /* CalendarDayCell.swift in Sources */,
 				0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */,
 				0BB0AFCF2CE3461B008272B2 /* StepModel.swift in Sources */,
+				0B1FC1382CEF25BC00DC0CFF /* PlanetModel.swift in Sources */,
 				0B301CA22CC2742C0008804A /* UIFont.swift in Sources */,
 				0B8BC1F52CDA1A650009B553 /* KeyboardTap.swift in Sources */,
 				0BEBD8912CD3A63B001590E8 /* AppleLoginModel.swift in Sources */,

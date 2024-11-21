@@ -22,6 +22,9 @@ public class PlanetController {
     @GetMapping("/get-all-planet")
     public ResponseEntity<List<PlanetEntity>> getPlanets() {
         List<PlanetEntity> planets = planetService.getAllPlanets();
+        for (PlanetEntity planet : planets) {
+            System.out.println("Planet: " + planet.getName() + ", Distance from Sun: " + planet.getDescription() + "");
+        }
         return ResponseEntity.ok(planets);
     }
 }

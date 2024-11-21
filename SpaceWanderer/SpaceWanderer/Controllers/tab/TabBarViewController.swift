@@ -11,6 +11,17 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     var userUniqueId: String?
     var userIdentifier: String?
 
+    var id: String?
+    var nickname: String?
+    var origin: String?
+    var birthday: String?
+    var profileImage: String?
+    var location: String?
+    var totalGoals: String?
+    
+    // 로딩 인디케이터
+    var loadingIndicator: UIActivityIndicatorView!
+
     init(userUniqueId: String?, userIdentifier: String?) {
         self.userUniqueId = userUniqueId
         self.userIdentifier = userIdentifier
@@ -26,6 +37,89 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         setUpTabBar()
         setUpVCs()
+        setupLoadingIndicator()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+        // 유저 데이터 가져오기
+        fetchUserData()
+    }
+    
+    private func setupLoadingIndicator() {
+        loadingIndicator = UIActivityIndicatorView(style: .medium)
+        loadingIndicator.center = view.center
+        loadingIndicator.color = .orange
+        loadingIndicator.hidesWhenStopped = true
+        view.addSubview(loadingIndicator)
+    }
+    
+    private func fetchUserData() {
+        let userManager = UserManager()
+
+        guard let userIdentifier = userIdentifier else {
+            print("userIdentifier가 nil입니다.")
+            return
+        }
+                
+        // 로딩 인디케이터 시작
+        loadingIndicator.startAnimating()
+        
+        userManager.getUser(by: userIdentifier) { result in
+            DispatchQueue.main.async {
+                // 로딩 인디케이터 중지
+                self.loadingIndicator.stopAnimating()
+            }
+            
+            switch result {
+            case .success(let userEntity):
+                DispatchQueue.main.async {
+                    // 사용자 정보를 UI에 업데이트
+                    print("사용자 ID: \(userEntity.userIdentifier)")
+                    print("fetchUserData userEntity:", userEntity)
+                    // 목적지 업데이트
+                    self.nickname = userEntity.nickname ?? "정보 없음" // destinationPlanet 업데이트
+                    self.id = "#\(userEntity.userUniqueId ?? "정보 없음")"
+                    self.origin = "출신 · \(userEntity.inhabitedPlanet ?? "정보 없음")"
+                    self.birthday = "생일 · \(userEntity.birthDay ?? "정보 없음")"
+                    self.profileImage = "\(userEntity.profileImage ?? "LaunchScreenIcon")"
+                    self.location = "\(userEntity.destinationPlanet ?? "정보 없음")"
+                    self.totalGoals = "\(userEntity.dayGoalCount ?? 0)"
+                    
+                    print("loadingIndicator totalGoals: ", self.totalGoals)
+                    
+                    // MainViewController 업데이트
+                    if let mainNavController = self.viewControllers?[0] as? UINavigationController,
+                       let mainVC = mainNavController.viewControllers.first as? MainViewController {
+                        mainVC.totalGoals = self.totalGoals
+                    }
+                    
+                    // ProfileViewController 업데이트
+                    if let profileNavController = self.viewControllers?.last as? UINavigationController,
+                       let profileVC = profileNavController.viewControllers.first as? ProfileViewController {
+                        profileVC.nickname = self.nickname
+                        profileVC.id = self.id
+                        profileVC.origin = self.origin
+                        profileVC.birthday = self.birthday
+                        profileVC.profileImage = self.profileImage
+                        profileVC.location = self.location
+                        profileVC.totalGoals = self.totalGoals
+                    }
+                    
+                    // MainViewController 업데이트
+                    if let calendarNavController = self.viewControllers?[1] as? UINavigationController,
+                       let calendarVC = calendarNavController.viewControllers.first as? CalendarViewController {
+                        calendarVC.totalGoals = self.totalGoals
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    // 오류 처리 (예: 경고 창 표시)
+                    print("사용자 정보를 가져오는 데 실패했습니다: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     func setUpTabBar() {

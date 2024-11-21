@@ -54,7 +54,7 @@ class ProfileViewController: UIViewController {
     var birthday: String?
     var profileImage: String?
     var location: String?
-    var totalSteps: String?
+    var totalGoals: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,13 +65,25 @@ class ProfileViewController: UIViewController {
         setupStackView()
         setupProfileCard()
         setupETCStack()
+        
+        print("profile nickname: ", nickname)
+        print("profile origin: ", origin)
+        print("profile location: ", location)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         // 유저 데이터 가져오기
-        fetchUserData()
+//        fetchUserData()
+        nameLabel.text = nickname
+        idLabel.text = id
+        originLabel.text = origin
+        birthdayLabel.text = birthday
+        profileImageView.image = UIImage(named: profileImage ?? "LaunchScreenIcon")
+        locationLabel.text = location
+        starLabel.text = totalGoals
+        totalStepsLabel.text = totalGoals
     }
     
     private func setupLoadingIndicator() {
@@ -82,55 +94,55 @@ class ProfileViewController: UIViewController {
         view.addSubview(loadingIndicator)
     }
     
-    private func fetchUserData() {
-        let userManager = UserManager()
-
-        guard let userIdentifier = userIdentifier else {
-            print("userIdentifier가 nil입니다.")
-            return
-        }
-                
-        // 로딩 인디케이터 시작
-        loadingIndicator.startAnimating()
-        
-        userManager.getUser(by: userIdentifier) { result in
-            DispatchQueue.main.async {
-                // 로딩 인디케이터 중지
-                self.loadingIndicator.stopAnimating()
-            }
-            
-            switch result {
-            case .success(let userEntity):
-                DispatchQueue.main.async {
-                    // 사용자 정보를 UI에 업데이트
-                    print("사용자 ID: \(userEntity.userIdentifier)")
-                    print("userEntity:", userEntity)
-                    // 목적지 업데이트
-                    self.nickname = userEntity.nickname ?? "정보 없음" // destinationPlanet 업데이트
-                    self.id = "#\(userEntity.userUniqueId ?? "정보 없음")"
-                    self.origin = "출신 · \(userEntity.inhabitedPlanet ?? "정보 없음")"
-                    self.birthday = "생일 · \(userEntity.birthDay ?? "정보 없음")"
-                    self.profileImage = "\(userEntity.profileImage ?? "LaunchScreenIcon")"
-                    self.location = "\(userEntity.destinationPlanet ?? "정보 없음")"
-                    self.totalSteps = "\(userEntity.dayGoalCount ?? 0)"
-                    
-                    self.nameLabel.text = self.nickname
-                    self.idLabel.text = self.id
-                    self.originLabel.text = self.origin
-                    self.birthdayLabel.text = self.birthday
-                    self.profileImageView.image = UIImage(named: self.profileImage ?? "LaunchScreenIcon")
-                    self.locationLabel.text = self.location
-                    self.starLabel.text = self.totalSteps
-                    self.totalStepsLabel.text = self.totalSteps
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    // 오류 처리 (예: 경고 창 표시)
-                    print("사용자 정보를 가져오는 데 실패했습니다: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
+//    private func fetchUserData() {
+//        let userManager = UserManager()
+//
+//        guard let userIdentifier = userIdentifier else {
+//            print("userIdentifier가 nil입니다.")
+//            return
+//        }
+//                
+//        // 로딩 인디케이터 시작
+//        loadingIndicator.startAnimating()
+//        
+//        userManager.getUser(by: userIdentifier) { result in
+//            DispatchQueue.main.async {
+//                // 로딩 인디케이터 중지
+//                self.loadingIndicator.stopAnimating()
+//            }
+//            
+//            switch result {
+//            case .success(let userEntity):
+//                DispatchQueue.main.async {
+//                    // 사용자 정보를 UI에 업데이트
+//                    print("사용자 ID: \(userEntity.userIdentifier)")
+//                    print("userEntity:", userEntity)
+//                    // 목적지 업데이트
+//                    self.nickname = userEntity.nickname ?? "정보 없음" // destinationPlanet 업데이트
+//                    self.id = "#\(userEntity.userUniqueId ?? "정보 없음")"
+//                    self.origin = "출신 · \(userEntity.inhabitedPlanet ?? "정보 없음")"
+//                    self.birthday = "생일 · \(userEntity.birthDay ?? "정보 없음")"
+//                    self.profileImage = "\(userEntity.profileImage ?? "LaunchScreenIcon")"
+//                    self.location = "\(userEntity.destinationPlanet ?? "정보 없음")"
+//                    self.totalSteps = "\(userEntity.dayGoalCount ?? 0)"
+//                    
+//                    self.nameLabel.text = self.nickname
+//                    self.idLabel.text = self.id
+//                    self.originLabel.text = self.origin
+//                    self.birthdayLabel.text = self.birthday
+//                    self.profileImageView.image = UIImage(named: self.profileImage ?? "LaunchScreenIcon")
+//                    self.locationLabel.text = self.location
+//                    self.starLabel.text = self.totalSteps
+//                    self.totalStepsLabel.text = self.totalSteps
+//                }
+//            case .failure(let error):
+//                DispatchQueue.main.async {
+//                    // 오류 처리 (예: 경고 창 표시)
+//                    print("사용자 정보를 가져오는 데 실패했습니다: \(error.localizedDescription)")
+//                }
+//            }
+//        }
+//    }
     
     private func setupStackView() {
         // titleLabel 설정

@@ -12,6 +12,7 @@ import UserNotifications
 class MainViewController: UIViewController {
     var userUniqueId: String?
     var userIdentifier: String?
+    var totalGoals: String? 
     
     // CMPedometer 인스턴스
     let pedometer = CMPedometer()
@@ -31,6 +32,8 @@ class MainViewController: UIViewController {
     
     // 걸음 수
     var stepLabel: UILabel!
+    var goalLabel: UILabel!
+    var goDetailButton: UIButton!
     
     // 목적지
     var selectDestinationButton: UIButton!
@@ -57,6 +60,8 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = SpecialColors.PupleColor
+        print("MainViewController userIdentifier: ", userIdentifier)
+        print("MainViewController totalGoals: ", totalGoals)
         addStars()
         addPlanets()
         
@@ -88,15 +93,70 @@ class MainViewController: UIViewController {
     func updateStepLabel() {
         // 총 걸음 수를 String으로 변환하여 stepLabel에 할당
         stepLabel.text = String(Int(totalStepsToday + realTimeSteps))
+        
+        let totalSteps = self.totalStepsToday + self.realTimeSteps
+        print("totalSteps: ", totalSteps)
+        // 12,000보 이상이면 목표 달성 알림
+        if totalSteps >= 80 {
+            // 목표 달성 푸시 알림 보내기
+            // goalLabel 초기화 및 설정
+            goalLabel = UILabel()
+            goalLabel.text = "축하합니다! 오늘 10,000걸음 목표를 달성하셨습니다!"
+            goalLabel.textAlignment = .center
+            goalLabel.textColor = .red // 텍스트 색상 설정
+            view.addSubview(goalLabel)
+            
+            // selectDestinationButton 초기화 및 설정
+            selectDestinationButton = UIButton()
+            selectDestinationButton.setTitle(">", for: .normal)
+            selectDestinationButton.tintColor = .red // 텍스트 색상 설정
+            selectDestinationButton.addTarget(self, action: #selector(navigateToDetailPage), for: .touchUpInside)
+            view.addSubview(selectDestinationButton)
+            
+            goalLabel.translatesAutoresizingMaskIntoConstraints = false
+            selectDestinationButton.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                goalLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+                goalLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                
+                selectDestinationButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+                selectDestinationButton.leadingAnchor.constraint(equalTo: goalLabel.trailingAnchor, constant: 6),
+                selectDestinationButton.heightAnchor.constraint(equalToConstant: 30),
+                selectDestinationButton.widthAnchor.constraint(equalToConstant: 24)
+            ])
+        }
     }
     
     @objc private func navigateToDestinationSelection() {
+//        let destinationVC = SolarSystemViewController()
         let destinationVC = DestinationSelectionViewController()
         destinationVC.userIdentifier = userIdentifier // userIdentifier 전달
+        destinationVC.totalGoals = totalGoals
         destinationVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
         navigationController?.pushViewController(destinationVC, animated: true)
     }
     
+    @objc private func navigateToDetailPage() {
+        let detailVC = StepDetailViewController()
+        
+        // 오늘 날짜 전달
+        detailVC.date = Date()
+        
+        // 오늘의 총 걸음 수 전달
+        let totalStepsToday = self.totalStepsToday + self.realTimeSteps
+        detailVC.steps = Int(totalStepsToday)
+        
+        // 오늘 목표 행성 전달
+        detailVC.dayDestination = destination
+        
+        // 탭 바 숨기기
+        detailVC.hidesBottomBarWhenPushed = true
+        
+        // 화면 전환
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
     private func setupLoadingIndicator() {
         loadingIndicator = UIActivityIndicatorView(style: .medium)
         loadingIndicator.center = view.center
@@ -340,7 +400,7 @@ class MainViewController: UIViewController {
         }
 
         // 8,000보 이상이면 응원 알림
-        if totalSteps >= 166, !UserDefaults.standard.bool(forKey: "notificationSentFor8k") {
+        if totalSteps >= 70, !UserDefaults.standard.bool(forKey: "notificationSentFor8k") {
             // 팔천보 응원 푸시 알림 보내기
             schedulePushNotification(message: "대단해요! 이제 조금만 더 가면 목표 달성입니다!")
             
@@ -349,7 +409,7 @@ class MainViewController: UIViewController {
         }
         
         // 12,000보 이상이면 목표 달성 알림
-        if totalSteps >= 177, !UserDefaults.standard.bool(forKey: "notificationSentFor10k") {
+        if totalSteps >= 80, !UserDefaults.standard.bool(forKey: "notificationSentFor10k") {
             // 목표 달성 푸시 알림 보내기
             schedulePushNotification(message: "축하합니다! 오늘 10,000걸음 목표를 달성하셨습니다!")
             
@@ -364,18 +424,21 @@ class MainViewController: UIViewController {
         content.body = message
         content.sound = .default
 
+        // 고유한 identifier 생성 (현재 시간 기반)
+        let uniqueIdentifier = "stepGoalNotification_\(UUID().uuidString)"
+
         // 알림을 즉시 보냄
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
 
         // 알림 요청 생성
-        let request = UNNotificationRequest(identifier: "stepGoalNotification", content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: uniqueIdentifier, content: content, trigger: trigger)
 
         // 알림을 등록
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("알림 등록 실패: \(error.localizedDescription)")
             } else {
-                print("푸시 알림이 성공적으로 전송되었습니다.")
+                print("푸시 알림이 성공적으로 전송되었습니다. [\(uniqueIdentifier)]")
             }
         }
     }
