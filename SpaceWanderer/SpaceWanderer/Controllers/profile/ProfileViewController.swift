@@ -321,7 +321,7 @@ class ProfileViewController: UIViewController {
         locationTitleLabel.textColor = SpecialColors.WhiteColor
         locationTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        locationLabel.text = "지구"
+        locationLabel.text = "수성"
         locationLabel.font = UIFont.systemFont(ofSize: 16)
         locationLabel.textColor = SpecialColors.WhiteColor
         locationLabel.translatesAutoresizingMaskIntoConstraints = false

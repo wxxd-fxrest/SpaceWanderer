@@ -109,7 +109,7 @@ public class AppleService {
         }
 
         String userUniqueId = UserEntity.generateUserUniqueId();
-        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, refreshToken, "apple", "지구", 0); 
+        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, refreshToken, "apple", "수성", 0); 
             
         return userRepository.save(newUser);
     }
@@ -171,7 +171,7 @@ public class AppleService {
             userRepository.save(userEntity);
             userUniqueId = userEntity.getUserUniqueId();
         } else  {
-            UserEntity newUser = registerUser(userIdentifier, email, encryptedRefreshToken, "apple", "지구", 0);
+            UserEntity newUser = registerUser(userIdentifier, email, encryptedRefreshToken, "apple", "수성", 0);
             userUniqueId = newUser.getUserUniqueId();
         }
 

@@ -80,6 +80,9 @@ class MainViewController: UIViewController {
         
         // 목적지 선택 버튼 및 라벨 초기화
         setDestinationUI()
+        
+        // NotificationCenter에 observer 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: .planetUpdatedMain, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -88,6 +91,16 @@ class MainViewController: UIViewController {
 
         // 유저 데이터 가져오기
         fetchUserData()
+    }
+    
+    @objc func updateData() {
+        // 데이터를 다시 가져오는 로직 또는 UI 업데이트 로직
+        fetchUserData() // 예: 행성 목록을 다시 가져옴
+        print("재 업데이트")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .planetUpdatedMain, object: nil)
     }
     
     func updateStepLabel() {
@@ -173,8 +186,10 @@ class MainViewController: UIViewController {
             return
         }
                 
-        // 로딩 인디케이터 시작
-        loadingIndicator.startAnimating()
+        // 로딩 인디케이터 시작 (메인 스레드에서 실행)
+        DispatchQueue.main.async {
+            self.loadingIndicator.startAnimating()
+        }
         
         userManager.getUser(by: userIdentifier) { result in
             DispatchQueue.main.async {

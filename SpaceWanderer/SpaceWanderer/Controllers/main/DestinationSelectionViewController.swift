@@ -63,12 +63,16 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
     // 테이블 뷰 설정
     private func setupTableView() {
         tableView = UITableView()
+        tableView.backgroundColor = SpecialColors.MainViewBackGroundColor
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
         
         // 테이블 뷰에 커스텀 셀 등록
         tableView.register(PlanetCell.self, forCellReuseIdentifier: "PlanetCell")
+        
+        // 구분선 색상 설정
+        tableView.separatorColor = .darkGray // 원하는 색으로 변경
         
         view.addSubview(tableView)
         
@@ -120,6 +124,11 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
         return planets.count
     }
     
+    // UITableViewDelegate 구현
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60 // 원하는 셀 높이
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let planet = planets[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "PlanetCell", for: indexPath) as! PlanetCell
@@ -127,14 +136,24 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
         // 셀 데이터 설정
         cell.planetNameLabel.text = planet.name
         
+        cell.backgroundColor = SpecialColors.MainViewBackGroundColor
+        
+        // 이미지 설정 (assets에 있는 이미지 이름과 일치해야 함)
+        cell.planetImageView.image = UIImage(named: planet.imageUrl) // imageUrl에 해당하는 이미지를 로드
+        
+        // requiredSteps 설정
+        cell.requiredStepsLabel.text = "필요 단계: \(planet.requiredSteps)" // 필요한 단계 표시
+        
         // totalGoals와 steps_required 비교
         if let totalGoalsInt = Int(totalGoals ?? "0"), totalGoalsInt >= planet.requiredSteps {
             // 조건 만족: 클릭 가능
-            cell.planetNameLabel.textColor = .black // 기본 색상
+            cell.planetNameLabel.textColor = SpecialColors.WhiteColor // 기본 색상
+            cell.requiredStepsLabel.textColor = SpecialColors.WhiteColor // 기본 색상
             cell.isUserInteractionEnabled = true
         } else {
             // 조건 불만족: 클릭 불가능
-            cell.planetNameLabel.textColor = .lightGray // 빨간색
+            cell.planetNameLabel.textColor = .darkGray // 빨간색
+            cell.requiredStepsLabel.textColor = .darkGray // 기본 색상
             cell.isUserInteractionEnabled = false
         }
         
@@ -183,6 +202,16 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
                 if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
                         print("User's planet updated successfully.")
+                        // NotificationCenter를 통해 알림 게시
+                        NotificationCenter.default.post(name: .planetUpdatedMain, object: nil)
+                        NotificationCenter.default.post(name: .planetUpdatedCalendar, object: nil)
+                        
+                        // 추가: 데이터 다시 가져오기
+                        DispatchQueue.main.async {
+                            // Notification을 수신한 후 fetchStepData 호출
+                            NotificationCenter.default.post(name: .planetUpdatedMain, object: nil)
+                            NotificationCenter.default.post(name: .planetUpdatedCalendar, object: nil)
+                        }
                     } else {
                         print("Failed to update planet. Status code: \(httpResponse.statusCode)")
                     }
@@ -195,33 +224,45 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
 class PlanetCell: UITableViewCell {
     var planetNameLabel: UILabel!
     var planetImageView: UIImageView!
+    var requiredStepsLabel: UILabel! // 최소 성공 횟수 라벨 추가
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         planetNameLabel = UILabel()
         planetImageView = UIImageView()
+        requiredStepsLabel = UILabel() // 라벨 초기화
         
         // 셀 내부 UI 구성
         planetNameLabel.translatesAutoresizingMaskIntoConstraints = false
         planetImageView.translatesAutoresizingMaskIntoConstraints = false
+        requiredStepsLabel.translatesAutoresizingMaskIntoConstraints = false // 라벨 제약 설정
         
         contentView.addSubview(planetNameLabel)
         contentView.addSubview(planetImageView)
+        contentView.addSubview(requiredStepsLabel) // 라벨 추가
         
         // 레이아웃 설정
         NSLayoutConstraint.activate([
             planetImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             planetImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            planetImageView.widthAnchor.constraint(equalToConstant: 50),
-            planetImageView.heightAnchor.constraint(equalToConstant: 50),
+            planetImageView.widthAnchor.constraint(equalToConstant: 24),
+            planetImageView.heightAnchor.constraint(equalToConstant: 24),
             
             planetNameLabel.leadingAnchor.constraint(equalTo: planetImageView.trailingAnchor, constant: 10),
-            planetNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            planetNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            requiredStepsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15), // 오른쪽 여백
+            requiredStepsLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor) // 세로 중앙 정렬
         ])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+extension Notification.Name {
+    static let planetUpdatedMain = Notification.Name("PlanetUpdatedMain")
+    static let planetUpdatedCalendar = Notification.Name("PlanetUpdatedCalendar")
 }

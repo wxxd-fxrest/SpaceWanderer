@@ -52,6 +52,7 @@
 		0BB0AFD12CE348F6008272B2 /* DestinationSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */; };
 		0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */; };
 		0BB0AFD52CE3A235008272B2 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD42CE3A235008272B2 /* UserManager.swift */; };
+		0BC4CCC42CF080CB00388BBC /* PlanetDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */; };
 		0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */; };
 		0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */; };
 		0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */; };
@@ -104,6 +105,7 @@
 		0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSelectionViewController.swift; sourceTree = "<group>"; };
 		0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		0BB0AFD42CE3A235008272B2 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetDetailViewController.swift; sourceTree = "<group>"; };
 		0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpaceWanderer.entitlements; sourceTree = "<group>"; };
 		0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileViewController.swift; sourceTree = "<group>"; };
 		0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				0B8BC1E32CDA17F90009B553 /* Manager */,
 				0B8BC1E42CDA18000009B553 /* Resource */,
 				0B8BC1E72CDA181D0009B553 /* Models */,
+				0BC4CCC52CF095F100388BBC /* ViewModel */,
 				0B8BC1E62CDA18180009B553 /* Views */,
 				0B8BC1E52CDA180C0009B553 /* Controllers */,
 				0B301C892CC272550008804A /* Info.plist */,
@@ -310,6 +313,7 @@
 				0B44F9D82CE75D4C00435FFC /* CalendarDayCell.swift */,
 				0BA08E652CE9E05800D2633F /* StepDetailViewController.swift */,
 				0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */,
+				0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */,
 			);
 			path = calendar;
 			sourceTree = "<group>";
@@ -328,6 +332,13 @@
 				0B8BC2102CDA41380009B553 /* UIColor.swift */,
 			);
 			path = Color;
+			sourceTree = "<group>";
+		};
+		0BC4CCC52CF095F100388BBC /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -432,6 +443,7 @@
 				0BA08E642CE9DF0D00D2633F /* CustomNavigationController.swift in Sources */,
 				0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */,
 				0BB0AFD52CE3A235008272B2 /* UserManager.swift in Sources */,
+				0BC4CCC42CF080CB00388BBC /* PlanetDetailViewController.swift in Sources */,
 				0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */,
 				0B1FC1322CEF13DA00DC0CFF /* GuestBookViewController.swift in Sources */,
 				0B2CED882CE8AAA200F19FD5 /* ProfileEditViewController.swift in Sources */,

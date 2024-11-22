@@ -58,7 +58,7 @@ public class KakaoService {
 
         System.out.println("암호화 후 refreshToken | " + encryptedRefreshToken);
 
-        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, encryptedRefreshToken, loginType, "지구", 0);
+        UserEntity newUser = new UserEntity(userUniqueId, userIdentifier, email, encryptedRefreshToken, loginType, "수성", 0);
         System.out.println("registerUser | " + newUser);
         return userRepository.save(newUser);
     }

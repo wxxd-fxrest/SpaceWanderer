@@ -111,6 +111,9 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
             return "http://localhost:1020" // 기본값 설정
         }
     }()
+    
+    private var year: Int = 0 // 연도
+    private var month: Int = 0 // 월
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,15 +124,10 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
         updateTotalStepsLabel()
         updatePlanetLabel()
 
-        let year = calendar.component(.year, from: selectedDate)
-        let month = calendar.component(.month, from: selectedDate)
+        // 선택된 날짜의 연도와 월을 가져옴
+        year = calendar.component(.year, from: selectedDate)
+        month = calendar.component(.month, from: selectedDate)
         
-        guard let userUniqueId = userUniqueId else {
-            print("User Unique ID is missing.")
-            return
-        }
-        
-        fetchStepData(for: userUniqueId, year: year, month: month)
         fetchPlanets()
         
         // 년월 표시 클릭 이벤트
@@ -137,11 +135,36 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
         monthLabel.addGestureRecognizer(tapGesture)
         
         print("CalendarViewController totalGoals: ", totalGoals)
+        
+        // NotificationCenter에 observer 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: .planetUpdatedCalendar, object: nil)
+    }
+    
+    @objc func updateData() {
+        guard let userUniqueId = userUniqueId else {
+            print("User Unique ID is missing.")
+            return
+        }
+        print("Calling fetchStepData with userUniqueId:", userUniqueId, "year:", year, "month:", month) // 디버깅용 로그
+        // 데이터를 다시 가져오는 로직 또는 UI 업데이트 로직
+        fetchStepData(for: userUniqueId, year: year, month: month) // 예: 행성 목록을 다시 가져옴
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .planetUpdatedCalendar, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+        
+        guard let userUniqueId = userUniqueId else {
+            print("User Unique ID is missing.")
+            return
+        }
+        print("Calling fetchStepData with userUniqueId:", userUniqueId, "year:", year, "month:", month) // 디버깅용 로그
+        // 데이터를 다시 가져오는 로직 또는 UI 업데이트 로직
+        fetchStepData(for: userUniqueId, year: year, month: month) // 예: 행성 목록을 다시 가져옴
     }
 
     private func setupViews() {
@@ -217,6 +240,7 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
                 print("stepData: ", stepData)
                 DispatchQueue.main.async {
                     self.stepData = self.convertStepEntitiesToDictionary(stepData)
+                    print("Updated stepData: \(self.stepData)") // 업데이트된 데이터를 확인
                     self.updateTotalStepsLabel()
                     self.calendarCollectionView.reloadData()
                 }
@@ -231,18 +255,34 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
     // JSON을 StepEntity 객체로 변환
     private func convertStepEntitiesToDictionary(_ stepEntities: [StepRequest]) -> [Date: (Int, String)] {
         var stepData: [Date: (Int, String)] = [:]
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = TimeZone(abbreviation: "UTC") // SQL 데이터가 UTC 기준으로 저장되었음을 명시
         
         for entity in stepEntities {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            if let dateObj = formatter.date(from: entity.walkingDate) {
-                // daySteps를 Int로 변환하여 저장
-                stepData[dateObj] = (Int(entity.daySteps), entity.dayDestination)
+            if let utcDate = formatter.date(from: entity.walkingDate) {
+                // UTC 날짜를 로컬 시간대로 변환
+                let localDate = Calendar.current.startOfDay(for: utcDate)
+                
+                let steps = Int(entity.daySteps)
+                guard steps > 0 else { continue } // 0 걸음 데이터 무시
+                
+                if let existingData = stepData[localDate] {
+                    let existingSteps = existingData.0
+                    stepData[localDate] = (existingSteps + steps, entity.dayDestination)
+                } else {
+                    stepData[localDate] = (steps, entity.dayDestination)
+                }
             }
         }
         
+        // 디버깅 출력
+//        for (date, (steps, destination)) in stepData {
+//            print("날짜: \(date), 걸음 수: \(steps), 목적지: \(destination)")
+//        }
         return stepData
     }
+
     
     private func updateMonthLabel() {
         let formatter = DateFormatter()
@@ -251,8 +291,9 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     private func updateTotalStepsLabel() {
-        let totalSteps = dates.reduce(0) { $0 + (stepData[$1]?.0 ?? 0) }  // 튜플의 첫 번째 값인 Int만 사용
+        let totalSteps = stepData.values.reduce(0) { $0 + $1.0 }
         totalStepsLabel.text = "총 걸음 수: \(totalSteps)"
+        print("총 걸음 수: \(totalSteps)")
     }
     
     private func updatePlanetLabel() {
@@ -361,8 +402,7 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
           navigateToDetailPage(for: selectedDate)
         } else if collectionView == self.planetCollectionView {
             let selectedPlanet = planets[indexPath.item]
-            print("Selected planet: \(selectedPlanet)")
-            // 선택된 행성을 처리하는 로직 추가
+            navigateToPlanetDetailPage(for: selectedPlanet) // 선택된 행성을 디테일 페이지로 이동
         }
     }
     
@@ -374,6 +414,36 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
         detailVC.dayDestination = stepDataForSelectedDate.1 // Day destination
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    private func filteredStepData(for planet: Planet) -> [Date: Int] {
+        // 필터링된 결과를 저장할 딕셔너리
+        var filteredData: [Date: Int] = [:]
+        
+        print("Current stepData: ", stepData) // stepData 출력
+        print("Filtering for planet: ", planet.name) // 비교할 행성 이름 출력
+        
+        for (date, (steps, destination)) in stepData {
+            if destination == planet.name {
+                filteredData[date] = steps // 행성을 기준으로 걸음 수 저장
+            }
+        }
+        
+        print("filteredData: ", filteredData)
+        return filteredData
+    }
+
+    private func navigateToPlanetDetailPage(for planet: Planet) {
+        let planetDetailVC = PlanetDetailViewController()
+        
+        // 필터링된 stepData를 가져옴
+        let filteredData = filteredStepData(for: planet)
+        planetDetailVC.filteredStepData = filteredData // 필터링된 데이터를 전달
+        planetDetailVC.planet = planet // 선택된 행성을 전달
+        print("planetplanetplanetplanet:", planet)
+        
+        planetDetailVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(planetDetailVC, animated: true)
     }
 }
 

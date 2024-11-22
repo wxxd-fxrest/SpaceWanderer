@@ -15,6 +15,8 @@ class StepDetailViewController: CustomNavigationController {
     let dateLabel = UILabel()
     let stepsLabel = UILabel()
     let destinationLabel = UILabel()
+    let imageView = UIImageView() // 이미지 뷰 추가
+    let resultLabel = UILabel() // 성공/실패 메시지 라벨 추가
     
     var goGuestBookButton: UIButton!
     
@@ -23,13 +25,22 @@ class StepDetailViewController: CustomNavigationController {
         view.backgroundColor = SpecialColors.MainViewBackGroundColor
         
         setupDetailView()
+        
+        print("StepDetailViewController 날짜: ", date ?? "날짜 없음")
+        print("StepDetailViewController 걸음 수: ", steps ?? "걸음 수 없음")
+        print("StepDetailViewController 목적지: ", dayDestination ?? "목적지 없음")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-        // 인스턴스 메서드로 호출
-        setupNavigationBar(withTitle: "프로필 수정", backButtonImage: "LargeLeftIcon")
+        
+        if let unwrappedDate = date {
+            let formattedDate = formatDate(unwrappedDate)
+            setupNavigationBar(withTitle: formattedDate, backButtonImage: "LargeLeftIcon")
+        } else {
+            setupNavigationBar(withTitle: "날짜 없음", backButtonImage: "LargeLeftIcon")
+        }
     }
     
     private func formatDate(_ date: Date) -> String {
@@ -47,7 +58,7 @@ class StepDetailViewController: CustomNavigationController {
         let formattedDate = formatDate(date)
         print("날짜: \(formattedDate), 걸음 수: \(steps)")
         
-        dateLabel.text = "Date: \(formattedDate)" // 형식화된 날짜를 사용
+        dateLabel.text = "Date: \(formattedDate)"
         dateLabel.textColor = SpecialColors.WhiteColor
         
         stepsLabel.text = "Steps: \(steps)"
@@ -56,26 +67,45 @@ class StepDetailViewController: CustomNavigationController {
         destinationLabel.text = "행성: \(destination)"
         destinationLabel.textColor = SpecialColors.WhiteColor
         
+        // 이미지 설정
+        if let image = UIImage(named: destination) {
+            imageView.image = image
+        } else {
+            imageView.image = UIImage(named: "태양") // 기본 이미지 설정
+        }
+        
+        // 성공/실패 메시지 라벨 설정
+        resultLabel.textColor = SpecialColors.WhiteColor
+        if steps >= 10000 {
+            resultLabel.text = "성공했습니다!"
+        } else {
+            resultLabel.text = "실패했습니다."
+        }
+        
         // selectDestinationButton 초기화 및 설정
         goGuestBookButton = UIButton()
         goGuestBookButton.setTitle("방명록", for: .normal)
-        goGuestBookButton.tintColor = .gray // 텍스트 색상 설정
+        goGuestBookButton.tintColor = .gray
         goGuestBookButton.addTarget(self, action: #selector(navigateToGuestBook), for: .touchUpInside)
         
         // UI 설정
         view.addSubview(dateLabel)
         view.addSubview(stepsLabel)
         view.addSubview(destinationLabel)
+        view.addSubview(imageView)
         view.addSubview(goGuestBookButton)
+        view.addSubview(resultLabel) // 성공/실패 메시지 라벨 추가
         
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         stepsLabel.translatesAutoresizingMaskIntoConstraints = false
         destinationLabel.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         goGuestBookButton.translatesAutoresizingMaskIntoConstraints = false
+        resultLabel.translatesAutoresizingMaskIntoConstraints = false // 성공/실패 라벨 제약 설정
         
         NSLayoutConstraint.activate([
             dateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            dateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
+            dateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -40),
             
             stepsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stepsLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 20),
@@ -83,8 +113,16 @@ class StepDetailViewController: CustomNavigationController {
             destinationLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             destinationLabel.topAnchor.constraint(equalTo: stepsLabel.bottomAnchor, constant: 20),
             
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: destinationLabel.bottomAnchor, constant: 20),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
+            imageView.heightAnchor.constraint(equalToConstant: 100),
+            
+            resultLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            resultLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20), // 이미지 아래에 배치
+            
             goGuestBookButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            goGuestBookButton.topAnchor.constraint(equalTo: destinationLabel.bottomAnchor, constant: 20),
+            goGuestBookButton.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 20),
         ])
     }
     
@@ -97,8 +135,8 @@ class StepDetailViewController: CustomNavigationController {
         
         // 알림 표시
         present(alertController, animated: true, completion: nil)
-//        let guestBookVC = GuestBookViewController()
-//        guestBookVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
-//        navigationController?.pushViewController(guestBookVC, animated: true)
+        //        let guestBookVC = GuestBookViewController()
+        //        guestBookVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
+        //        navigationController?.pushViewController(guestBookVC, animated: true)
     }
 }
