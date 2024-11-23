@@ -13,7 +13,6 @@
 		0B1FC1322CEF13DA00DC0CFF /* GuestBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */; };
 		0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */; };
 		0B1FC1382CEF25BC00DC0CFF /* PlanetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */; };
-		0B1FC13C2CEF9C9E00DC0CFF /* SolarSystemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC13B2CEF9C9E00DC0CFF /* SolarSystemViewController.swift */; };
 		0B2CED882CE8AAA200F19FD5 /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2CED872CE8AAA200F19FD5 /* ProfileEditViewController.swift */; };
 		0B2CED8A2CE8AAAD00F19FD5 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2CED892CE8AAAD00F19FD5 /* SettingViewController.swift */; };
 		0B301C792CC272530008804A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C782CC272530008804A /* AppDelegate.swift */; };
@@ -66,7 +65,6 @@
 		0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestBookViewController.swift; sourceTree = "<group>"; };
 		0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPlanetCell.swift; sourceTree = "<group>"; };
 		0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetModel.swift; sourceTree = "<group>"; };
-		0B1FC13B2CEF9C9E00DC0CFF /* SolarSystemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolarSystemViewController.swift; sourceTree = "<group>"; };
 		0B2CED872CE8AAA200F19FD5 /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
 		0B2CED892CE8AAAD00F19FD5 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		0B301C752CC272530008804A /* SpaceWanderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceWanderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -282,7 +280,6 @@
 			children = (
 				0BEC2A322CD8AE97000EC98C /* MainViewController.swift */,
 				0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */,
-				0B1FC13B2CEF9C9E00DC0CFF /* SolarSystemViewController.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -307,13 +304,11 @@
 		0B8BC2082CDA1D6C0009B553 /* calendar */ = {
 			isa = PBXGroup;
 			children = (
+				0BC4CCC72CF0A2A200388BBC /* select month */,
+				0BC4CCC62CF0A27B00388BBC /* planet */,
 				0B8BC20A2CDA1D860009B553 /* CalendarViewController.swift */,
-				0B44F9DC2CE75D9300435FFC /* BottomSheetPresentationController.swift */,
-				0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */,
 				0B44F9D82CE75D4C00435FFC /* CalendarDayCell.swift */,
 				0BA08E652CE9E05800D2633F /* StepDetailViewController.swift */,
-				0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */,
-				0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */,
 			);
 			path = calendar;
 			sourceTree = "<group>";
@@ -339,6 +334,24 @@
 			children = (
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		0BC4CCC62CF0A27B00388BBC /* planet */ = {
+			isa = PBXGroup;
+			children = (
+				0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */,
+				0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */,
+			);
+			path = planet;
+			sourceTree = "<group>";
+		};
+		0BC4CCC72CF0A2A200388BBC /* select month */ = {
+			isa = PBXGroup;
+			children = (
+				0B44F9DC2CE75D9300435FFC /* BottomSheetPresentationController.swift */,
+				0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */,
+			);
+			path = "select month";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -434,7 +447,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B2CED8A2CE8AAAD00F19FD5 /* SettingViewController.swift in Sources */,
-				0B1FC13C2CEF9C9E00DC0CFF /* SolarSystemViewController.swift in Sources */,
 				0B8BC20B2CDA1D860009B553 /* CalendarViewController.swift in Sources */,
 				0B301C7D2CC272530008804A /* ViewController.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,

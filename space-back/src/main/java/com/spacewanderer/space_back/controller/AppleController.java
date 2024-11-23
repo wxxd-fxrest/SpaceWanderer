@@ -3,8 +3,6 @@ package com.spacewanderer.space_back.controller;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Collections;
-import java.util.HashMap;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spacewanderer.space_back.dto.request.apple.AppleAutoLoginRequestDTO;
+import com.spacewanderer.space_back.dto.request.apple.AppleLoginRequestDTO;
+import com.spacewanderer.space_back.dto.response.AppleAutoLoginResponseDTO;
 import com.spacewanderer.space_back.entity.UserEntity;
 import com.spacewanderer.space_back.repository.UserRepository;
 import com.spacewanderer.space_back.service.AppleService;
@@ -31,30 +32,30 @@ public class AppleController {
 
     // function: Apple Login PostMapping 
     @PostMapping("/apple-login")
-    public String appleLogin(@RequestBody Map<String, String> body) throws ParseException {
-        String idToken = body.get("idToken");
-        String appleResponse = body.get("appleResponse"); 
-        String deviceToken = body.get("deviceToken");
+    public String appleLogin(@RequestBody AppleLoginRequestDTO request) throws ParseException {
+        String idToken = request.getIdToken();
+        String appleResponse = request.getAppleResponse();
+        String deviceToken = request.getDeviceToken();
 
         if(idToken == null || idToken.isEmpty()) {
             throw new IllegalArgumentException("idToken이 null이거나 비어있습니다.");
         }
-        
+
         if(appleResponse == null || appleResponse.isEmpty()) {
             throw new IllegalArgumentException("appleResponse이 null이거나 비어있습니다.");
         }
 
-        // function: Apple Login 요청 처리 
+        // Apple 로그인 요청 처리
         Map<String, String> loginResult = appleService.handleAppleLogin(idToken, appleResponse, deviceToken);
 
         String userIdentifier = loginResult.get("userIdentifier");
         String userUniqueId = loginResult.get("userUniqueId");
 
-        if(userIdentifier == null) {;
+        if(userIdentifier == null) {
             throw new RuntimeException("userIdentifier가 null 입니다.");
         }
 
-        if(userUniqueId == null) {;
+        if(userUniqueId == null) {
             throw new RuntimeException("userUniqueId가 null 입니다.");
         }
 
@@ -66,38 +67,35 @@ public class AppleController {
     }
 
     // function: Auto Apple Login PostMapping 
-    @PostMapping("/auto-login")
-    public ResponseEntity<Map<String, String>> autoLogin(@RequestBody Map<String, String> body) {
+    @PostMapping("/apple-auto-login")
+    public ResponseEntity<AppleAutoLoginResponseDTO> autoLogin(@RequestBody AppleAutoLoginRequestDTO request) {
         try {
-            String userIdentifier = body.get("userIdentifier");
+            String userIdentifier = request.getUserIdentifier();
 
             if(userIdentifier == null || userIdentifier.isEmpty()) {
-                return ResponseEntity.badRequest().body(Collections.singletonMap("error", "userIdentifier is required"));
+                return ResponseEntity.badRequest().body(new AppleAutoLoginResponseDTO("error", null, null));
             }
 
             Optional<UserEntity> userEntity = userRepository.findByUserIdentifier(userIdentifier);
-            
+
             if(userEntity.isPresent()) {
                 String encryptedRefreshToken = userEntity.get().getRefreshToken();
                 String refreshToken = appleService.decryptRefreshToken(encryptedRefreshToken);
-                
+
                 try {
                     String accessToken = appleService.getAccessTokenUsingRefreshToken(refreshToken);
-                    
-                    Map<String, String> response = new HashMap<>();
-                    response.put("accessToken", accessToken); // Access Token 추가
-                    response.put("userUniqueId", userEntity.get().getUserUniqueId()); // userUniqueId 추가
-                    response.put("nickname", userEntity.get().getNickname());
+
+                    AppleAutoLoginResponseDTO response = new AppleAutoLoginResponseDTO(accessToken, userEntity.get().getUserUniqueId(), userEntity.get().getNickname());
 
                     return ResponseEntity.ok(response);
                 } catch(Exception e) {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Invalid refresh token or another error"));
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AppleAutoLoginResponseDTO("error", null, null));
                 }
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AppleAutoLoginResponseDTO("error", null, null));
         }
-        
+
         return null;
     }
 

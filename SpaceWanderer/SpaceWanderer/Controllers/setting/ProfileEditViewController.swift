@@ -35,13 +35,13 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
     let nicknameTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
-        textField.textColor = SpecialColors.WhiteColor
+        textField.textColor = SpecialColors.MainViewBackGroundColor
         textField.tintColor = SpecialColors.WhiteColor
         return textField
     }()
     
-    private let planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
-
+    private let planets = ["수성", "금성", "지구", "화성", "목성", "토성", "천왕성", "해왕성"]
+    
     let originButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("출신 행성 선택", for: .normal)
@@ -237,6 +237,9 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
                     return
                 }
                 
+                // NotificationCenter를 통해 알림 게시
+                NotificationCenter.default.post(name: .planetUpdatedTabBar, object: nil)
+
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)
                 }

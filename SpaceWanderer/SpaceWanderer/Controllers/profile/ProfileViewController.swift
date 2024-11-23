@@ -65,25 +65,30 @@ class ProfileViewController: UIViewController {
         setupStackView()
         setupProfileCard()
         setupETCStack()
-        
-        print("profile nickname: ", nickname)
-        print("profile origin: ", origin)
-        print("profile location: ", location)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         // 유저 데이터 가져오기
-//        fetchUserData()
-        nameLabel.text = nickname
-        idLabel.text = id
-        originLabel.text = origin
-        birthdayLabel.text = birthday
-        profileImageView.image = UIImage(named: profileImage ?? "LaunchScreenIcon")
-        locationLabel.text = location
-        starLabel.text = totalGoals
-        totalStepsLabel.text = totalGoals
+        setUpdateProfileUI()
+        
+        print("profile nickname: ", nickname)
+        print("profile origin: ", origin)
+        print("profile profileImage: ", profileImage)
+    }
+    
+    func setUpdateProfileUI() {
+        DispatchQueue.main.async {
+            self.nameLabel.text = self.nickname
+            self.idLabel.text = self.id
+            self.originLabel.text = self.origin
+            self.birthdayLabel.text = self.birthday
+            self.profileImageView.image = UIImage(named: self.profileImage ?? "LaunchScreenIcon")
+            self.locationLabel.text = self.location
+            self.starLabel.text = self.totalGoals
+            self.totalStepsLabel.text = self.totalGoals
+        }
     }
     
     private func setupLoadingIndicator() {

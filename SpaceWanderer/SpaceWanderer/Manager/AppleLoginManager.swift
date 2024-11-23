@@ -105,7 +105,7 @@ class AppleLoginManager {
             return
         }
         
-        guard let url = URL(string: "\(backendURL)/auto-login") else { return }
+        guard let url = URL(string: "\(backendURL)/apple-auto-login") else { return }
         var request = URLRequest(url: url)
         print(url)
         request.httpMethod = "POST"

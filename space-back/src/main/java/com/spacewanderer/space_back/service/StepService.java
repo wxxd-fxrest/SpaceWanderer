@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.spacewanderer.space_back.dto.StepResponse;
+import com.spacewanderer.space_back.dto.response.StepResponseDTO;
 import com.spacewanderer.space_back.entity.StepEntity;
 import com.spacewanderer.space_back.entity.SuccessEntity;
 import com.spacewanderer.space_back.entity.UserEntity;
@@ -27,11 +27,11 @@ public class StepService {
     private final UserRepository userRepository;
 
     // function: 마지막 기록된 날짜 가져오기
-    public StepResponse getLastStepDay(String userUniqueId) {
+    public StepResponseDTO getLastStepDay(String userUniqueId) {
         // 사용자의 마지막 기록된 날짜 조회
         StepEntity lastStep = stepRepository.findTopByUserUniqueIdOrderByWalkingDateDesc(userUniqueId);
         
-        StepResponse response = new StepResponse();
+        StepResponseDTO response = new StepResponseDTO();
         if (lastStep != null) {
             response.setWalkingDate(lastStep.getWalkingDate());
         } 

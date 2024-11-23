@@ -22,7 +22,7 @@ public class StepEntity {
     @Column(name = "day_id")  // MySQL의 `day_id` 컬럼과 매핑
     private Long dayId;
 
-    @Column(name = "day_destination")  // MySQL의 `day_id` 컬럼과 매핑
+    // @Column(name = "day_destination")
     private String dayDestination;
     private String walkingDate;
     private int daySteps;

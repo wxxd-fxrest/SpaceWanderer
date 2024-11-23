@@ -1,4 +1,4 @@
-package com.spacewanderer.space_back.dto;
+package com.spacewanderer.space_back.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StepRequest {
+public class StepRequestDTO {
     private String userUniqueId;
     private String walkingDate;
     private int daySteps;

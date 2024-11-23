@@ -24,21 +24,12 @@ public class UserEntity {
     private String userIdentifier; 
 
     private String email;
-
-    private String password;
-
     private String nickname;
-
     private String birthDay;
-
     private String inhabitedPlanet;
-
     private String profileImage;
-
     private String refreshToken;  
-
     private String loginType;
-
     private long dayGoalCount;
 
     @Column(name = "destination_planet")

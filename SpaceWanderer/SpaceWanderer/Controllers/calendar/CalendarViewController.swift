@@ -374,7 +374,7 @@ class CalendarViewController: UIViewController, UICollectionViewDataSource, UICo
             cell.configure(planet: planet.name)
             
             // 조건 확인: totalGoals >= stepsRequired
-            if let totalGoalsInt = Int(totalGoals ?? "0"), totalGoalsInt >= planet.requiredSteps {
+            if let totalGoalsInt = Int(totalGoals ?? "0"), totalGoalsInt >= planet.stepsRequired {
                 // 조건 만족: 클릭 가능, 글자 색상 기본
                 cell.planetLabel.textColor = .white
                 cell.isUserInteractionEnabled = true

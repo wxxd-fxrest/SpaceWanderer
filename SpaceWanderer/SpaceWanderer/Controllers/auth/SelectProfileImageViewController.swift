@@ -112,7 +112,7 @@ class SelectProfileImageViewController: UIViewController {
         let requestData: [String: Any] = [
             "nickname": nickname,
             "birthDay": birthDay,
-            "inhabitedPlanet": "화성",
+            "inhabitedPlanet": "수성",
             "profileImage": imageName
         ]
         print("updateProfile - requestData : ", requestData)

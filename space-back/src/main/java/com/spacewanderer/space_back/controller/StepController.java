@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.spacewanderer.space_back.dto.StepRequest;
-import com.spacewanderer.space_back.dto.StepResponse;
+import com.spacewanderer.space_back.dto.request.StepRequestDTO;
+import com.spacewanderer.space_back.dto.response.StepResponseDTO;
 import com.spacewanderer.space_back.service.StepService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,17 +22,17 @@ public class StepController {
 
     private final StepService stepService;
 
-    // 하루 걸음 수 저장
+    // function: 하루 걸음 수 저장
     @PostMapping("/day-walking")
-    public ResponseEntity<Void> saveDaySteps(@RequestBody StepRequest stepRequest) {
+    public ResponseEntity<Void> saveDaySteps(@RequestBody StepRequestDTO stepRequest) {
         stepService.saveDaySteps(stepRequest.getUserUniqueId(), stepRequest.getWalkingDate(), stepRequest.getDaySteps(), stepRequest.getDayDestination());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 마지막 기록된 날짜 가져오기
+    // function: 마지막 기록된 날짜 가져오기
     @GetMapping("/last-recorded-date/{userIdentifier}")
-    public ResponseEntity<StepResponse> getLastStepDay(@PathVariable("userIdentifier") String userUniqueId) {
-        StepResponse lastStepResponse = stepService.getLastStepDay(userUniqueId);
+    public ResponseEntity<StepResponseDTO> getLastStepDay(@PathVariable("userIdentifier") String userUniqueId) {
+        StepResponseDTO lastStepResponse = stepService.getLastStepDay(userUniqueId);
         System.out.println("lastStepResponse: " + lastStepResponse);
         return ResponseEntity.ok(lastStepResponse);
     }

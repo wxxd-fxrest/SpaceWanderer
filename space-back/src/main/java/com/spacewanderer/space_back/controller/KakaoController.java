@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spacewanderer.space_back.dto.request.user.UserRequestDTO;
+import com.spacewanderer.space_back.dto.response.UserResponseDTO;
 import com.spacewanderer.space_back.entity.UserEntity;
 import com.spacewanderer.space_back.repository.UserRepository;
 import com.spacewanderer.space_back.service.KakaoService;
@@ -30,21 +32,25 @@ public class KakaoController {
     private final EncryptionUtil encryptionUtil; 
 
     @PostMapping("/kakao-login")
-    public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity userEntity) {
+    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRequestDTO userRequestDTO) {
         System.out.println("/kakao-login 1");
         
+        // 요청 데이터를 통해 새로운 사용자 등록
         UserEntity registeredUser = kakaoService.registerUser(
-                userEntity.getUserIdentifier(),
-                userEntity.getEmail(),
-                userEntity.getRefreshToken(),
-                userEntity.getLoginType(),
-                userEntity.getDestinationPlanet(),
-                userEntity.getDayGoalCount()
+                userRequestDTO.getUserIdentifier(),
+                userRequestDTO.getEmail(),
+                userRequestDTO.getRefreshToken(),
+                userRequestDTO.getLoginType(),
+                userRequestDTO.getDestinationPlanet(),
+                userRequestDTO.getDayGoalCount()
         );
         System.out.println("/kakao-login 2");
         System.out.println("registeredUser | " + registeredUser);
-        return ResponseEntity.ok(registeredUser);
-    }    
+
+        // Entity -> ResponseDTO 변환
+        UserResponseDTO responseDTO = UserResponseDTO.fromEntity(registeredUser);
+        return ResponseEntity.ok(responseDTO);
+    }
 
     @GetMapping("/get-kakao-user/{userIdentifier}")
     public ResponseEntity<Map<String, Object>> getUserData(@PathVariable("userIdentifier") String userIdentifier) {

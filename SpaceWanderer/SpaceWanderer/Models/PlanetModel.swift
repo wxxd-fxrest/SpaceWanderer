@@ -11,8 +11,8 @@ struct Planet: Decodable {
     let id: String
     let name: String
     let description: String
-    let imageUrl: String
-    let requiredSteps: Int
+    let planetImage: String
+    let stepsRequired: Int
 }
 
 // 서버에서 받는 요청을 위해 planetName을 감싸는 구조체 생성

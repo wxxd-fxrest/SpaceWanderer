@@ -139,13 +139,13 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
         cell.backgroundColor = SpecialColors.MainViewBackGroundColor
         
         // 이미지 설정 (assets에 있는 이미지 이름과 일치해야 함)
-        cell.planetImageView.image = UIImage(named: planet.imageUrl) // imageUrl에 해당하는 이미지를 로드
+        cell.planetImageView.image = UIImage(named: planet.planetImage) // imageUrl에 해당하는 이미지를 로드
         
         // requiredSteps 설정
-        cell.requiredStepsLabel.text = "필요 단계: \(planet.requiredSteps)" // 필요한 단계 표시
+        cell.requiredStepsLabel.text = "필요 단계: \(planet.stepsRequired)" // 필요한 단계 표시
         
         // totalGoals와 steps_required 비교
-        if let totalGoalsInt = Int(totalGoals ?? "0"), totalGoalsInt >= planet.requiredSteps {
+        if let totalGoalsInt = Int(totalGoals ?? "0"), totalGoalsInt >= planet.stepsRequired {
             // 조건 만족: 클릭 가능
             cell.planetNameLabel.textColor = SpecialColors.WhiteColor // 기본 색상
             cell.requiredStepsLabel.textColor = SpecialColors.WhiteColor // 기본 색상
@@ -205,12 +205,14 @@ class DestinationSelectionViewController: CustomNavigationController, UITableVie
                         // NotificationCenter를 통해 알림 게시
                         NotificationCenter.default.post(name: .planetUpdatedMain, object: nil)
                         NotificationCenter.default.post(name: .planetUpdatedCalendar, object: nil)
+                        NotificationCenter.default.post(name: .planetUpdatedTabBar, object: nil)
                         
                         // 추가: 데이터 다시 가져오기
                         DispatchQueue.main.async {
                             // Notification을 수신한 후 fetchStepData 호출
                             NotificationCenter.default.post(name: .planetUpdatedMain, object: nil)
                             NotificationCenter.default.post(name: .planetUpdatedCalendar, object: nil)
+                            NotificationCenter.default.post(name: .planetUpdatedTabBar, object: nil)
                         }
                     } else {
                         print("Failed to update planet. Status code: \(httpResponse.statusCode)")
@@ -265,4 +267,5 @@ class PlanetCell: UITableViewCell {
 extension Notification.Name {
     static let planetUpdatedMain = Notification.Name("PlanetUpdatedMain")
     static let planetUpdatedCalendar = Notification.Name("PlanetUpdatedCalendar")
+    static let planetUpdatedTabBar = Notification.Name("PlanetUpdatedTabbar")
 }
