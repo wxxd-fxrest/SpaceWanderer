@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "sitAlien.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -67,6 +67,9 @@ enum SpecialColors {
     
     // 프로그레스 바
     static let ProgressBarColor = UIColor(hex: "#F9F9F9")
+    
+    // kakao login button
+    static let KakaoButtonBackgroundColor = UIColor(hex: "#FEE500")
 
     //color asset
     static let customColor  = UIColor(named: "")

@@ -62,7 +62,7 @@ class MainViewController: UIViewController {
         view.backgroundColor = SpecialColors.PupleColor
         print("MainViewController userIdentifier: ", userIdentifier)
         print("MainViewController totalGoals: ", totalGoals)
-        addStars()
+        addStars(starCount: 100)
         addPlanets()
         
         // 로딩 인디케이터 초기화
@@ -142,7 +142,6 @@ class MainViewController: UIViewController {
     }
     
     @objc private func navigateToDestinationSelection() {
-//        let destinationVC = SolarSystemViewController()
         let destinationVC = DestinationSelectionViewController()
         destinationVC.userIdentifier = userIdentifier // userIdentifier 전달
         destinationVC.totalGoals = totalGoals
@@ -547,29 +546,6 @@ class MainViewController: UIViewController {
         
         // 초기 텍스트 설정
         updateStepLabel()
-    }
-    
-    func addStars() {
-        let starCount = 100
-        // 세 가지 색상 정의
-        let colors: [UIColor] = [
-            SpecialColors.PinkStarColor,      // 첫 번째 색상
-            SpecialColors.BlueStarColor,      // 두 번째 색상
-            SpecialColors.GreenStarColor,     // 세 번째 색상
-            SpecialColors.WhiteStarColor      // 네 번째 색상
-        ]
-        
-        for _ in 0..<starCount {
-            let starSize: CGFloat = CGFloat.random(in: 1...6)
-            let star = UIView(frame: CGRect(x: CGFloat.random(in: 0...view.bounds.width),
-                                            y: CGFloat.random(in: 0...view.bounds.height),
-                                            width: starSize,
-                                            height: starSize))
-            // 랜덤 색상 선택
-            star.backgroundColor = colors.randomElement() // 배열에서 랜덤 색상 선택
-            star.layer.cornerRadius = starSize / 2
-            view.addSubview(star)
-        }
     }
 
     func addPlanets() {

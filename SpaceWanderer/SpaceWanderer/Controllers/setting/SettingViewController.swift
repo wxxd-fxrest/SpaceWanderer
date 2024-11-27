@@ -15,6 +15,8 @@ class SettingViewController: CustomNavigationController {
     
     let kakaoLoginManager = KakaoLoginManager() // KakaoLoginManager 인스턴스 생성
     let appleLoginManager = AppleLoginManager() // AppleLoginManager 인스턴스 생성
+    
+    private let loginView = LoginView()
 
     lazy var backendURL: String = {
         // Space.plist에서 BackendURL 가져오기
@@ -98,6 +100,8 @@ class SettingViewController: CustomNavigationController {
                 
                 // 애플 로그아웃 후 로그인 화면으로 이동
                 self.navigateToViewVC()
+                // 로그인 버튼 보이기
+                self.loginView.showLoginButtons()
             case "LOGIN_KAKAO":
                 kakaoLoginManager.logout { success in
                     if success {
@@ -105,6 +109,8 @@ class SettingViewController: CustomNavigationController {
                         
                         // 로그아웃 성공 후 화면 전환
                         self.navigateToViewVC()
+                        // 로그인 버튼 보이기
+                        self.loginView.showLoginButtons()
                     } else {
                         print("카카오 로그아웃 실패")
                     }
