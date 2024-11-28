@@ -14,8 +14,8 @@ import AuthenticationServices
 class ViewController: UIViewController, KakaoAutoLoginManagerDelegate, AppleAutoLoginManagerDelegate, KakaoLoginManagerDelegate {
 
     private let loginView = LoginView()
-    private let kakaoLoginManager = KakaoLoginManager() // KakaoLoginManager 인스턴스 생성
-    private let appleLoginManager = AppleLoginManager() // AppleLoginManager 인스턴스 생성
+    private let kakaoLoginManager = KakaoLoginAPIManager() // KakaoLoginManager 인스턴스 생성
+    private let appleLoginManager = AppleAPILoginManager() // AppleLoginManager 인스턴스 생성
 
     override func viewDidLoad() {
         super.viewDidLoad()

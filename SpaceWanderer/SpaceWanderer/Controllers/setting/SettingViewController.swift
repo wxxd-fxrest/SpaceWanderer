@@ -13,8 +13,8 @@ class SettingViewController: CustomNavigationController {
     var accessToken: String?
     var userIdentifier: String?
     
-    let kakaoLoginManager = KakaoLoginManager() // KakaoLoginManager 인스턴스 생성
-    let appleLoginManager = AppleLoginManager() // AppleLoginManager 인스턴스 생성
+    let kakaoLoginManager = KakaoLoginAPIManager() // KakaoLoginManager 인스턴스 생성
+    let appleLoginManager = AppleAPILoginManager() // AppleLoginManager 인스턴스 생성
     
     private let loginView = LoginView()
 

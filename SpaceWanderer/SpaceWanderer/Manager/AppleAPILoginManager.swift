@@ -12,7 +12,7 @@ protocol AppleAutoLoginManagerDelegate: AnyObject {
     func didCompleteAppleLogin(userUniqueId: String, userIdentifier: String, accessToken: String?)
 }
 
-class AppleLoginManager {
+class AppleAPILoginManager {
     let userDefaults = UserDefaults.standard
     weak var autoDelegate: AppleAutoLoginManagerDelegate?
     

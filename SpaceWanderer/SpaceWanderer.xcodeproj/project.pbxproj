@@ -34,6 +34,22 @@
 		0B44F9D92CE75D4C00435FFC /* CalendarDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B44F9D82CE75D4C00435FFC /* CalendarDayCell.swift */; };
 		0B44F9DB2CE75D6A00435FFC /* MonthSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */; };
 		0B44F9DD2CE75D9300435FFC /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B44F9DC2CE75D9300435FFC /* BottomSheetPresentationController.swift */; };
+		0B4987D72CF33CEE00045E54 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4987D62CF33CEE00045E54 /* LoginView.swift */; };
+		0B7B63642CF8712300FC38CC /* AddPlanetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63632CF8712300FC38CC /* AddPlanetView.swift */; };
+		0B7B63682CF8831600FC38CC /* StepAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63672CF8831600FC38CC /* StepAPIManager.swift */; };
+		0B7B636A2CF8879B00FC38CC /* UNUserNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63692CF8879B00FC38CC /* UNUserNotificationCenter.swift */; };
+		0B7B636C2CF8883000FC38CC /* UIViewController+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B636B2CF8883000FC38CC /* UIViewController+Date.swift */; };
+		0B7B636E2CF8D2AA00FC38CC /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B636D2CF8D2AA00FC38CC /* MainView.swift */; };
+		0B7B63702CF8D92D00FC38CC /* PlanetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B636F2CF8D92D00FC38CC /* PlanetCell.swift */; };
+		0B7B63722CF8D94B00FC38CC /* PlanetNotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63712CF8D94B00FC38CC /* PlanetNotificationNames.swift */; };
+		0B7B63742CF8DA5F00FC38CC /* PlanetAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63732CF8DA5F00FC38CC /* PlanetAPIManager.swift */; };
+		0B7B63762CF8DC8B00FC38CC /* DestinationSelectionViewController+TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63752CF8DC8B00FC38CC /* DestinationSelectionViewController+TableView.swift */; };
+		0B7B637A2CF8DD3B00FC38CC /* DestinationSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63792CF8DD3B00FC38CC /* DestinationSelectionView.swift */; };
+		0B7B637C2CF8DDA600FC38CC /* CalendarViewController+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B637B2CF8DDA600FC38CC /* CalendarViewController+CollectionView.swift */; };
+		0B7B637F2CF8E91F00FC38CC /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B637E2CF8E91F00FC38CC /* CalendarView.swift */; };
+		0B7B63812CF8EA1600FC38CC /* StepDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63802CF8EA1600FC38CC /* StepDetailView.swift */; };
+		0B7B63832CF8EAE900FC38CC /* PlanetDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63822CF8EAE900FC38CC /* PlanetDetailView.swift */; };
+		0B7B63862CF8ED8500FC38CC /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63852CF8ED8500FC38CC /* ProfileView.swift */; };
 		0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC1EA2CDA1A650009B553 /* ActivityIndicatorHelper.swift */; };
 		0B8BC1F32CDA1A650009B553 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC1EB2CDA1A650009B553 /* UIView+.swift */; };
 		0B8BC1F52CDA1A650009B553 /* KeyboardTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8BC1ED2CDA1A650009B553 /* KeyboardTap.swift */; };
@@ -50,13 +66,15 @@
 		0BB0AFCF2CE3461B008272B2 /* StepModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFCE2CE3461B008272B2 /* StepModel.swift */; };
 		0BB0AFD12CE348F6008272B2 /* DestinationSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */; };
 		0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */; };
-		0BB0AFD52CE3A235008272B2 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD42CE3A235008272B2 /* UserManager.swift */; };
+		0BB0AFD52CE3A235008272B2 /* UserAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD42CE3A235008272B2 /* UserAPIManager.swift */; };
 		0BC4CCC42CF080CB00388BBC /* PlanetDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */; };
+		0BCA103D2CF1FAA900FF6285 /* TabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA103C2CF1FAA900FF6285 /* TabBarViewModel.swift */; };
+		0BCA10402CF24C7900FF6285 /* UIViewController+StarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA103F2CF24C7900FF6285 /* UIViewController+StarView.swift */; };
 		0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */; };
 		0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */; };
-		0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */; };
+		0BEBD88F2CD3A622001590E8 /* AppleAPILoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD88E2CD3A622001590E8 /* AppleAPILoginManager.swift */; };
 		0BEBD8912CD3A63B001590E8 /* AppleLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8902CD3A63B001590E8 /* AppleLoginModel.swift */; };
-		0BEBD8932CD3A686001590E8 /* KakaoLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */; };
+		0BEBD8932CD3A686001590E8 /* KakaoLoginAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEBD8922CD3A686001590E8 /* KakaoLoginAPIManager.swift */; };
 		0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */; };
 		0BEC2A332CD8AE97000EC98C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC2A322CD8AE97000EC98C /* MainViewController.swift */; };
 /* End PBXBuildFile section */
@@ -88,6 +106,22 @@
 		0B44F9D82CE75D4C00435FFC /* CalendarDayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayCell.swift; sourceTree = "<group>"; };
 		0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthSelectionViewController.swift; sourceTree = "<group>"; };
 		0B44F9DC2CE75D9300435FFC /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
+		0B4987D62CF33CEE00045E54 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		0B7B63632CF8712300FC38CC /* AddPlanetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlanetView.swift; sourceTree = "<group>"; };
+		0B7B63672CF8831600FC38CC /* StepAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepAPIManager.swift; sourceTree = "<group>"; };
+		0B7B63692CF8879B00FC38CC /* UNUserNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNUserNotificationCenter.swift; sourceTree = "<group>"; };
+		0B7B636B2CF8883000FC38CC /* UIViewController+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Date.swift"; sourceTree = "<group>"; };
+		0B7B636D2CF8D2AA00FC38CC /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		0B7B636F2CF8D92D00FC38CC /* PlanetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetCell.swift; sourceTree = "<group>"; };
+		0B7B63712CF8D94B00FC38CC /* PlanetNotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetNotificationNames.swift; sourceTree = "<group>"; };
+		0B7B63732CF8DA5F00FC38CC /* PlanetAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetAPIManager.swift; sourceTree = "<group>"; };
+		0B7B63752CF8DC8B00FC38CC /* DestinationSelectionViewController+TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DestinationSelectionViewController+TableView.swift"; sourceTree = "<group>"; };
+		0B7B63792CF8DD3B00FC38CC /* DestinationSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSelectionView.swift; sourceTree = "<group>"; };
+		0B7B637B2CF8DDA600FC38CC /* CalendarViewController+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CalendarViewController+CollectionView.swift"; sourceTree = "<group>"; };
+		0B7B637E2CF8E91F00FC38CC /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		0B7B63802CF8EA1600FC38CC /* StepDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailView.swift; sourceTree = "<group>"; };
+		0B7B63822CF8EAE900FC38CC /* PlanetDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetDetailView.swift; sourceTree = "<group>"; };
+		0B7B63852CF8ED8500FC38CC /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		0B8BC1EA2CDA1A650009B553 /* ActivityIndicatorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorHelper.swift; sourceTree = "<group>"; };
 		0B8BC1EB2CDA1A650009B553 /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		0B8BC1ED2CDA1A650009B553 /* KeyboardTap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardTap.swift; sourceTree = "<group>"; };
@@ -102,14 +136,16 @@
 		0BB0AFCE2CE3461B008272B2 /* StepModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepModel.swift; sourceTree = "<group>"; };
 		0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSelectionViewController.swift; sourceTree = "<group>"; };
 		0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
-		0BB0AFD42CE3A235008272B2 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		0BB0AFD42CE3A235008272B2 /* UserAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPIManager.swift; sourceTree = "<group>"; };
 		0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetDetailViewController.swift; sourceTree = "<group>"; };
+		0BCA103C2CF1FAA900FF6285 /* TabBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewModel.swift; sourceTree = "<group>"; };
+		0BCA103F2CF24C7900FF6285 /* UIViewController+StarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+StarView.swift"; sourceTree = "<group>"; };
 		0BE87C3C2CC5356B00BAEA19 /* SpaceWanderer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpaceWanderer.entitlements; sourceTree = "<group>"; };
 		0BE8B8522CD4D6DB003524C3 /* UpdateProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileViewController.swift; sourceTree = "<group>"; };
 		0BEBD88A2CD36F4F001590E8 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
-		0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginManager.swift; sourceTree = "<group>"; };
+		0BEBD88E2CD3A622001590E8 /* AppleAPILoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleAPILoginManager.swift; sourceTree = "<group>"; };
 		0BEBD8902CD3A63B001590E8 /* AppleLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginModel.swift; sourceTree = "<group>"; };
-		0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginManager.swift; sourceTree = "<group>"; };
+		0BEBD8922CD3A686001590E8 /* KakaoLoginAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginAPIManager.swift; sourceTree = "<group>"; };
 		0BEC2A302CD8A7C0000EC98C /* SelectProfileImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectProfileImageViewController.swift; sourceTree = "<group>"; };
 		0BEC2A322CD8AE97000EC98C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -200,12 +236,49 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		0B7B63772CF8DD2300FC38CC /* auth */ = {
+			isa = PBXGroup;
+			children = (
+				0B4987D62CF33CEE00045E54 /* LoginView.swift */,
+			);
+			path = auth;
+			sourceTree = "<group>";
+		};
+		0B7B63782CF8DD2D00FC38CC /* main */ = {
+			isa = PBXGroup;
+			children = (
+				0B7B636D2CF8D2AA00FC38CC /* MainView.swift */,
+				0B7B63792CF8DD3B00FC38CC /* DestinationSelectionView.swift */,
+			);
+			path = main;
+			sourceTree = "<group>";
+		};
+		0B7B637D2CF8E91500FC38CC /* calendar */ = {
+			isa = PBXGroup;
+			children = (
+				0B7B637E2CF8E91F00FC38CC /* CalendarView.swift */,
+				0B7B63802CF8EA1600FC38CC /* StepDetailView.swift */,
+				0B7B63822CF8EAE900FC38CC /* PlanetDetailView.swift */,
+			);
+			path = calendar;
+			sourceTree = "<group>";
+		};
+		0B7B63842CF8ED5700FC38CC /* profile */ = {
+			isa = PBXGroup;
+			children = (
+				0B7B63852CF8ED8500FC38CC /* ProfileView.swift */,
+			);
+			path = profile;
+			sourceTree = "<group>";
+		};
 		0B8BC1E32CDA17F90009B553 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				0BEBD8922CD3A686001590E8 /* KakaoLoginManager.swift */,
-				0BEBD88E2CD3A622001590E8 /* AppleLoginManager.swift */,
-				0BB0AFD42CE3A235008272B2 /* UserManager.swift */,
+				0BEBD8922CD3A686001590E8 /* KakaoLoginAPIManager.swift */,
+				0B7B63672CF8831600FC38CC /* StepAPIManager.swift */,
+				0BEBD88E2CD3A622001590E8 /* AppleAPILoginManager.swift */,
+				0BB0AFD42CE3A235008272B2 /* UserAPIManager.swift */,
+				0B7B63732CF8DA5F00FC38CC /* PlanetAPIManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -213,6 +286,7 @@
 		0B8BC1E42CDA18000009B553 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				0BCA103E2CF24C6A00FF6285 /* Extension */,
 				0B8BC20F2CDA41380009B553 /* Color */,
 				0B8BC1E92CDA1A650009B553 /* UIFactorys */,
 				0B301C8F2CC2742C0008804A /* Fonts */,
@@ -239,6 +313,10 @@
 		0B8BC1E62CDA18180009B553 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0B7B63772CF8DD2300FC38CC /* auth */,
+				0B7B63782CF8DD2D00FC38CC /* main */,
+				0B7B637D2CF8E91500FC38CC /* calendar */,
+				0B7B63842CF8ED5700FC38CC /* profile */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -262,6 +340,7 @@
 				0B8BC1ED2CDA1A650009B553 /* KeyboardTap.swift */,
 				0B8BC1F02CDA1A650009B553 /* UIFactory+.swift */,
 				0BA08E632CE9DF0D00D2633F /* CustomNavigationController.swift */,
+				0B7B63632CF8712300FC38CC /* AddPlanetView.swift */,
 			);
 			path = UIFactorys;
 			sourceTree = "<group>";
@@ -280,6 +359,7 @@
 			children = (
 				0BEC2A322CD8AE97000EC98C /* MainViewController.swift */,
 				0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */,
+				0B7B636F2CF8D92D00FC38CC /* PlanetCell.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -332,6 +412,7 @@
 		0BC4CCC52CF095F100388BBC /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				0BCA103C2CF1FAA900FF6285 /* TabBarViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -352,6 +433,19 @@
 				0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */,
 			);
 			path = "select month";
+			sourceTree = "<group>";
+		};
+		0BCA103E2CF24C6A00FF6285 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				0BCA103F2CF24C7900FF6285 /* UIViewController+StarView.swift */,
+				0B7B63692CF8879B00FC38CC /* UNUserNotificationCenter.swift */,
+				0B7B636B2CF8883000FC38CC /* UIViewController+Date.swift */,
+				0B7B63712CF8D94B00FC38CC /* PlanetNotificationNames.swift */,
+				0B7B63752CF8DC8B00FC38CC /* DestinationSelectionViewController+TableView.swift */,
+				0B7B637B2CF8DDA600FC38CC /* CalendarViewController+CollectionView.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -449,18 +543,26 @@
 				0B2CED8A2CE8AAAD00F19FD5 /* SettingViewController.swift in Sources */,
 				0B8BC20B2CDA1D860009B553 /* CalendarViewController.swift in Sources */,
 				0B301C7D2CC272530008804A /* ViewController.swift in Sources */,
+				0B7B636A2CF8879B00FC38CC /* UNUserNotificationCenter.swift in Sources */,
+				0B7B63812CF8EA1600FC38CC /* StepDetailView.swift in Sources */,
+				0BCA10402CF24C7900FF6285 /* UIViewController+StarView.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
 				0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */,
+				0B7B63702CF8D92D00FC38CC /* PlanetCell.swift in Sources */,
 				0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */,
+				0B7B63862CF8ED8500FC38CC /* ProfileView.swift in Sources */,
 				0BA08E642CE9DF0D00D2633F /* CustomNavigationController.swift in Sources */,
 				0BE8B8532CD4D6DB003524C3 /* UpdateProfileViewController.swift in Sources */,
-				0BB0AFD52CE3A235008272B2 /* UserManager.swift in Sources */,
+				0BB0AFD52CE3A235008272B2 /* UserAPIManager.swift in Sources */,
 				0BC4CCC42CF080CB00388BBC /* PlanetDetailViewController.swift in Sources */,
 				0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */,
 				0B1FC1322CEF13DA00DC0CFF /* GuestBookViewController.swift in Sources */,
 				0B2CED882CE8AAA200F19FD5 /* ProfileEditViewController.swift in Sources */,
+				0B7B63762CF8DC8B00FC38CC /* DestinationSelectionViewController+TableView.swift in Sources */,
 				0B44F9DD2CE75D9300435FFC /* BottomSheetPresentationController.swift in Sources */,
 				0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */,
+				0B7B63722CF8D94B00FC38CC /* PlanetNotificationNames.swift in Sources */,
+				0B4987D72CF33CEE00045E54 /* LoginView.swift in Sources */,
 				0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */,
 				0BA08E662CE9E05800D2633F /* StepDetailViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
@@ -468,19 +570,29 @@
 				0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */,
 				0B44F9DB2CE75D6A00435FFC /* MonthSelectionViewController.swift in Sources */,
 				0B8BC2072CDA1D490009B553 /* ProfileViewController.swift in Sources */,
+				0B7B63682CF8831600FC38CC /* StepAPIManager.swift in Sources */,
 				0BEC2A332CD8AE97000EC98C /* MainViewController.swift in Sources */,
+				0B7B63832CF8EAE900FC38CC /* PlanetDetailView.swift in Sources */,
+				0B7B637F2CF8E91F00FC38CC /* CalendarView.swift in Sources */,
 				0B44F9D92CE75D4C00435FFC /* CalendarDayCell.swift in Sources */,
 				0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */,
+				0B7B63742CF8DA5F00FC38CC /* PlanetAPIManager.swift in Sources */,
 				0BB0AFCF2CE3461B008272B2 /* StepModel.swift in Sources */,
 				0B1FC1382CEF25BC00DC0CFF /* PlanetModel.swift in Sources */,
 				0B301CA22CC2742C0008804A /* UIFont.swift in Sources */,
+				0BCA103D2CF1FAA900FF6285 /* TabBarViewModel.swift in Sources */,
 				0B8BC1F52CDA1A650009B553 /* KeyboardTap.swift in Sources */,
+				0B7B63642CF8712300FC38CC /* AddPlanetView.swift in Sources */,
 				0BEBD8912CD3A63B001590E8 /* AppleLoginModel.swift in Sources */,
 				0B8BC1F32CDA1A650009B553 /* UIView+.swift in Sources */,
 				0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */,
-				0BEBD8932CD3A686001590E8 /* KakaoLoginManager.swift in Sources */,
+				0B7B636E2CF8D2AA00FC38CC /* MainView.swift in Sources */,
+				0B7B636C2CF8883000FC38CC /* UIViewController+Date.swift in Sources */,
+				0B7B637C2CF8DDA600FC38CC /* CalendarViewController+CollectionView.swift in Sources */,
+				0B7B637A2CF8DD3B00FC38CC /* DestinationSelectionView.swift in Sources */,
+				0BEBD8932CD3A686001590E8 /* KakaoLoginAPIManager.swift in Sources */,
 				0BB0AFD12CE348F6008272B2 /* DestinationSelectionViewController.swift in Sources */,
-				0BEBD88F2CD3A622001590E8 /* AppleLoginManager.swift in Sources */,
+				0BEBD88F2CD3A622001590E8 /* AppleAPILoginManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

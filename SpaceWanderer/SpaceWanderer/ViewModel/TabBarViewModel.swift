@@ -26,14 +26,12 @@ class TabBarViewModel {
     
     // UserManager 인스턴스를 사용하여 사용자 데이터를 가져옵니다.
     func fetchUserData(completion: @escaping (Result<UserModel, Error>) -> Void) {
-        let userManager = UserManager()
-        
         guard let userIdentifier = userIdentifier else {
             print("userIdentifier가 nil입니다.")
             return
         }
         
-        userManager.getUser(by: userIdentifier) { result in
+        UserAPIManager.shared.getUser(by: userIdentifier) { result in
             switch result {
             case .success(let userEntity):
                 completion(.success(userEntity))

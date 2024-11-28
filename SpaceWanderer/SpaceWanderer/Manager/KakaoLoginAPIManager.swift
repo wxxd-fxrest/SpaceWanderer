@@ -21,7 +21,7 @@ protocol KakaoAutoLoginManagerDelegate: AnyObject {
     func didCompleteKakaoLogin(userUniqueId: String, userIdentifier: String)
 }
 
-class KakaoLoginManager {
+class KakaoLoginAPIManager {
     weak var delegate: KakaoLoginManagerDelegate?
     weak var autoDelegate: KakaoAutoLoginManagerDelegate?
     
