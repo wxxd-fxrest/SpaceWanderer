@@ -10,6 +10,11 @@
 		0B07676F2CD2767600866B22 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0B07676E2CD2767600866B22 /* KakaoSDKAuth */; };
 		0B0767752CD2767600866B22 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0767742CD2767600866B22 /* KakaoSDKCommon */; };
 		0B0767772CD276E500866B22 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0767762CD276E500866B22 /* KakaoSDKUser */; };
+		0B1153A62CF9BE7E003AF39F /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1153A52CF9BE7E003AF39F /* ProfileEditView.swift */; };
+		0B1153A82CF9CCEA003AF39F /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1153A72CF9CCEA003AF39F /* SettingView.swift */; };
+		0B1153AA2CF9CD3F003AF39F /* SelectProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1153A92CF9CD3F003AF39F /* SelectProfileImageView.swift */; };
+		0B1153AC2CF9CD63003AF39F /* UpdateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1153AB2CF9CD63003AF39F /* UpdateProfileView.swift */; };
+		0B1153AE2CF9D654003AF39F /* AuthAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1153AD2CF9D654003AF39F /* AuthAPIManager.swift */; };
 		0B1FC1322CEF13DA00DC0CFF /* GuestBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */; };
 		0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */; };
 		0B1FC1382CEF25BC00DC0CFF /* PlanetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */; };
@@ -80,6 +85,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B1153A52CF9BE7E003AF39F /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
+		0B1153A72CF9CCEA003AF39F /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		0B1153A92CF9CD3F003AF39F /* SelectProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectProfileImageView.swift; sourceTree = "<group>"; };
+		0B1153AB2CF9CD63003AF39F /* UpdateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileView.swift; sourceTree = "<group>"; };
+		0B1153AD2CF9D654003AF39F /* AuthAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIManager.swift; sourceTree = "<group>"; };
 		0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestBookViewController.swift; sourceTree = "<group>"; };
 		0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPlanetCell.swift; sourceTree = "<group>"; };
 		0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetModel.swift; sourceTree = "<group>"; };
@@ -173,6 +183,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0B1153A42CF9BE70003AF39F /* setting */ = {
+			isa = PBXGroup;
+			children = (
+				0B1153A52CF9BE7E003AF39F /* ProfileEditView.swift */,
+				0B1153A72CF9CCEA003AF39F /* SettingView.swift */,
+			);
+			path = setting;
+			sourceTree = "<group>";
+		};
 		0B1FC1302CEF13C400DC0CFF /* guest */ = {
 			isa = PBXGroup;
 			children = (
@@ -240,6 +259,8 @@
 			isa = PBXGroup;
 			children = (
 				0B4987D62CF33CEE00045E54 /* LoginView.swift */,
+				0B1153AB2CF9CD63003AF39F /* UpdateProfileView.swift */,
+				0B1153A92CF9CD3F003AF39F /* SelectProfileImageView.swift */,
 			);
 			path = auth;
 			sourceTree = "<group>";
@@ -279,6 +300,7 @@
 				0BEBD88E2CD3A622001590E8 /* AppleAPILoginManager.swift */,
 				0BB0AFD42CE3A235008272B2 /* UserAPIManager.swift */,
 				0B7B63732CF8DA5F00FC38CC /* PlanetAPIManager.swift */,
+				0B1153AD2CF9D654003AF39F /* AuthAPIManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -317,6 +339,7 @@
 				0B7B63782CF8DD2D00FC38CC /* main */,
 				0B7B637D2CF8E91500FC38CC /* calendar */,
 				0B7B63842CF8ED5700FC38CC /* profile */,
+				0B1153A42CF9BE70003AF39F /* setting */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -548,7 +571,9 @@
 				0BCA10402CF24C7900FF6285 /* UIViewController+StarView.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
 				0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */,
+				0B1153AC2CF9CD63003AF39F /* UpdateProfileView.swift in Sources */,
 				0B7B63702CF8D92D00FC38CC /* PlanetCell.swift in Sources */,
+				0B1153AE2CF9D654003AF39F /* AuthAPIManager.swift in Sources */,
 				0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */,
 				0B7B63862CF8ED8500FC38CC /* ProfileView.swift in Sources */,
 				0BA08E642CE9DF0D00D2633F /* CustomNavigationController.swift in Sources */,
@@ -561,6 +586,7 @@
 				0B7B63762CF8DC8B00FC38CC /* DestinationSelectionViewController+TableView.swift in Sources */,
 				0B44F9DD2CE75D9300435FFC /* BottomSheetPresentationController.swift in Sources */,
 				0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */,
+				0B1153A82CF9CCEA003AF39F /* SettingView.swift in Sources */,
 				0B7B63722CF8D94B00FC38CC /* PlanetNotificationNames.swift in Sources */,
 				0B4987D72CF33CEE00045E54 /* LoginView.swift in Sources */,
 				0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */,
@@ -568,6 +594,7 @@
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
 				0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */,
 				0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */,
+				0B1153A62CF9BE7E003AF39F /* ProfileEditView.swift in Sources */,
 				0B44F9DB2CE75D6A00435FFC /* MonthSelectionViewController.swift in Sources */,
 				0B8BC2072CDA1D490009B553 /* ProfileViewController.swift in Sources */,
 				0B7B63682CF8831600FC38CC /* StepAPIManager.swift in Sources */,
@@ -584,6 +611,7 @@
 				0B8BC1F52CDA1A650009B553 /* KeyboardTap.swift in Sources */,
 				0B7B63642CF8712300FC38CC /* AddPlanetView.swift in Sources */,
 				0BEBD8912CD3A63B001590E8 /* AppleLoginModel.swift in Sources */,
+				0B1153AA2CF9CD3F003AF39F /* SelectProfileImageView.swift in Sources */,
 				0B8BC1F32CDA1A650009B553 /* UIView+.swift in Sources */,
 				0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */,
 				0B7B636E2CF8D2AA00FC38CC /* MainView.swift in Sources */,

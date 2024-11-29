@@ -195,4 +195,58 @@ class AppleAPILoginManager {
         
         print("애플 로그아웃 성공")
     }
+    
+    // 애플 회원 탈퇴 
+    func deleteUserAccount(userIdentifier: String, accessToken: String?, completion: @escaping (Bool, String) -> Void) {
+        print("deleteUserAccount userIdentifier: ", userIdentifier)
+        guard let url = URL(string: "\(backendURL)/apple-delete/\(userIdentifier)") else {
+            completion(false, "잘못된 URL입니다.")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        print("deleteUserAccount url: ", url)
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        if let token = accessToken {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let body: [String: Any] = ["userIdentifier": userIdentifier]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(false, "서버와의 연결에 실패했습니다: \(error.localizedDescription)")
+                }
+                return
+            }
+            
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    completion(false, "서버 응답을 받지 못했습니다.")
+                }
+                return
+            }
+            
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("서버 응답: \(responseString)")
+                
+                if responseString.contains("회원 탈퇴가 완료되었습니다.") {
+                    DispatchQueue.main.async {
+                        completion(true, responseString)
+                    }
+                } else {
+                    let errorMessage = "서버에서 예상치 못한 응답을 받았습니다: \(responseString)"
+                    DispatchQueue.main.async {
+                        completion(false, errorMessage)
+                    }
+                }
+            }
+        }
+        
+        task.resume()
+    }
 }

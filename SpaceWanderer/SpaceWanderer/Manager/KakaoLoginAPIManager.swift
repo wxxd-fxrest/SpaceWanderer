@@ -265,7 +265,6 @@ class KakaoLoginAPIManager {
     // 사용자 데이터 삭제를 위한 백엔드 요청
     func deleteUserDataFromBackend(userIdentifier: String, completion: @escaping (Bool) -> Void) {
         // 서버에서 사용자 데이터를 삭제하는 API 호출 (예시)
-        
         guard let url = URL(string: "\(backendURL)/kakao-delete/\(userIdentifier)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"

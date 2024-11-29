@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 
 class LoginView: UIView {
-    
     var appleSignInButton: UIButton!
     var kakaoLoginButton: UIButton!
     
@@ -107,16 +106,20 @@ class LoginView: UIView {
     
     // 로딩 인디케이터 시작
     func startLoading() {
-        loadingIndicator.startAnimating()
-        isUserInteractionEnabled = false // 사용자 인터랙션 비활성화
+        DispatchQueue.main.async {
+            self.loadingIndicator.startAnimating()
+            self.isUserInteractionEnabled = false // 사용자 인터랙션 비활성화
+        }
     }
 
     // 로딩 인디케이터 중지
     func stopLoading() {
-        loadingIndicator.stopAnimating()
-        isUserInteractionEnabled = true // 사용자 인터랙션 활성화
+        DispatchQueue.main.async {
+            self.loadingIndicator.stopAnimating()
+            self.isUserInteractionEnabled = true // 사용자 인터랙션 활성화
+        }
     }
-    
+
     // 로그인 버튼 숨기기
     func hideLoginButtons() {
         kakaoLoginButton.isHidden = true

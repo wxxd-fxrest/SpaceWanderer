@@ -10,7 +10,7 @@ import UIKit
 class CustomNavigationController: UIViewController {
     func setupNavigationBar(withTitle title: String, backButtonImage: String) {
         // 뒤로가기 버튼 색상 설정
-        self.navigationController?.navigationBar.tintColor = UIColor.red // 원하는 색상으로 변경
+        self.navigationController?.navigationBar.tintColor = SpecialColors.WhiteColor // 원하는 색상으로 변경
 
         // 네비게이션 타이틀 설정
         self.navigationController?.navigationBar.topItem?.title = title

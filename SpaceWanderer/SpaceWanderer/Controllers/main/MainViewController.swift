@@ -36,7 +36,6 @@ class MainViewController: UIViewController {
         mainView.destinationButtonTapped = { [weak self] in
             self?.navigateToDestinationSelection()
         }
-        
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: .planetUpdatedMain, object: nil)
     }
 

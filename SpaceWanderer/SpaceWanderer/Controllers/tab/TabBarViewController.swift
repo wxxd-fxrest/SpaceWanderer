@@ -144,10 +144,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         let calendarNavController = createNavController(for: calendarVC, title: NSLocalizedString("", comment: ""), image: UIImage(named: "CalendarIcon")!)
         let profileNavController = createNavController(for: profileVC, title: NSLocalizedString("", comment: ""), image: UIImage(named: "UserIcon")!)
 
-//        mainNavController.tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -8, right: 0)
-//        calendarNavController.tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -8, right: 0)
-//        profileNavController.tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -8, right: 0)
-
         viewControllers = [mainNavController, calendarNavController, profileNavController]
     }
 

@@ -134,4 +134,106 @@ class UserAPIManager {
         
         task.resume()
     }
+    
+    // 닉네임 유니크 체크 메서드
+    func checkNicknameUniqueness(_ nickname: String, completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(backendURL)/check-nickname/\(nickname)") else {
+            completion(false)
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            if let _ = error {
+                completion(false)
+                return
+            }
+            
+            guard let data = data, let isUnique = try? JSONDecoder().decode(Bool.self, from: data) else {
+                completion(false)
+                return
+            }
+            
+            completion(isUnique)
+        }
+        task.resume()
+    }
+    
+    // 프로필 수정(회원가입 이후)
+    func updateProfile(userIdentifier: String, requestData: [String: Any], completion: @escaping (Result<Void, Error>) -> Void) {
+        guard !requestData.isEmpty,
+              let url = URL(string: "\(backendURL)/profile-update/\(userIdentifier)") else {
+            completion(.failure(NSError(domain: "Invalid URL or empty request data", code: 400, userInfo: nil)))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: requestData, options: [])
+            request.httpBody = jsonData
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                // 성공적으로 업데이트된 경우
+                completion(.success(()))
+            }
+            task.resume()
+        } catch {
+            completion(.failure(error))
+        }
+    }
+    
+    // 프로필 작성(회원가입 진행 시)
+    func updateProfile(userIdentifier: String, nickname: String, birthDay: String, inhabitedPlanet: String, profileImage: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        // URL 요청 준비
+        guard let url = URL(string: "\(backendURL)/profile-write/\(userIdentifier)") else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let requestData: [String: Any] = [
+            "nickname": nickname,
+            "birthDay": birthDay,
+            "inhabitedPlanet": inhabitedPlanet,
+            "profileImage": profileImage
+        ]
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: requestData, options: [])
+            request.httpBody = jsonData
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data else {
+                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+                    return
+                }
+                
+                // 응답 처리
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("Profile updated: \(responseString)")
+                    completion(.success(()))
+                } else {
+                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])))
+                }
+            }
+            task.resume()
+        } catch {
+            completion(.failure(error))
+        }
+    }
 }
