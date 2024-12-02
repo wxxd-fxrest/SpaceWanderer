@@ -10,7 +10,7 @@ import UIKit
 // MARK: - UITableViewDelegate & UITableViewDataSource
 extension DestinationSelectionViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return planets.count
+        return viewModel.planets.count
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -18,7 +18,7 @@ extension DestinationSelectionViewController: UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let planet = planets[indexPath.row]
+        let planet = viewModel.planets[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "PlanetCell", for: indexPath) as! PlanetCell
         
         // 셀 데이터 설정
@@ -42,8 +42,8 @@ extension DestinationSelectionViewController: UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedPlanet = planets[indexPath.row]
-        updateUserPlanet(with: selectedPlanet.name)
+        let selectedPlanet = viewModel.planets[indexPath.row]
+        viewModel.updateUserPlanet(with: selectedPlanet.name)
         self.navigationController?.popViewController(animated: true)
     }
 }

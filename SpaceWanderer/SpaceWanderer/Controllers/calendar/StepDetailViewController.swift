@@ -8,9 +8,7 @@
 import UIKit
 
 class StepDetailViewController: CustomNavigationController {
-    var date: Date?
-    var steps: Int?
-    var dayDestination: String?
+    var viewModel: StepDetailViewModel! // StepDetailViewModel 인스턴스
     
     private let stepDetailView = StepDetailView() // StepDetailView 인스턴스
 
@@ -20,31 +18,30 @@ class StepDetailViewController: CustomNavigationController {
         
         setupDetailView()
         
-        print("StepDetailViewController 날짜: ", date ?? "날짜 없음")
-        print("StepDetailViewController 걸음 수: ", steps ?? "걸음 수 없음")
-        print("StepDetailViewController 목적지: ", dayDestination ?? "목적지 없음")
+        // 날짜, 걸음 수, 목적지 출력
+        print("StepDetailViewController 날짜: ", viewModel.date ?? "날짜 없음")
+        print("StepDetailViewController 걸음 수: ", viewModel.steps ?? "걸음 수 없음")
+        print("StepDetailViewController 목적지: ", viewModel.dayDestination ?? "목적지 없음")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
 
-        if let unwrappedDate = date {
-            let formattedDate = stepDetailView.formatDate(unwrappedDate)
-            setupNavigationBar(withTitle: formattedDate, backButtonImage: "LargeLeftIcon")
-        } else {
-            setupNavigationBar(withTitle: "날짜 없음", backButtonImage: "LargeLeftIcon")
-        }
+        // 뷰 모델에서 날짜를 포맷해서 네비게이션 바 타이틀에 설정
+        let formattedDate = viewModel.formattedDate()
+        setupNavigationBar(withTitle: formattedDate, backButtonImage: "LargeLeftIcon")
     }
     
     private func setupDetailView() {
-        guard let date = date, let steps = steps, let destination = dayDestination else { return }
-        
-        stepDetailView.configureView(date: date, steps: steps, destination: destination)
-        
-        // UI 설정
-        view.addSubview(stepDetailView)
-        stepDetailView.frame = view.bounds // 전체 화면에 맞게 설정
+        // 뷰 모델에서 데이터를 가져와 뷰를 설정
+        if let viewData = viewModel.configureDetailView() {
+            stepDetailView.configureView(date: viewData.date, steps: viewData.steps, destination: viewData.destination)
+            
+            // UI 설정
+            view.addSubview(stepDetailView)
+            stepDetailView.frame = view.bounds // 전체 화면에 맞게 설정
+        }
     }
     
     @objc private func navigateToGuestBook() {

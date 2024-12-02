@@ -39,6 +39,7 @@
 		0B44F9D92CE75D4C00435FFC /* CalendarDayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B44F9D82CE75D4C00435FFC /* CalendarDayCell.swift */; };
 		0B44F9DB2CE75D6A00435FFC /* MonthSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */; };
 		0B44F9DD2CE75D9300435FFC /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B44F9DC2CE75D9300435FFC /* BottomSheetPresentationController.swift */; };
+		0B485E192CFAE903006DEBE6 /* UpdateProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B485E182CFAE903006DEBE6 /* UpdateProfileViewModel.swift */; };
 		0B4987D72CF33CEE00045E54 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4987D62CF33CEE00045E54 /* LoginView.swift */; };
 		0B7B63642CF8712300FC38CC /* AddPlanetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63632CF8712300FC38CC /* AddPlanetView.swift */; };
 		0B7B63682CF8831600FC38CC /* StepAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7B63672CF8831600FC38CC /* StepAPIManager.swift */; };
@@ -72,6 +73,11 @@
 		0BB0AFD12CE348F6008272B2 /* DestinationSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */; };
 		0BB0AFD32CE3A0D0008272B2 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */; };
 		0BB0AFD52CE3A235008272B2 /* UserAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0AFD42CE3A235008272B2 /* UserAPIManager.swift */; };
+		0BBDC0B82CFD92F900EB26BC /* SelectProfileImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDC0B72CFD92F900EB26BC /* SelectProfileImageViewModel.swift */; };
+		0BBDC0BA2CFDAA3B00EB26BC /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDC0B92CFDAA3B00EB26BC /* MainViewModel.swift */; };
+		0BBDC0BC2CFDABAC00EB26BC /* DestinationSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDC0BB2CFDABAC00EB26BC /* DestinationSelectionViewModel.swift */; };
+		0BBDC0BE2CFDB1EB00EB26BC /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDC0BD2CFDB1EB00EB26BC /* CalendarViewModel.swift */; };
+		0BBDC0C02CFDB52C00EB26BC /* StepDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDC0BF2CFDB52C00EB26BC /* StepDetailViewModel.swift */; };
 		0BC4CCC42CF080CB00388BBC /* PlanetDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */; };
 		0BCA103D2CF1FAA900FF6285 /* TabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA103C2CF1FAA900FF6285 /* TabBarViewModel.swift */; };
 		0BCA10402CF24C7900FF6285 /* UIViewController+StarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCA103F2CF24C7900FF6285 /* UIViewController+StarView.swift */; };
@@ -116,6 +122,7 @@
 		0B44F9D82CE75D4C00435FFC /* CalendarDayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayCell.swift; sourceTree = "<group>"; };
 		0B44F9DA2CE75D6A00435FFC /* MonthSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthSelectionViewController.swift; sourceTree = "<group>"; };
 		0B44F9DC2CE75D9300435FFC /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
+		0B485E182CFAE903006DEBE6 /* UpdateProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileViewModel.swift; sourceTree = "<group>"; };
 		0B4987D62CF33CEE00045E54 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		0B7B63632CF8712300FC38CC /* AddPlanetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlanetView.swift; sourceTree = "<group>"; };
 		0B7B63672CF8831600FC38CC /* StepAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepAPIManager.swift; sourceTree = "<group>"; };
@@ -147,6 +154,11 @@
 		0BB0AFD02CE348F6008272B2 /* DestinationSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSelectionViewController.swift; sourceTree = "<group>"; };
 		0BB0AFD22CE3A0D0008272B2 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		0BB0AFD42CE3A235008272B2 /* UserAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPIManager.swift; sourceTree = "<group>"; };
+		0BBDC0B72CFD92F900EB26BC /* SelectProfileImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectProfileImageViewModel.swift; sourceTree = "<group>"; };
+		0BBDC0B92CFDAA3B00EB26BC /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		0BBDC0BB2CFDABAC00EB26BC /* DestinationSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSelectionViewModel.swift; sourceTree = "<group>"; };
+		0BBDC0BD2CFDB1EB00EB26BC /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
+		0BBDC0BF2CFDB52C00EB26BC /* StepDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailViewModel.swift; sourceTree = "<group>"; };
 		0BC4CCC32CF080CB00388BBC /* PlanetDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetDetailViewController.swift; sourceTree = "<group>"; };
 		0BCA103C2CF1FAA900FF6285 /* TabBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewModel.swift; sourceTree = "<group>"; };
 		0BCA103F2CF24C7900FF6285 /* UIViewController+StarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+StarView.swift"; sourceTree = "<group>"; };
@@ -253,6 +265,55 @@
 				0B301C992CC2742C0008804A /* Pretendard-Light.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		0B485E122CFAE8D8006DEBE6 /* auth */ = {
+			isa = PBXGroup;
+			children = (
+				0B485E182CFAE903006DEBE6 /* UpdateProfileViewModel.swift */,
+				0BBDC0B72CFD92F900EB26BC /* SelectProfileImageViewModel.swift */,
+			);
+			path = auth;
+			sourceTree = "<group>";
+		};
+		0B485E132CFAE8DD006DEBE6 /* setting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = setting;
+			sourceTree = "<group>";
+		};
+		0B485E142CFAE8E3006DEBE6 /* profile */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = profile;
+			sourceTree = "<group>";
+		};
+		0B485E152CFAE8EA006DEBE6 /* calendar */ = {
+			isa = PBXGroup;
+			children = (
+				0BBDC0BD2CFDB1EB00EB26BC /* CalendarViewModel.swift */,
+				0BBDC0BF2CFDB52C00EB26BC /* StepDetailViewModel.swift */,
+			);
+			path = calendar;
+			sourceTree = "<group>";
+		};
+		0B485E162CFAE8EF006DEBE6 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				0BBDC0B92CFDAA3B00EB26BC /* MainViewModel.swift */,
+				0BBDC0BB2CFDABAC00EB26BC /* DestinationSelectionViewModel.swift */,
+			);
+			path = main;
+			sourceTree = "<group>";
+		};
+		0B485E172CFAE8F6006DEBE6 /* tab */ = {
+			isa = PBXGroup;
+			children = (
+				0BCA103C2CF1FAA900FF6285 /* TabBarViewModel.swift */,
+			);
+			path = tab;
 			sourceTree = "<group>";
 		};
 		0B7B63772CF8DD2300FC38CC /* auth */ = {
@@ -435,7 +496,12 @@
 		0BC4CCC52CF095F100388BBC /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				0BCA103C2CF1FAA900FF6285 /* TabBarViewModel.swift */,
+				0B485E172CFAE8F6006DEBE6 /* tab */,
+				0B485E122CFAE8D8006DEBE6 /* auth */,
+				0B485E162CFAE8EF006DEBE6 /* main */,
+				0B485E152CFAE8EA006DEBE6 /* calendar */,
+				0B485E142CFAE8E3006DEBE6 /* profile */,
+				0B485E132CFAE8DD006DEBE6 /* setting */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -569,11 +635,13 @@
 				0B7B636A2CF8879B00FC38CC /* UNUserNotificationCenter.swift in Sources */,
 				0B7B63812CF8EA1600FC38CC /* StepDetailView.swift in Sources */,
 				0BCA10402CF24C7900FF6285 /* UIViewController+StarView.swift in Sources */,
+				0BBDC0BE2CFDB1EB00EB26BC /* CalendarViewModel.swift in Sources */,
 				0B301C792CC272530008804A /* AppDelegate.swift in Sources */,
 				0BEC2A312CD8A7C0000EC98C /* SelectProfileImageViewController.swift in Sources */,
 				0B1153AC2CF9CD63003AF39F /* UpdateProfileView.swift in Sources */,
 				0B7B63702CF8D92D00FC38CC /* PlanetCell.swift in Sources */,
 				0B1153AE2CF9D654003AF39F /* AuthAPIManager.swift in Sources */,
+				0BBDC0BA2CFDAA3B00EB26BC /* MainViewModel.swift in Sources */,
 				0B8BC20E2CDA1DCE0009B553 /* TabBarViewController.swift in Sources */,
 				0B7B63862CF8ED8500FC38CC /* ProfileView.swift in Sources */,
 				0BA08E642CE9DF0D00D2633F /* CustomNavigationController.swift in Sources */,
@@ -583,6 +651,7 @@
 				0B8BC2112CDA41380009B553 /* UIColor.swift in Sources */,
 				0B1FC1322CEF13DA00DC0CFF /* GuestBookViewController.swift in Sources */,
 				0B2CED882CE8AAA200F19FD5 /* ProfileEditViewController.swift in Sources */,
+				0BBDC0B82CFD92F900EB26BC /* SelectProfileImageViewModel.swift in Sources */,
 				0B7B63762CF8DC8B00FC38CC /* DestinationSelectionViewController+TableView.swift in Sources */,
 				0B44F9DD2CE75D9300435FFC /* BottomSheetPresentationController.swift in Sources */,
 				0B8BC1F82CDA1A650009B553 /* UIFactory+.swift in Sources */,
@@ -593,6 +662,7 @@
 				0BA08E662CE9E05800D2633F /* StepDetailViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
 				0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */,
+				0BBDC0BC2CFDABAC00EB26BC /* DestinationSelectionViewModel.swift in Sources */,
 				0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */,
 				0B1153A62CF9BE7E003AF39F /* ProfileEditView.swift in Sources */,
 				0B44F9DB2CE75D6A00435FFC /* MonthSelectionViewController.swift in Sources */,
@@ -600,11 +670,13 @@
 				0B7B63682CF8831600FC38CC /* StepAPIManager.swift in Sources */,
 				0BEC2A332CD8AE97000EC98C /* MainViewController.swift in Sources */,
 				0B7B63832CF8EAE900FC38CC /* PlanetDetailView.swift in Sources */,
+				0B485E192CFAE903006DEBE6 /* UpdateProfileViewModel.swift in Sources */,
 				0B7B637F2CF8E91F00FC38CC /* CalendarView.swift in Sources */,
 				0B44F9D92CE75D4C00435FFC /* CalendarDayCell.swift in Sources */,
 				0BEBD88B2CD36F4F001590E8 /* KeychainHelper.swift in Sources */,
 				0B7B63742CF8DA5F00FC38CC /* PlanetAPIManager.swift in Sources */,
 				0BB0AFCF2CE3461B008272B2 /* StepModel.swift in Sources */,
+				0BBDC0C02CFDB52C00EB26BC /* StepDetailViewModel.swift in Sources */,
 				0B1FC1382CEF25BC00DC0CFF /* PlanetModel.swift in Sources */,
 				0B301CA22CC2742C0008804A /* UIFont.swift in Sources */,
 				0BCA103D2CF1FAA900FF6285 /* TabBarViewModel.swift in Sources */,

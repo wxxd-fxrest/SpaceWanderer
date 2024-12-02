@@ -9,16 +9,20 @@ import UIKit
 
 class SelectProfileImageViewController: CustomNavigationController {
     
-    var userIdentifier: String?
-    var nickname: String?
-    var birthDay: String?
-    
+    private let viewModel = SelectProfileImageViewModel()
     private let profileImageView = SelectProfileImageView()
+
+    // ViewModel에 사용자 정보를 설정하는 메서드
+    func configure(with userIdentifier: String?, nickname: String?, birthDay: String?) {
+        viewModel.userIdentifier = userIdentifier
+        viewModel.nickname = nickname
+        viewModel.birthDay = birthDay
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewDidLoad : ", nickname, birthDay)
-        print("viewDidLoad - userIdentifier: ", userIdentifier)
+        print("viewDidLoad : ", viewModel.nickname ?? "", viewModel.birthDay ?? "")
+        print("viewDidLoad - userIdentifier: ", viewModel.userIdentifier ?? "")
 
         setupUI()
     }
@@ -40,18 +44,7 @@ class SelectProfileImageViewController: CustomNavigationController {
     }
 
     private func updateProfile(imageName: String) {
-        guard let nickname = nickname,
-              let birthDay = birthDay else {
-            print("Missing user data")
-            return
-        }
-        print("updateProfile : ", nickname, birthDay)
-        
-        guard let userIdentifier = userIdentifier else { return }
-        print("updateProfile : ", userIdentifier)
-        
-        // APIManager를 사용하여 프로필 업데이트
-        UserAPIManager.shared.updateProfile(userIdentifier: userIdentifier, nickname: nickname, birthDay: birthDay, inhabitedPlanet: "수성", profileImage: imageName) { [weak self] result in
+        viewModel.updateProfile(imageName: imageName) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:

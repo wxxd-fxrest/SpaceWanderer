@@ -11,10 +11,12 @@ class MainView: UIView {
     
     var stepLabel: UILabel!
     var goalLabel: UILabel!
-    var selectDestinationButton: UIButton!
+    var goalButton: UIButton!
     var destinationLabel: UILabel!
+    var selectDestinationButton: UIButton!
     
     var destinationButtonTapped: (() -> Void)?
+    var goalButtonTapped: (() -> Void)?
     
     var loadingIndicator = UIActivityIndicatorView(style: .medium).then {
         $0.color = SpecialColors.WhiteColor
@@ -48,22 +50,23 @@ class MainView: UIView {
         goalLabel.textColor = .red
         addSubview(goalLabel)
         
-        selectDestinationButton = UIButton()
-        selectDestinationButton.setTitle(">", for: .normal)
-        selectDestinationButton.tintColor = .red
-        addSubview(selectDestinationButton)
+        goalButton = UIButton()
+        goalButton.setTitle(">", for: .normal)
+        goalButton.tintColor = .red
+        goalButton.addTarget(self, action: #selector(goalButtonTappedAction), for: .touchUpInside)
+        addSubview(goalButton)
         
         goalLabel.translatesAutoresizingMaskIntoConstraints = false
-        selectDestinationButton.translatesAutoresizingMaskIntoConstraints = false
+        goalButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             goalLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 40),
             goalLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
-            selectDestinationButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 40),
-            selectDestinationButton.leadingAnchor.constraint(equalTo: goalLabel.trailingAnchor, constant: 6),
-            selectDestinationButton.heightAnchor.constraint(equalToConstant: 30),
-            selectDestinationButton.widthAnchor.constraint(equalToConstant: 24)
+            goalButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 40),
+            goalButton.leadingAnchor.constraint(equalTo: goalLabel.trailingAnchor, constant: 6),
+            goalButton.heightAnchor.constraint(equalToConstant: 30),
+            goalButton.widthAnchor.constraint(equalToConstant: 24)
         ])
     }
     
@@ -71,7 +74,7 @@ class MainView: UIView {
         // 목적지 선택 버튼 및 행성 라벨
         stepLabel = UILabel()
         stepLabel.textAlignment = .center
-        stepLabel.frame = CGRect(x: (frame.width - 200) / 2, y: (frame.height - 80) / 2, width: 200, height: 50)
+        stepLabel.frame = CGRect(x: (frame.width - 200) / 2, y: (frame.height - 180) / 2, width: 200, height: 50)
         stepLabel.textColor = .blue
         
         selectDestinationButton = UIButton()
@@ -92,6 +95,10 @@ class MainView: UIView {
         destinationButtonTapped?() // 클로저 호출
     }
     
+    @objc private func goalButtonTappedAction() {
+        goalButtonTapped?()
+    }
+ 
     // 로딩 인디케이터 시작
     func startLoading() {
         loadingIndicator.startAnimating()
@@ -190,7 +197,7 @@ class MainView: UIView {
 
     func updateCircularProgressBar(totalStepsToday: Double, realTimeSteps: Double) {
         let totalSteps = totalStepsToday + realTimeSteps
-        let maxStepCount = 20.0
+        let maxStepCount = 300.0
         let progress = totalSteps / maxStepCount
         
         let labelRadius: CGFloat = 150

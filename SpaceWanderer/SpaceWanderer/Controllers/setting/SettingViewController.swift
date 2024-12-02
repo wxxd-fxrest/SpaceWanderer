@@ -108,6 +108,12 @@ class SettingViewController: CustomNavigationController {
                 print("사용자 데이터 삭제 완료.")
                 UserDefaults.standard.removeObject(forKey: "kakaoUserIdentifier")
                 UserDefaults.standard.removeObject(forKey: "LoginType")
+                UserDefaults.standard.removeObject(forKey: "lastNotificationDate")
+                UserDefaults.standard.removeObject(forKey: "notificationSentFor8k")
+                UserDefaults.standard.removeObject(forKey: "notificationSentFor10k")
+                
+                // UserDefaults 변경 사항 저장
+                UserDefaults.standard.synchronize()
                 print("UserDefaults에서 카카오 데이터 삭제 완료.")
                 
                 UserApi.shared.unlink { error in

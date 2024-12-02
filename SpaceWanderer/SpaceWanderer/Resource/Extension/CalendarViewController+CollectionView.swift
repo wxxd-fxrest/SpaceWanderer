@@ -66,13 +66,20 @@ extension CalendarViewController: UICollectionViewDataSource, UICollectionViewDe
     
     private func navigateToDetailPage(for date: Date) {
         let detailVC = StepDetailViewController()
+
+        // 해당 날짜에 대한 걸음 수와 목적지 가져오기
         let stepDataForSelectedDate = stepData[date] ?? (0, "")
-        detailVC.date = date
-        detailVC.steps = stepDataForSelectedDate.0 // Step count
-        detailVC.dayDestination = stepDataForSelectedDate.1 // Day destination
+        
+        // StepDetailViewModel 생성
+        let viewModel = StepDetailViewModel(date: date, steps: stepDataForSelectedDate.0, dayDestination: stepDataForSelectedDate.1)
+        
+        // 뷰 모델 설정
+        detailVC.viewModel = viewModel
+        
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
+
     
     private func filteredStepData(for planet: Planet) -> [Date: Int] {
         var filteredData: [Date: Int] = [:]
@@ -112,12 +119,29 @@ extension CalendarViewController: UIViewControllerTransitioningDelegate, MonthSe
     
     // MARK: - MonthSelectionViewControllerDelegate
     func didSelectDate(_ date: Date) {
+        guard let userUniqueId = userUniqueId else {
+            print("userUniqueId is nil")
+            return // 조건이 충족되지 않으면 이 함수에서 빠져나갑니다.
+        }
+        
         selectedDate = date
         setupDates()
         
         let year = Calendar.current.component(.year, from: selectedDate)
         let month = Calendar.current.component(.month, from: selectedDate)
-        fetchStepData(for: userUniqueId ?? "", year: year, month: month)
+        // ViewModel을 사용하여 데이터 가져오기
+        viewModel.fetchStepData(for: userUniqueId, year: year, month: month) { result in
+            switch result {
+            case .success(let stepData):
+                DispatchQueue.main.async {
+                    self.stepData = stepData
+                    self.updateTotalStepsLabel()
+                    self.calendarView.calendarCollectionView.reloadData()
+                }
+            case .failure(let error):
+                print("Error fetching step data: \(error.localizedDescription)")
+            }
+        }
         
         updateMonthLabel()
         updateTotalStepsLabel()

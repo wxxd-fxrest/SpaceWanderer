@@ -180,6 +180,13 @@ class AppleAPILoginManager {
         userDefaults.removeObject(forKey: "appleUserIdentifier")
         userDefaults.removeObject(forKey: "LoginType")
         
+        userDefaults.removeObject(forKey: "lastNotificationDate")
+        userDefaults.removeObject(forKey: "notificationSentFor8k")
+        userDefaults.removeObject(forKey: "notificationSentFor10k")
+        
+        // UserDefaults 변경 사항 저장
+        userDefaults.synchronize()
+        
         // 삭제된 값 확인 로그
         if userDefaults.object(forKey: "appleUserIdentifier") == nil {
             print("애플 사용자 식별자 삭제 완료")

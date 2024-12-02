@@ -99,24 +99,24 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
             
             if let mainNavController = self.viewControllers?[0] as? UINavigationController,
                let mainVC = mainNavController.viewControllers.first as? MainViewController {
-                mainVC.totalGoals = self.viewModel?.totalGoals
+                mainVC.totalGoals = viewModel.totalGoals
             }
             
             if let profileNavController = self.viewControllers?.last as? UINavigationController,
                let profileVC = profileNavController.viewControllers.first as? ProfileViewController {
-                profileVC.nickname = self.viewModel?.nickname
-                profileVC.id = self.viewModel?.id
-                profileVC.origin = self.viewModel?.origin
-                profileVC.birthday = self.viewModel?.birthday
-                profileVC.profileImage = self.viewModel?.profileImage
-                profileVC.location = self.viewModel?.location
-                profileVC.totalGoals = self.viewModel?.totalGoals
+                profileVC.nickname = viewModel.nickname
+                profileVC.id = viewModel.id
+                profileVC.origin = viewModel.origin
+                profileVC.birthday = viewModel.birthday
+                profileVC.profileImage = viewModel.profileImage
+                profileVC.location = viewModel.location
+                profileVC.totalGoals = viewModel.totalGoals
                 profileVC.setUpdateProfileUI()
             }
             
             if let calendarNavController = self.viewControllers?[1] as? UINavigationController,
                let calendarVC = calendarNavController.viewControllers.first as? CalendarViewController {
-                calendarVC.totalGoals = self.viewModel?.totalGoals
+                calendarVC.totalGoals = viewModel.totalGoals
             }
         }
     }
