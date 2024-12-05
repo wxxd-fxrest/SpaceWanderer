@@ -17,7 +17,7 @@ class ProfileViewController: UIViewController {
     
     private let profileView = ProfileView() // ProfileView 인스턴스
 
-    // User data properties
+    // properties
     var id: String?
     var nickname: String?
     var origin: String?
@@ -33,7 +33,6 @@ class ProfileViewController: UIViewController {
         // Setup Profile View
         setupProfileView()
         
-        // Add tap gesture recognizers
         profileView.downloadIcon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(downloadIconTapped)))
         profileView.moreIcon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(moreIconTapped)))
     }
@@ -42,7 +41,6 @@ class ProfileViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         
-        // Update profile UI with user data
         setUpdateProfileUI()
         
         print("Profile nickname: ", nickname ?? "No nickname")
@@ -68,7 +66,6 @@ class ProfileViewController: UIViewController {
         profileView.frame = view.bounds // Fill the view
     }
     
-    // Method to capture card view as an image
     func captureCardViewAsImage() -> UIImage? {
         let renderer = UIGraphicsImageRenderer(size: profileView.cardView.bounds.size)
         return renderer.image { context in
@@ -76,11 +73,9 @@ class ProfileViewController: UIViewController {
         }
     }
 
-    // Method to save and share the profile image
     func saveAndShareImage() {
         guard let image = captureCardViewAsImage() else { return }
 
-        // Request access to the photo library
         PHPhotoLibrary.requestAuthorization { status in
             switch status {
             case .authorized:
@@ -95,7 +90,6 @@ class ProfileViewController: UIViewController {
         }
     }
 
-    // Method to handle the image save result
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         if let error = error {
             print("Failed to save image: \(error.localizedDescription)")
@@ -104,13 +98,11 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    // Method to handle download icon tap
     @objc private func downloadIconTapped() {
         print("Download Icon Tapped")
         saveAndShareImage()
     }
 
-    // Method to handle more icon tap
     @objc private func moreIconTapped() {
         print("More Icon Tapped")
         

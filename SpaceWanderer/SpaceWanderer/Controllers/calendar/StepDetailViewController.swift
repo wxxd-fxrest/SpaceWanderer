@@ -11,12 +11,17 @@ class StepDetailViewController: CustomNavigationController {
     var viewModel: StepDetailViewModel! // StepDetailViewModel 인스턴스
     
     private let stepDetailView = StepDetailView() // StepDetailView 인스턴스
+    
+    private let blurBackgroundView = UIVisualEffectView(effect: nil) // 블러 효과 뷰
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = SpecialColors.MainViewBackGroundColor
-        
+        view.backgroundColor = SpecialColors.WhiteColor
+        setupBlurBackground()
         setupDetailView()
+        
+        // 내부 요소 크기에 맞게 preferredContentSize 설정
+        updatePreferredContentSize()
         
         // 날짜, 걸음 수, 목적지 출력
         print("StepDetailViewController 날짜: ", viewModel.date ?? "날짜 없음")
@@ -24,13 +29,25 @@ class StepDetailViewController: CustomNavigationController {
         print("StepDetailViewController 목적지: ", viewModel.dayDestination ?? "목적지 없음")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
-
-        // 뷰 모델에서 날짜를 포맷해서 네비게이션 바 타이틀에 설정
-        let formattedDate = viewModel.formattedDate()
-        setupNavigationBar(withTitle: formattedDate, backButtonImage: "LargeLeftIcon")
+    private func setupBlurBackground() {
+        // 블러 배경 추가
+        blurBackgroundView.frame = view.bounds
+        blurBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.insertSubview(blurBackgroundView, at: 0) // 바텀 시트 뒤로 배치
+    }
+    
+    func showWithBlurEffect() {
+        // 애니메이션으로 블러 효과 추가
+        UIView.animate(withDuration: 0.3) {
+            self.blurBackgroundView.effect = UIBlurEffect(style: .dark)
+        }
+    }
+    
+    func hideWithBlurEffect() {
+        // 애니메이션으로 블러 효과 제거
+        UIView.animate(withDuration: 0.3) {
+            self.blurBackgroundView.effect = nil
+        }
     }
     
     private func setupDetailView() {
@@ -42,6 +59,18 @@ class StepDetailViewController: CustomNavigationController {
             view.addSubview(stepDetailView)
             stepDetailView.frame = view.bounds // 전체 화면에 맞게 설정
         }
+    }
+    
+    private func updatePreferredContentSize() {
+        // 내부 요소 크기에 맞게 preferredContentSize 업데이트
+        let contentHeight = calculateContentHeight()
+        preferredContentSize = CGSize(width: view.bounds.width, height: contentHeight)
+    }
+    
+    private func calculateContentHeight() -> CGFloat {
+        // 내부 요소의 총 높이를 계산
+        // 여기서는 stepDetailView의 높이를 기준으로 설정
+        return stepDetailView.frame.height
     }
     
     @objc private func navigateToGuestBook() {

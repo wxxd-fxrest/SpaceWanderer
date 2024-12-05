@@ -6,31 +6,43 @@
 //
 
 import UIKit
+import SnapKit
+import Then
 
 class PlanetDetailView: UIView {
     
+    let topPadding: CGFloat = 8.0
+    let bottomPadding: CGFloat = 8.0
+    
     // MARK: - UI Elements
-    let successCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16)
-        label.textColor = SpecialColors.WhiteColor
-        return label
-    }()
+    lazy var successCountTitleLabel = UIFactory.makeLabel(text: "방문 성공 횟수", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .regular, size: 18, isScaled: true), textAlignment: .center)
+    lazy var successCountBackView = UIFactory.makeView(backgroundColor: SpecialColors.MainColor, cornerRadius: 12)
+    lazy var successCountLabel = UIFactory.makeLabel(text: "success count", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .regular, size: 18, isScaled: true), textAlignment: .center)
+    lazy var successCountStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [successCountTitleLabel, successCountBackView],
+        axis: .horizontal,
+        spacing: 20,
+        alignment: .fill,
+        distribution: .equalSpacing
+    )
     
-    let planetImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit // 이미지를 비율에 맞게 조정
-        return imageView
-    }()
+    lazy var descriptionBackView = UIFactory.makeView(backgroundColor: SpecialColors.WhiteColor, cornerRadius: 12)
+    lazy var descriptionLabel = UIFactory.makeLabel(text: "description", textColor: SpecialColors.MainViewBackGroundColor, font: UIFont.pretendard(style: .regular, size: 18, isScaled: true), textAlignment: .center)
     
-    let descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = SpecialColors.WhiteColor
-        label.numberOfLines = 0 // 여러 줄을 지원하도록 설정
-        return label
-    }()
+    // Image
+    lazy var imageBackView = UIFactory.makeView(backgroundColor: SpecialColors.MainViewBackGroundColor.withAlphaComponent(0.2), cornerRadius: 12)
+    lazy var imageInnerBackView = UIFactory.makeView(backgroundColor: SpecialColors.MainViewBackGroundColor, cornerRadius: 8)
+    let planetImageView = UIImageView() // 이미지 뷰 추가
     
+    lazy var stackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [planetImageView, descriptionBackView, successCountStackView],
+        axis: .vertical,
+        spacing: 34,
+        alignment: .center,
+        distribution: .fill
+    )
+
+    // goGuestBookButton은 나중에 개발
     let goGuestBookButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("방명록 보기", for: .normal)
@@ -52,40 +64,50 @@ class PlanetDetailView: UIView {
     }
     
     private func setupViews() {
-        addSubview(successCountLabel)
-        addSubview(planetImageView)
-        addSubview(descriptionLabel)
-        addSubview(goGuestBookButton)
+        addSubviews(stackView)
+        successCountBackView.addSubview(successCountLabel)
+        descriptionBackView.addSubview(descriptionLabel)
         
-        // 레이블의 오토 레이아웃 설정
-        successCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        planetImageView.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        goGuestBookButton.translatesAutoresizingMaskIntoConstraints = false
+        stackView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(34)
+            $0.leading.trailing.equalToSuperview().inset(20)
+        }
+
+        planetImageView.snp.makeConstraints {
+            $0.width.equalTo(120)
+            $0.height.equalTo(120)
+        }
         
-        NSLayoutConstraint.activate([
-            successCountLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
-            successCountLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            
-            planetImageView.topAnchor.constraint(equalTo: successCountLabel.bottomAnchor, constant: 20),
-            planetImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            planetImageView.widthAnchor.constraint(equalToConstant: 100), // 원하는 너비
-            planetImageView.heightAnchor.constraint(equalToConstant: 100), // 원하는 높이
-            
-            descriptionLabel.topAnchor.constraint(equalTo: planetImageView.bottomAnchor, constant: 20),
-            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16), // 양쪽 여백 설정
-            
-            goGuestBookButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
-            goGuestBookButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            goGuestBookButton.widthAnchor.constraint(equalToConstant: 150), // 버튼 너비
-            goGuestBookButton.heightAnchor.constraint(equalToConstant: 40) // 버튼 높이
-        ])
+        successCountStackView.snp.makeConstraints {
+            $0.leading.trailing.equalTo(stackView)
+        }
+        
+        successCountBackView.snp.makeConstraints {
+            $0.height.equalTo(28)
+            $0.leading.equalTo(successCountLabel).offset(-8) // 여백을 설정해서 label의 왼쪽에 여백을 추가
+            $0.trailing.equalTo(successCountLabel).offset(8) // 여백을 설정해서 label의 오른쪽에 여백을 추가
+        }
+
+        successCountLabel.snp.makeConstraints {
+            $0.center.equalTo(successCountBackView) // successCountBackView의 중앙에 배치
+        }
+
+        descriptionBackView.snp.makeConstraints {
+            $0.leading.trailing.equalTo(stackView)
+            $0.height.equalTo(descriptionLabel.snp.height).offset(topPadding + bottomPadding) // 패딩을 포함한 높이
+        }
+
+        descriptionLabel.snp.makeConstraints {
+            $0.center.equalTo(descriptionBackView) // descriptionBackView의 중앙에 배치
+            $0.top.equalTo(descriptionBackView.snp.top).offset(topPadding) // 상단 패딩
+            $0.bottom.equalTo(descriptionBackView.snp.bottom).offset(-bottomPadding) // 하단 패딩
+        }
     }
 
     func configureView(planet: Planet, filteredStepData: [Date: Int]) {
         // 행성 정보를 설정
-        successCountLabel.text = "방문 성공 횟수: \(countSuccessfulVisits(filteredStepData: filteredStepData))"
+        successCountLabel.text = String(format: "%02d", countSuccessfulVisits(filteredStepData: filteredStepData))
         descriptionLabel.text = planet.description // 행성 설명 설정
         loadPlanetImage(named: planet.name) // 행성 이름으로 이미지 로드
     }

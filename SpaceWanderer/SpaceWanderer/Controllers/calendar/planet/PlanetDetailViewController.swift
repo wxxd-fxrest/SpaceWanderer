@@ -12,6 +12,8 @@ class PlanetDetailViewController: CustomNavigationController {
     var filteredStepData: [Date: Int] = [:] // 필터링된 데이터
 
     private let planetDetailView = PlanetDetailView() // PlanetDetailView 인스턴스
+    
+    private let blurBackgroundView = UIVisualEffectView(effect: nil) // 블러 효과 뷰
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +21,7 @@ class PlanetDetailViewController: CustomNavigationController {
         
         // UI 설정
         setupViews()
+        setupBlurBackground()
         
         // 선택된 행성 정보 및 필터링된 데이터를 표시하는 로직 추가
         if let planet = planet {
@@ -50,6 +53,27 @@ class PlanetDetailViewController: CustomNavigationController {
     private func setupViews() {
         view.addSubview(planetDetailView)
         planetDetailView.frame = view.bounds // 전체 화면에 맞게 설정
+    }
+    
+    private func setupBlurBackground() {
+        // 블러 배경 추가
+        blurBackgroundView.frame = view.bounds
+        blurBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.insertSubview(blurBackgroundView, at: 0) // 바텀 시트 뒤로 배치
+    }
+    
+    func showWithBlurEffect() {
+        // 애니메이션으로 블러 효과 추가
+        UIView.animate(withDuration: 0.3) {
+            self.blurBackgroundView.effect = UIBlurEffect(style: .dark)
+        }
+    }
+    
+    func hideWithBlurEffect() {
+        // 애니메이션으로 블러 효과 제거
+        UIView.animate(withDuration: 0.3) {
+            self.blurBackgroundView.effect = nil
+        }
     }
 
     @objc private func navigateToGuestBook() {

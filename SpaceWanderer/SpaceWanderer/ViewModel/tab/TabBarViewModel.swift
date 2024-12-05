@@ -45,8 +45,8 @@ class TabBarViewModel {
     func updateUserInfo(userEntity: UserModel) {
         self.nickname = userEntity.nickname ?? "정보 없음"
         self.id = "#\(userEntity.userUniqueId)"
-        self.origin = "출신 · \(userEntity.inhabitedPlanet ?? "정보 없음")"
-        self.birthday = "생일 · \(userEntity.birthDay ?? "정보 없음")"
+        self.origin = "출신: \(userEntity.inhabitedPlanet ?? "정보 없음")"
+        self.birthday = "생일: \(userEntity.birthDay ?? "정보 없음")"
         self.profileImage = "\(userEntity.profileImage ?? "LaunchScreenIcon")"
         self.location = "\(userEntity.destinationPlanet ?? "")으로 가는 중"
         self.totalGoals = "\(userEntity.dayGoalCount)"

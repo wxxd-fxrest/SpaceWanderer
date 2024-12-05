@@ -6,27 +6,55 @@
 //
 
 import UIKit
+import SnapKit
 
 class MainView: UIView {
+    let isSmallDevice = UIScreen.main.bounds.height <= 667 // iPhone SE (1세대) 기준
+
+    // MARK: step label
+    var stepLabel = UIFactory.makeLabel(text: "step", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .regular, size: 10, isScaled: true), textAlignment: .center)
     
-    var stepLabel: UILabel!
-    var goalLabel: UILabel!
-    var goalButton: UIButton!
-    var destinationLabel: UILabel!
-    var selectDestinationButton: UIButton!
+    // MARK: success label & button
+    var goalButton = UIFactory.makeView(backgroundColor: SpecialColors.MainViewBackGroundColor.withAlphaComponent(0.9))
+    lazy var goalLabelStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [goalTitleLabel, goalLabel],
+        axis: .vertical,
+        spacing: 4,
+        alignment: .center,
+        distribution: .fill
+    )
+    lazy var goalTitleLabel = UIFactory.makeLabel(text: "축하합니다! 오늘 목표를 달성하셨습니다!", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .semiBold, size: isSmallDevice ? 16 : 18, isScaled: true), textAlignment: .center)
+    lazy var goalLabel = UIFactory.makeLabel(text: "클릭 시 상세페이지로 이동", textColor: SpecialColors.WhiteColor.withAlphaComponent(0.6), font: UIFont.pretendard(style: .regular, size: self.isSmallDevice ? 14 : 16, isScaled: true), textAlignment: .center)
+    var goalIconImage = UIFactory.makeImageView(imageName: "LargeRightIcon", color: SpecialColors.WhiteColor)
+
+    // MARK: destination label & button
+    var selectDestinationButton = UIFactory.makeView(backgroundColor: SpecialColors.MainViewBackGroundColor.withAlphaComponent(0.3))
+    lazy var destinationStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [selectDestinationLabel, destinationLabel, destinationIconImage],
+        axis: .horizontal,
+        spacing: 4,
+        alignment: .center,
+        distribution: .fill
+    )
+    var selectDestinationLabel = UIFactory.makeLabel(text: "목적지: ", textColor: SpecialColors.WhiteColor.withAlphaComponent(0.7), font: UIFont.pretendard(style: .bold, size: 24, isScaled: true), textAlignment: .center)
+    var destinationLabel = UIFactory.makeLabel(text: "명왕성", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .bold, size: 24, isScaled: true), textAlignment: .center)
+    var destinationIconImage = UIFactory.makeImageView(imageName: "LargeRightIcon", color: SpecialColors.WhiteColor)
     
+    // MARK: Button Tapped
     var destinationButtonTapped: (() -> Void)?
     var goalButtonTapped: (() -> Void)?
     
+    // MARK: loadingIndicator
     var loadingIndicator = UIActivityIndicatorView(style: .medium).then {
         $0.color = SpecialColors.WhiteColor
         $0.hidesWhenStopped = true
     }
 
+    // MARK: ProgressBar
     private var progressLayer: CAShapeLayer!
     private var trackLayer: CAShapeLayer!
     private var progressImageView: UIImageView!
-    private var progressBackgroundView: UIView!
+    private var progressMarkBackgroundView: UIView!
     private let radius: CGFloat = 150
     private let lineWidth: CGFloat = 16
     
@@ -44,51 +72,54 @@ class MainView: UIView {
     }
     
     func showGoalMessage() {
-        goalLabel = UILabel()
-        goalLabel.text = "축하합니다! 오늘 10,000걸음 목표를 달성하셨습니다!"
-        goalLabel.textAlignment = .center
-        goalLabel.textColor = .red
-        addSubview(goalLabel)
+        // goalButton 클릭 이벤트 추가
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goalButtonTappedAction))
+        goalButton.isUserInteractionEnabled = true // 터치 이벤트를 활성화
+        goalButton.addGestureRecognizer(tapGesture)
         
-        goalButton = UIButton()
-        goalButton.setTitle(">", for: .normal)
-        goalButton.tintColor = .red
-        goalButton.addTarget(self, action: #selector(goalButtonTappedAction), for: .touchUpInside)
         addSubview(goalButton)
+        goalButton.addSubviews(goalLabelStackView)
+                
+        goalButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview() // 가로 중앙 정렬
+            $0.top.equalTo(safeAreaLayoutGuide.snp.bottom).offset(isSmallDevice ? -90 : -150) // 조건에 따른 간격 설정
+            $0.height.equalTo(40) // 버튼 높이
+        }
         
-        goalLabel.translatesAutoresizingMaskIntoConstraints = false
-        goalButton.translatesAutoresizingMaskIntoConstraints = false
+        goalLabelStackView.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(0) // 내부 여백 설정
+            $0.center.equalToSuperview() // StackView가 버튼 안에서 중앙 정렬되도록
+        }
         
-        NSLayoutConstraint.activate([
-            goalLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 40),
-            goalLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            
-            goalButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 40),
-            goalButton.leadingAnchor.constraint(equalTo: goalLabel.trailingAnchor, constant: 6),
-            goalButton.heightAnchor.constraint(equalToConstant: 30),
-            goalButton.widthAnchor.constraint(equalToConstant: 24)
-        ])
+        goalIconImage.snp.makeConstraints {
+            $0.width.equalTo(24)
+            $0.height.equalTo(24)
+        }
     }
     
     func setDestinationUI() {
-        // 목적지 선택 버튼 및 행성 라벨
-        stepLabel = UILabel()
-        stepLabel.textAlignment = .center
-        stepLabel.frame = CGRect(x: (frame.width - 200) / 2, y: (frame.height - 180) / 2, width: 200, height: 50)
-        stepLabel.textColor = .blue
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(destinationButtonTappedAction))
+        selectDestinationButton.isUserInteractionEnabled = true // 터치 이벤트를 활성화
+        selectDestinationButton.addGestureRecognizer(tapGesture)
         
-        selectDestinationButton = UIButton()
-        selectDestinationButton.setTitle("목적지 선택", for: .normal)
-        selectDestinationButton.frame = CGRect(x: (frame.width - 120) / 2, y: 40, width: 200, height: 50)
-        selectDestinationButton.tintColor = .blue
-        selectDestinationButton.addTarget(self, action: #selector(destinationButtonTappedAction), for: .touchUpInside)
+        addSubview(selectDestinationButton)
+        selectDestinationButton.addSubviews(destinationStackView)
         
-        destinationLabel = UILabel()
-        destinationLabel.textAlignment = .center
-        destinationLabel.frame = CGRect(x: (frame.width - 300) / 2, y: 40, width: 200, height: 50)
-        destinationLabel.textColor = .blue
+        selectDestinationButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview() // 가로 중앙 정렬
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(isSmallDevice ? 60 : 120) // 조건에 따른 간격 설정
+            $0.height.equalTo(40) // 버튼 높이
+        }
         
-        addSubviews(stepLabel, selectDestinationButton, destinationLabel)
+        destinationStackView.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(0) // 내부 여백 설정
+            $0.center.equalToSuperview() // StackView가 버튼 안에서 중앙 정렬되도록
+        }
+        
+        destinationIconImage.snp.makeConstraints {
+            $0.width.equalTo(24)
+            $0.height.equalTo(24)
+        }
     }
     
     @objc private func destinationButtonTappedAction() {
@@ -117,7 +148,7 @@ class MainView: UIView {
 
         // 트랙 레이어 및 프로그레스 레이어 다시 설정
         let radius: CGFloat = 150
-        let lineWidth: CGFloat = 16
+        let lineWidth: CGFloat = 18
         let centerPoint = CGPoint(x: bounds.midX, y: bounds.midY)
         
         if trackLayer == nil {
@@ -158,39 +189,28 @@ class MainView: UIView {
     }
 
     func setupCircularProgressBar() {
-        let backgroundDiameter: CGFloat = 44
-        if progressBackgroundView == nil {
-            progressBackgroundView = UIView()
-            progressBackgroundView.backgroundColor = SpecialColors.WhiteColor
-            progressBackgroundView.layer.cornerRadius = backgroundDiameter / 2
-            addSubview(progressBackgroundView)
-
-            // progressBackgroundView를 최상단으로 가져옴
-            bringSubviewToFront(progressBackgroundView)
-
-            progressBackgroundView.snp.makeConstraints {
+        let backgroundDiameter: CGFloat = 40
+        if progressMarkBackgroundView == nil {
+            progressMarkBackgroundView = UIView()
+            progressMarkBackgroundView.backgroundColor = SpecialColors.WhiteColor
+            progressMarkBackgroundView.layer.cornerRadius = backgroundDiameter / 2
+            addSubview(progressMarkBackgroundView)
+            
+            // SnapKit으로 progressBackgroundView의 제약 설정
+            progressMarkBackgroundView.snp.makeConstraints {
                 $0.width.height.equalTo(backgroundDiameter)
-                $0.center.equalToSuperview()
+                $0.center.equalToSuperview()  // 부모 뷰의 중앙에 배치
             }
-
+            
+            // 내부 원
             let innerCircleView = UIView()
             let innerDiameter = backgroundDiameter - 4
             innerCircleView.backgroundColor = SpecialColors.GreenStarColor
             innerCircleView.layer.cornerRadius = innerDiameter / 2
-            progressBackgroundView.addSubview(innerCircleView)
+            progressMarkBackgroundView.addSubview(innerCircleView)
             
-            if progressImageView == nil {
-                let progressImage = UIImage(named: "flyAlien")
-                progressImageView = UIImageView(image: progressImage)
-                progressImageView.contentMode = .scaleAspectFit
-                let imageSize: CGFloat = 42
-                progressImageView.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
-                progressBackgroundView.addSubview(progressImageView)
-                progressImageView.center = CGPoint(x: backgroundDiameter / 2, y: backgroundDiameter / 2)
-            }
-
             innerCircleView.snp.makeConstraints {
-                $0.edges.equalToSuperview().inset(2) // 바깥쪽 여백
+                $0.edges.equalToSuperview().inset(2)
             }
         }
     }
@@ -205,7 +225,8 @@ class MainView: UIView {
         let xOffset = labelRadius * cos(endAngle)
         let yOffset = labelRadius * sin(endAngle)
         
-        progressBackgroundView.snp.updateConstraints {
+        // progressBackgroundView의 위치를 변경하는 제약
+        progressMarkBackgroundView.snp.updateConstraints {
             $0.centerX.equalToSuperview().offset(xOffset)
             $0.centerY.equalToSuperview().offset(yOffset)
         }

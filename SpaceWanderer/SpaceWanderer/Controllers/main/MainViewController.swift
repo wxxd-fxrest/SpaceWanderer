@@ -309,6 +309,8 @@ class MainViewController: UIViewController, MainViewModelDelegate {
         mainView.frame = view.bounds
         addStars(starCount: 100)
         
+        mainView.showGoalMessage()
+        
         // MainViewModel 메서드 호출
         mainViewModel?.fetchTotalStepsForToday()
         mainViewModel?.startRealTimeStepUpdates()
@@ -361,25 +363,42 @@ class MainViewController: UIViewController, MainViewModelDelegate {
         navigationController?.pushViewController(destinationVC, animated: true)
     }
 
+    
 //    @objc private func navigateToDetailPage() {
-//        let detailVC = StepDetailViewController()
-//        detailVC.date = Date()
-//        
 //        let totalStepsToday = self.totalStepsToday + self.realTimeSteps
-//        detailVC.steps = Int(totalStepsToday)
-//        detailVC.dayDestination = mainView.destinationLabel.text
+//        let viewModel = StepDetailViewModel(date: Date(), steps: Int(totalStepsToday), dayDestination: mainView.destinationLabel.text)
+//
+//        let detailVC = StepDetailViewController()
+//        detailVC.viewModel = viewModel // ViewModel을 설정
 //        detailVC.hidesBottomBarWhenPushed = true
 //        navigationController?.pushViewController(detailVC, animated: true)
 //    }
+    
     @objc private func navigateToDetailPage() {
         let totalStepsToday = self.totalStepsToday + self.realTimeSteps
-        let viewModel = StepDetailViewModel(date: Date(), steps: Int(totalStepsToday), dayDestination: mainView.destinationLabel.text)
+        let viewModel = StepDetailViewModel(
+            date: Date(),
+            steps: Int(totalStepsToday),
+            dayDestination: mainView.destinationLabel.text ?? ""
+        )
 
         let detailVC = StepDetailViewController()
-        detailVC.viewModel = viewModel // ViewModel을 설정
-        detailVC.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(detailVC, animated: true)
+        detailVC.viewModel = viewModel // ViewModel 설정
+
+        // 바텀 시트 설정
+        if let sheet = detailVC.sheetPresentationController {
+            sheet.detents = [
+                .custom(resolver: { _ in 300 }) // 300pt 고정 높이 설정
+            ]
+            sheet.prefersGrabberVisible = true // 핸들 표시
+            sheet.prefersEdgeAttachedInCompactHeight = true // 컴팩트 모드에서 가장자리 고정
+        }
+
+        detailVC.modalPresentationStyle = .pageSheet // 모달 스타일 설정
+        present(detailVC, animated: true) // 모달로 ViewController 표시
     }
+
+
 
     
     // 목표 걸음 수 체크하는 메서드

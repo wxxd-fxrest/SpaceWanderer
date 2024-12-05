@@ -41,6 +41,7 @@ enum SpecialColors {
     static let TabSelectColor = UIColor(hex: "#D8E5F3")
     static let TabUnSelectColor = UIColor(hex: "#C8D2DE")
     static let WhiteColor = UIColor(hex: "#F9F9F9")
+    
     static let DarkGreenColor = UIColor(hex: "#071209")
     static let BlackColor = UIColor(hex: "#070707")
     static let GreenColor = UIColor(hex: "#6fea98")

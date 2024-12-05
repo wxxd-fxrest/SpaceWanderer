@@ -64,6 +64,21 @@ extension CalendarViewController: UICollectionViewDataSource, UICollectionViewDe
         }
     }
     
+//    private func navigateToDetailPage(for date: Date) {
+//        let detailVC = StepDetailViewController()
+//
+//        // 해당 날짜에 대한 걸음 수와 목적지 가져오기
+//        let stepDataForSelectedDate = stepData[date] ?? (0, "")
+//        
+//        // StepDetailViewModel 생성
+//        let viewModel = StepDetailViewModel(date: date, steps: stepDataForSelectedDate.0, dayDestination: stepDataForSelectedDate.1)
+//        
+//        // 뷰 모델 설정
+//        detailVC.viewModel = viewModel
+//        
+//        detailVC.hidesBottomBarWhenPushed = true
+//        navigationController?.pushViewController(detailVC, animated: true)
+//    }
     private func navigateToDetailPage(for date: Date) {
         let detailVC = StepDetailViewController()
 
@@ -76,10 +91,18 @@ extension CalendarViewController: UICollectionViewDataSource, UICollectionViewDe
         // 뷰 모델 설정
         detailVC.viewModel = viewModel
         
-        detailVC.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(detailVC, animated: true)
+        // 바텀 시트 설정
+        if let sheet = detailVC.sheetPresentationController {
+            sheet.detents = [
+                .custom { _ in 300 } // 기본 높이 설정 (필요 시 변경 가능)
+            ]
+            sheet.prefersGrabberVisible = true // 바텀 시트 위쪽에 핸들 표시
+            sheet.prefersEdgeAttachedInCompactHeight = true // 컴팩트 모드에서 화면 가장자리 고정
+        }
+        
+        detailVC.modalPresentationStyle = .pageSheet
+        present(detailVC, animated: true)
     }
-
     
     private func filteredStepData(for planet: Planet) -> [Date: Int] {
         var filteredData: [Date: Int] = [:]
@@ -103,9 +126,7 @@ extension CalendarViewController: UICollectionViewDataSource, UICollectionViewDe
         let filteredData = filteredStepData(for: planet)
         planetDetailVC.filteredStepData = filteredData
         planetDetailVC.planet = planet
-        
-        print("planetplanetplanetplanet:", planet)
-        
+
         planetDetailVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(planetDetailVC, animated: true)
     }

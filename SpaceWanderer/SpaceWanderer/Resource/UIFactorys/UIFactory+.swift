@@ -68,21 +68,6 @@ class UIFactory: UIViewController {
 
         return button
     }
-
-    
-//    static func makeButton(title: String, titleColor: UIColor, font: UIFont, backgroundColor: UIColor, cornerRadius: CGFloat = 0, image: UIImage?) -> UIButton {
-//        return UIButton().then {
-//            $0.setTitle(title, for: .normal)
-//            $0.setTitleColor(titleColor, for: .normal)
-//            if let image = image {
-//                $0.setImage(image, for: .normal)
-//            }
-//            $0.titleLabel?.font = font
-//            $0.backgroundColor = backgroundColor
-//            $0.layer.cornerRadius = cornerRadius
-//            $0.clipsToBounds = true
-//        }
-//    }
     
     // MARK: Image Button
     static func makeSystemImageButton(image: String, tintColor: UIColor) -> UIButton {
