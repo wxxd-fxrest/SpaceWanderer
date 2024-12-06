@@ -46,8 +46,11 @@ enum SpecialColors {
     static let BlackColor = UIColor(hex: "#070707")
     static let GreenColor = UIColor(hex: "#6fea98")
     static let PupleColor = UIColor(hex: "#090909")
-//    static let Gray3 = UIColor(hex: "#9E9E9E")
-//    static let Gray4 = UIColor(hex: "#555555")
+
+    // DatePickerView
+    static let Gray3 = UIColor(hex: "#858585")
+    // DatePicker Alert
+    static let AlertRed = UIColor(hex: "#fc4747")
 //    static let Black = UIColor(hex: "#2D2D2D")
 //    static let Red = UIColor(hex: "#EE2000")
     // 추가

@@ -6,34 +6,93 @@
 //
 
 import UIKit
+import SnapKit
+import Then
 
 class ProfileView: UIView {
     
     // MARK: - UI Elements
-    let titleLabel = UILabel()
-    let downloadIcon = UIImageView(image: UIImage(named: "DownloadIcon"))
-    let moreIcon = UIImageView(image: UIImage(named: "MoreVerticalIcon"))
+    lazy var titleLabel = UIFactory.makeLabel(text: "PROFILE", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .bold, size: 20, isScaled: true), textAlignment: .left)
+    var downloadIcon = UIFactory.makeImageView(imageName: "DownloadIcon", color: SpecialColors.WhiteColor)
+    var moreIcon = UIFactory.makeImageView(imageName: "MoreVerticalIcon", color: SpecialColors.WhiteColor)
+    lazy var iconsStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [downloadIcon, moreIcon],
+        axis: .horizontal,
+        spacing: 8,
+        alignment: .leading,
+        distribution: .fill
+    )
+    lazy var combinedStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [titleLabel, iconsStackView],
+        axis: .horizontal,
+        spacing: 16,
+        alignment: .leading,
+        distribution: .fill
+    )
     
-    var iconsStackView: UIStackView!
-    var combinedStackView: UIStackView!
-    
-    let cardView = UIView()
+    lazy var cardView = UIFactory.makeView(backgroundColor: SpecialColors.WhiteColor, cornerRadius: 12)
+    lazy var profileImageBackView = UIFactory.makeView(backgroundColor: SpecialColors.MainColor.withAlphaComponent(0.3), cornerRadius: 30)
     let profileImageView = UIImageView()
-    let nameLabel = UILabel()
-    let idLabel = UILabel()
-    let originLabel = UILabel()
-    let birthdayLabel = UILabel()
-    let descriptionLabel = UILabel()
-    let starView = UIView()
-    let starStackView = UIStackView()
-    let starIcon = UIImageView(image: UIImage(systemName: "star.fill"))
-    let starLabel = UILabel()
     
-    let locationTitleLabel = UILabel()
-    let locationLabel = UILabel()
+    lazy var nameLabel = UIFactory.makeLabel(text: "name", textColor: SpecialColors.MainViewBackGroundColor, font: UIFont.pretendard(style: .bold, size: 20, isScaled: true), textAlignment: .left)
+    lazy var idLabel = UIFactory.makeLabel(text: "id", textColor: SpecialColors.GearGray, font: UIFont.pretendard(style: .regular, size: 14, isScaled: true), textAlignment: .left)
+    lazy var nameIdStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [nameLabel, idLabel],
+        axis: .horizontal,
+        spacing: 8,
+        alignment: .center,
+        distribution: .fill
+    )
     
-    let totalStepsTitleLabel = UILabel()
-    let totalStepsLabel = UILabel()
+    lazy var originLabel = UIFactory.makeLabel(text: "origin", textColor: SpecialColors.GearGray, font: UIFont.pretendard(style: .regular, size: 16, isScaled: true), textAlignment: .left)
+    lazy var birthdayLabel = UIFactory.makeLabel(text: "birthday", textColor: SpecialColors.GearGray, font: UIFont.pretendard(style: .regular, size: 16, isScaled: true), textAlignment: .left)
+    lazy var systemLabel = UIFactory.makeLabel(text: "위 외계인에게 우주 여행을 허가함.", textColor: SpecialColors.GearGray, font: UIFont.pretendard(style: .regular, size: 14, isScaled: true), textAlignment: .left)
+    lazy var infoStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [nameIdStackView, originLabel, birthdayLabel, systemLabel],
+        axis: .vertical,
+        spacing: 8,
+        alignment: .leading,
+        distribution: .fill
+    )
+    
+    lazy var starView = UIFactory.makeView(backgroundColor: SpecialColors.GreenStarColor, cornerRadius: 12)
+    lazy var starStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [starIcon, starLabel],
+        axis: .horizontal,
+        spacing: 8,
+        alignment: .center,
+        distribution: .fill
+    )
+    var starIcon = UIFactory.makeImageView(imageName: "star.fill", color: SpecialColors.WhiteColor)
+    lazy var starLabel = UIFactory.makeLabel(text: "0", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .semiBold, size: 16, isScaled: true), textAlignment: .left)
+
+    lazy var locationTitleLabel = UIFactory.makeLabel(text: "현 위치", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .regular, size: 16, isScaled: true), textAlignment: .left)
+    lazy var locationLabel = UIFactory.makeLabel(text: "수성", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .bold, size: 16, isScaled: true), textAlignment: .left)
+    lazy var locationStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [locationTitleLabel, locationLabel],
+        axis: .horizontal,
+        spacing: 8,
+        alignment: .fill,
+        distribution: .fill
+    )
+    
+    lazy var totalStepsTitleLabel = UIFactory.makeLabel(text: "만보 달성 횟수", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .regular, size: 16, isScaled: true), textAlignment: .left)
+    lazy var totalStepsLabel = UIFactory.makeLabel(text: "0 회", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .bold, size: 16, isScaled: true), textAlignment: .left)
+    lazy var totalStepsStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [totalStepsTitleLabel, totalStepsLabel],
+        axis: .horizontal,
+        spacing: 8,
+        alignment: .fill,
+        distribution: .fill
+    )
+    
+    lazy var totalCombinedStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [locationStackView, totalStepsStackView],
+        axis: .vertical,
+        spacing: 16,
+        alignment: .center,
+        distribution: .fill
+    )
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -46,44 +105,22 @@ class ProfileView: UIView {
     }
     
     private func setupViews() {
-        // Title Label 설정
-        titleLabel.text = "PROFILE"
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        titleLabel.textColor = SpecialColors.WhiteColor
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Download Icon 설정
-        downloadIcon.tintColor = SpecialColors.WhiteColor
-        downloadIcon.translatesAutoresizingMaskIntoConstraints = false
         downloadIcon.isUserInteractionEnabled = true
-        
-        // More Icon 설정
-        moreIcon.tintColor = SpecialColors.WhiteColor
-        moreIcon.translatesAutoresizingMaskIntoConstraints = false
         moreIcon.isUserInteractionEnabled = true
         
-        // StackView 설정
-        iconsStackView = UIStackView(arrangedSubviews: [downloadIcon, moreIcon])
-        iconsStackView.axis = .horizontal
-        iconsStackView.spacing = 8
-        iconsStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        combinedStackView = UIStackView(arrangedSubviews: [titleLabel, iconsStackView])
-        combinedStackView.axis = .horizontal
-        combinedStackView.spacing = 16
-        combinedStackView.translatesAutoresizingMaskIntoConstraints = false
-        
         // Parent View에 추가
-        addSubview(combinedStackView)
+        addSubviews(combinedStackView, cardView, totalCombinedStackView)
 
-        // Layout Constraints 설정
-        NSLayoutConstraint.activate([
-            iconsStackView.widthAnchor.constraint(equalToConstant: 60),
-            combinedStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 14),
-            combinedStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            combinedStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-        ])
-        
+        iconsStackView.snp.makeConstraints {
+            $0.width.equalTo(60)
+        }
+
+        combinedStackView.snp.makeConstraints {
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(14)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
+
         // Profile Card 설정
         setupProfileCard()
         
@@ -92,163 +129,68 @@ class ProfileView: UIView {
     }
     
     private func setupProfileCard() {
-        // 카드 뷰 설정
-        cardView.backgroundColor = SpecialColors.WhiteColor
-        cardView.layer.cornerRadius = 12
-        cardView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(cardView)
-        
         // Profile Image 설정
-        profileImageView.contentMode = .scaleAspectFill
-        profileImageView.layer.cornerRadius = 40
-        profileImageView.clipsToBounds = true
-        profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        cardView.addSubview(profileImageView)
-        
-        // Name Label 설정
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        nameLabel.textColor = .black
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // ID Label 설정
-        idLabel.font = UIFont.systemFont(ofSize: 14)
-        idLabel.textColor = .darkGray
-        idLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Origin Label 설정
-        originLabel.font = UIFont.systemFont(ofSize: 16)
-        originLabel.textColor = .darkGray
-        originLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Birthday Label 설정
-        birthdayLabel.font = UIFont.systemFont(ofSize: 16)
-        birthdayLabel.textColor = .darkGray
-        birthdayLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Description Label 설정
-        descriptionLabel.text = "위 외계인에게 우주 여행을 허가함."
-        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
-        descriptionLabel.textColor = .gray
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Name and ID Stack 설정
-        let nameIdStackView = UIStackView(arrangedSubviews: [nameLabel, idLabel])
-        nameIdStackView.axis = .horizontal
-        nameIdStackView.alignment = .center
-        nameIdStackView.spacing = 8
-        nameIdStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Info Stack 설정
-        let infoStackView = UIStackView(arrangedSubviews: [nameIdStackView, originLabel, birthdayLabel, descriptionLabel])
-        infoStackView.axis = .vertical
-        infoStackView.alignment = .leading
-        infoStackView.spacing = 8
-        infoStackView.translatesAutoresizingMaskIntoConstraints = false
-        cardView.addSubview(infoStackView)
-        
-        // Star View 설정
-        starView.backgroundColor = SpecialColors.WhiteColor
-        starView.layer.cornerRadius = 12
-        starView.translatesAutoresizingMaskIntoConstraints = false
-        cardView.addSubview(starView)
-
-        // Star Stack 설정
-        starStackView.axis = .horizontal
-        starStackView.alignment = .center
-        starStackView.spacing = 4
-        starStackView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.addSubviews(profileImageBackView, infoStackView, starView)
+        profileImageBackView.addSubview(profileImageView)
         starView.addSubview(starStackView)
+
+        cardView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(combinedStackView.snp.bottom).offset(24)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
+
+        profileImageBackView.snp.makeConstraints {
+            $0.leading.equalTo(cardView.snp.leading).offset(24)
+            $0.top.equalTo(cardView.snp.top).offset(30)
+            $0.width.equalTo(80)
+            $0.height.equalTo(80)
+        }
         
-        // Star Icon 설정
-        starIcon.tintColor = SpecialColors.GreenStarColor
-        starIcon.contentMode = .scaleAspectFit
-        starIcon.translatesAutoresizingMaskIntoConstraints = false
-        starStackView.addArrangedSubview(starIcon)
+        profileImageView.snp.makeConstraints {
+            $0.center.equalTo(profileImageBackView) // imageBackView의 중앙에 배치
+            $0.edges.equalToSuperview().inset(12) // imageBackView 내부 여백 설정
+        }
+
+        starView.snp.makeConstraints {
+            $0.centerX.equalTo(profileImageView.snp.centerX)
+            $0.top.equalTo(profileImageBackView.snp.bottom).offset(-12)
+            $0.width.equalTo(60)
+            $0.height.equalTo(28)
+        }
+
+        starStackView.snp.makeConstraints {
+            $0.centerX.equalTo(starView.snp.centerX)
+            $0.centerY.equalTo(starView.snp.centerY)
+        }
         
-        // Star Label 설정
-        starLabel.text = "36"
-        starLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        starLabel.textColor = SpecialColors.GreenStarColor
-        starLabel.translatesAutoresizingMaskIntoConstraints = false
-        starStackView.addArrangedSubview(starLabel)
-        
-        // Layout Constraints 설정
-        NSLayoutConstraint.activate([
-            cardView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            cardView.topAnchor.constraint(equalTo: combinedStackView.bottomAnchor, constant: 24),
-            cardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            cardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            
-            profileImageView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
-            profileImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 30),
-            profileImageView.widthAnchor.constraint(equalToConstant: 80),
-            profileImageView.heightAnchor.constraint(equalToConstant: 80),
-            
-            starView.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor),
-            starView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: -12),
-            starView.widthAnchor.constraint(equalToConstant: 60),
-            starView.heightAnchor.constraint(equalToConstant: 28),
-            
-            starStackView.centerXAnchor.constraint(equalTo: starView.centerXAnchor),
-            starStackView.centerYAnchor.constraint(equalTo: starView.centerYAnchor),
-            
-            infoStackView.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 16),
-            infoStackView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -24),
-            infoStackView.topAnchor.constraint(equalTo: profileImageView.topAnchor),
-            infoStackView.bottomAnchor.constraint(lessThanOrEqualTo: cardView.bottomAnchor, constant: -30)
-        ])
+        starIcon.snp.makeConstraints {
+            $0.width.equalTo(18)
+            $0.height.equalTo(18)
+        }
+
+        infoStackView.snp.makeConstraints {
+            $0.leading.equalTo(profileImageBackView.snp.trailing).offset(26)
+            $0.trailing.equalTo(cardView.snp.trailing).offset(-24)
+            $0.centerY.equalTo(cardView)
+            $0.bottom.lessThanOrEqualTo(cardView.snp.bottom).offset(-30)
+        }
     }
     
     private func setupETCStack() {
-        locationTitleLabel.text = "현 위치"
-        locationTitleLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        locationTitleLabel.textColor = SpecialColors.WhiteColor
-        locationTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        totalStepsStackView.snp.makeConstraints {
+            $0.leading.trailing.equalTo(totalCombinedStackView)
+        }
         
-        locationLabel.text = "수성"
-        locationLabel.font = UIFont.systemFont(ofSize: 16)
-        locationLabel.textColor = SpecialColors.WhiteColor
-        locationLabel.translatesAutoresizingMaskIntoConstraints = false
+        locationStackView.snp.makeConstraints {
+            $0.leading.trailing.equalTo(totalCombinedStackView)
+        }
         
-        totalStepsTitleLabel.text = "만보 달성 횟수"
-        totalStepsTitleLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        totalStepsTitleLabel.textColor = SpecialColors.WhiteColor
-        totalStepsTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        totalStepsLabel.text = "36회"
-        totalStepsLabel.font = UIFont.systemFont(ofSize: 16)
-        totalStepsLabel.textColor = SpecialColors.WhiteColor
-        totalStepsLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Location Title and Label Stack
-        let locationStackView = UIStackView(arrangedSubviews: [locationTitleLabel, locationLabel])
-        locationStackView.axis = .horizontal
-        locationStackView.spacing = 8
-        locationStackView.translatesAutoresizingMaskIntoConstraints = false
-
-        // Total Steps Title and Label Stack
-        let totalStepsStackView = UIStackView(arrangedSubviews: [totalStepsTitleLabel, totalStepsLabel])
-        totalStepsStackView.axis = .horizontal
-        totalStepsStackView.spacing = 8
-        totalStepsStackView.translatesAutoresizingMaskIntoConstraints = false
-
-        // Combined Stack View
-        let combinedStackView = UIStackView(arrangedSubviews: [locationStackView, totalStepsStackView])
-        combinedStackView.axis = .vertical
-        combinedStackView.alignment = .fill
-        combinedStackView.spacing = 16 // Vertical spacing
-        combinedStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add to Parent View
-        addSubview(combinedStackView)
-
-        // Layout Constraints for Combined Stack View
-        NSLayoutConstraint.activate([
-            combinedStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            combinedStackView.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 28),
-            combinedStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            combinedStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-        ])
+        totalCombinedStackView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(cardView.snp.bottom).offset(28)
+            $0.leading.trailing.equalToSuperview().inset(20)  // 좌우 여백 20
+        }
     }
 }

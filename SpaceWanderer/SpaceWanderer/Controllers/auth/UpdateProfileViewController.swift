@@ -25,8 +25,8 @@ class UpdateProfileViewController: CustomNavigationController, UIImagePickerCont
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = SpecialColors.PupleColor
-
+        view.backgroundColor = SpecialColors.MainViewBackGroundColor
+        
         setupUI()
 
         // 버튼 액션 설정

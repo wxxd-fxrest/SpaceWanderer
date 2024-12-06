@@ -37,12 +37,8 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
             button.addTarget(self, action: #selector(imageButtonTapped(_:)), for: .touchUpInside)
         }
         
-        // Add confirm button
-        let confirmButton = UIButton(type: .system)
-        confirmButton.setTitle("확인", for: .normal)
-        confirmButton.frame = CGRect(x: 125, y: 400, width: 100, height: 50)
-        confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
-        view.addSubview(confirmButton)
+        // confirmButton에 target 액션 추가
+        profileEditView.confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,9 +61,9 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
         let imageButtons = profileEditView.getImageButtons()
         for (index, button) in imageButtons.enumerated() {
             if index == selectedImageIndex {
-                button.layer.borderColor = UIColor.red.cgColor // 선택된 이미지에 빨간 테두리
+                button.layer.borderColor = SpecialColors.MainColor.cgColor // 선택된 이미지에 빨간 테두리
             } else {
-                button.layer.borderColor = UIColor.clear.cgColor // 다른 이미지는 테두리 제거
+                button.layer.borderColor = SpecialColors.WhiteColor.withAlphaComponent(0.3).cgColor // 다른 이미지는 테두리 제거
             }
         }
     }
@@ -84,7 +80,7 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
                     for planet in planets {
                         alertController.addAction(UIAlertAction(title: planet.name, style: .default, handler: { [weak self] _ in
                             self?.selectedPlanet = planet.name
-                            self?.profileEditView.originButton.setTitle("선택된 행성: \(planet.name)", for: .normal)
+                            self?.profileEditView.originButton.setTitle("\(planet.name)", for: .normal)
                             print("선택된 출신 행성: \(planet.name)")
                         }))
                     }
@@ -106,7 +102,7 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
            !nickname.isEmpty,
            nickname != previousNickname {
             // 닉네임 형식 검증
-            let nicknamePattern = "^[a-zA-Z가-힣0-9]{3,12}$"
+            let nicknamePattern = "^[a-zA-Z가-힣0-9]{2,12}$"
             let nicknamePredicate = NSPredicate(format: "SELF MATCHES %@", nicknamePattern)
             
             guard nicknamePredicate.evaluate(with: nickname) else {

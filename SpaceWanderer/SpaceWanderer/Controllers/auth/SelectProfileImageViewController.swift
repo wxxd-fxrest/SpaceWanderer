@@ -21,6 +21,7 @@ class SelectProfileImageViewController: CustomNavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = SpecialColors.MainViewBackGroundColor
         print("viewDidLoad : ", viewModel.nickname ?? "", viewModel.birthDay ?? "")
         print("viewDidLoad - userIdentifier: ", viewModel.userIdentifier ?? "")
 
