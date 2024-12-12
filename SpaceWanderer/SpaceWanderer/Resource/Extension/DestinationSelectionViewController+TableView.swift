@@ -37,6 +37,11 @@ extension DestinationSelectionViewController: UITableViewDelegate, UITableViewDa
             cell.requiredStepsLabel.textColor = .darkGray
             cell.isUserInteractionEnabled = false
         }
+
+        // 셀 선택 시 배경색 설정
+        let selectedBackgroundView = UIView()
+        selectedBackgroundView.backgroundColor = SpecialColors.MainColor.withAlphaComponent(0.3)
+        cell.selectedBackgroundView = selectedBackgroundView
         
         return cell
     }

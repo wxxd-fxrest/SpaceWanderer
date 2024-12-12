@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class PlanetCell: UITableViewCell {
     var planetNameLabel: UILabel!
@@ -19,28 +20,25 @@ class PlanetCell: UITableViewCell {
         planetImageView = UIImageView()
         requiredStepsLabel = UILabel() // 라벨 초기화
         
-        // 셀 내부 UI 구성
-        planetNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        planetImageView.translatesAutoresizingMaskIntoConstraints = false
-        requiredStepsLabel.translatesAutoresizingMaskIntoConstraints = false // 라벨 제약 설정
+        contentView.addSubviews(planetNameLabel, planetImageView, requiredStepsLabel)
         
-        contentView.addSubview(planetNameLabel)
-        contentView.addSubview(planetImageView)
-        contentView.addSubview(requiredStepsLabel) // 라벨 추가
-        
-        // 레이아웃 설정
-        NSLayoutConstraint.activate([
-            planetImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            planetImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            planetImageView.widthAnchor.constraint(equalToConstant: 24),
-            planetImageView.heightAnchor.constraint(equalToConstant: 24),
-            
-            planetNameLabel.leadingAnchor.constraint(equalTo: planetImageView.trailingAnchor, constant: 10),
-            planetNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            requiredStepsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15), // 오른쪽 여백
-            requiredStepsLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor) // 세로 중앙 정렬
-        ])
+        planetImageView.snp.makeConstraints {
+            $0.leading.equalTo(contentView).offset(15)
+            $0.centerY.equalTo(contentView)
+            $0.width.equalTo(24)
+            $0.height.equalTo(24)
+        }
+
+        planetNameLabel.snp.makeConstraints {
+            $0.leading.equalTo(planetImageView.snp.trailing).offset(10)
+            $0.centerY.equalTo(contentView)
+        }
+
+        requiredStepsLabel.snp.makeConstraints {
+            $0.trailing.equalTo(contentView).offset(-15)
+            $0.centerY.equalTo(contentView)
+        }
+
     }
     
     required init?(coder: NSCoder) {

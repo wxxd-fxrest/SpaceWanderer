@@ -24,10 +24,23 @@ class SettingViewController: CustomNavigationController {
         
         // SettingView를 서브뷰로 추가
         view.addSubview(settingView)
-
-        // 버튼 액션 설정
-        settingView.logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
-        settingView.deleteAccountButton.addTarget(self, action: #selector(handleDeleteAccount), for: .touchUpInside)
+        
+        // SettingView의 액션 설정
+        settingView.handleLogout = { [weak self] in
+            self?.handleLogout()
+        }
+        
+        settingView.handleDeleteAccount = { [weak self] in
+            self?.handleDeleteAccount()
+        }
+        
+        settingView.handleNavigatePersonalInformationVC = { [weak self] in
+            self?.handleNavigatePersonalInformationVC()
+        }
+        
+        settingView.handleNavigateTermsOfUseViewControllerVC = { [weak self] in
+            self?.handleNavigateTermsOfUseViewControllerVC()
+        }
 
         // SettingView의 frame을 설정
         settingView.frame = view.bounds
@@ -40,6 +53,22 @@ class SettingViewController: CustomNavigationController {
     }
 
     @objc private func handleLogout() {
+        let alertController = UIAlertController(
+            title: "로그아웃",
+            message: "정말 로그아웃 하시겠습니까?",
+            preferredStyle: .alert
+        )
+        
+        alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        
+        alertController.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { [weak self] _ in
+            self?.performLogout()
+        }))
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    private func performLogout() {
         if let loginType = UserDefaults.standard.string(forKey: "LoginType") {
             switch loginType {
             case "LOGIN_APPLE":
@@ -62,8 +91,24 @@ class SettingViewController: CustomNavigationController {
             print("로그인 타입이 UserDefaults에 저장되어 있지 않습니다.")
         }
     }
-
+    
     @objc private func handleDeleteAccount() {
+        let alertController = UIAlertController(
+            title: "회원 탈퇴",
+            message: "정말 회원 탈퇴를 하시겠습니까?",
+            preferredStyle: .alert
+        )
+        
+        alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        
+        alertController.addAction(UIAlertAction(title: "회원 탈퇴", style: .destructive, handler: { [weak self] _ in
+            self?.performDeleteAccount()
+        }))
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func performDeleteAccount() {
         guard let userIdentifier = self.userIdentifier else {
             print("사용자 아이디가 없습니다.")
             return
@@ -143,6 +188,26 @@ class SettingViewController: CustomNavigationController {
             // 로그인 화면으로 전환
             let viewController = ViewController()  // 로그인 화면 클래스 생성
             navigationController.pushViewController(viewController, animated: true)
+        }
+    }
+    
+    @objc private func handleNavigatePersonalInformationVC() {
+        print("개인정보 처리방침 클릭")
+        // 개인정보 처리방침 화면으로 이동
+        if let navigationController = self.navigationController {
+            let personalInfoVC = PersonalInformationViewController()  // 설정 화면을 나타내는 뷰 컨트롤러
+            personalInfoVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
+            navigationController.pushViewController(personalInfoVC, animated: true)
+        }
+    }
+    
+    @objc private func handleNavigateTermsOfUseViewControllerVC() {
+        print("서비스 이용약관 클릭")
+        // 서비스 이용약관 화면으로 이동
+        if let navigationController = self.navigationController {
+            let termsVC = TermsOfUseViewController()  // 설정 화면을 나타내는 뷰 컨트롤러
+            termsVC.hidesBottomBarWhenPushed = true // 탭 바 숨기기
+            navigationController.pushViewController(termsVC, animated: true)
         }
     }
 }

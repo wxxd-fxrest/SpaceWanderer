@@ -32,6 +32,7 @@ class MainViewController: UIViewController, MainViewModelDelegate {
         addStars(starCount: 100)
         
 //        mainView.showGoalMessage()
+        updateStepLabel()
         
         // MainViewModel 메서드 호출
         mainViewModel?.fetchTotalStepsForToday()
@@ -152,8 +153,10 @@ class MainViewController: UIViewController, MainViewModelDelegate {
         let totalSteps = self.totalStepsToday + self.realTimeSteps
         mainView.updateStepLabel(with: Int(totalSteps))
         
-        if totalSteps >= 10 {
+        if totalSteps >= 10000 {
             mainView.showGoalMessage()
         }
     }
 }
+
+

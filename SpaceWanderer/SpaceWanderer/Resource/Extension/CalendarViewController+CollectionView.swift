@@ -63,22 +63,7 @@ extension CalendarViewController: UICollectionViewDataSource, UICollectionViewDe
             navigateToPlanetDetailPage(for: selectedPlanet)
         }
     }
-    
-//    private func navigateToDetailPage(for date: Date) {
-//        let detailVC = StepDetailViewController()
-//
-//        // 해당 날짜에 대한 걸음 수와 목적지 가져오기
-//        let stepDataForSelectedDate = stepData[date] ?? (0, "")
-//        
-//        // StepDetailViewModel 생성
-//        let viewModel = StepDetailViewModel(date: date, steps: stepDataForSelectedDate.0, dayDestination: stepDataForSelectedDate.1)
-//        
-//        // 뷰 모델 설정
-//        detailVC.viewModel = viewModel
-//        
-//        detailVC.hidesBottomBarWhenPushed = true
-//        navigationController?.pushViewController(detailVC, animated: true)
-//    }
+
     private func navigateToDetailPage(for date: Date) {
         let detailVC = StepDetailViewController()
 

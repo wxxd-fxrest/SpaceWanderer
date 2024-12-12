@@ -12,7 +12,8 @@ class MainView: UIView {
     let isSmallDevice = UIScreen.main.bounds.height <= 667 // iPhone SE (1세대) 기준
 
     // MARK: step label
-    var stepLabel = UIFactory.makeLabel(text: "step", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .regular, size: 10, isScaled: true), textAlignment: .center)
+    lazy var stepBackView = UIFactory.makeView(backgroundColor: SpecialColors.MainColor.withAlphaComponent(0.6), cornerRadius: 12)
+    var stepLabel = UIFactory.makeLabel(text: "step", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .semiBold, size: 20, isScaled: true), textAlignment: .center)
     
     // MARK: success label & button
     var goalButton = UIFactory.makeView(backgroundColor: SpecialColors.MainViewBackGroundColor.withAlphaComponent(0.9))
@@ -186,6 +187,22 @@ class MainView: UIView {
             layer.addSublayer(progressLayer)
             progressLayer.zPosition = -1 // 뒤로 보냄
         }
+        
+        // stepLabel 추가
+        if stepLabel.superview == nil {
+            addSubview(stepBackView)
+            stepBackView.addSubview(stepLabel)
+            stepBackView.snp.makeConstraints {
+                $0.centerX.equalToSuperview()
+                $0.top.equalTo(selectDestinationButton.snp.bottom).offset(isSmallDevice ? 6 : 4) // 프로그레스 마커 바로 위
+                $0.width.greaterThanOrEqualTo(stepLabel.snp.width).offset(26) // stepLabel의 너비 + 양쪽 여백 16
+                $0.height.equalTo(stepLabel.snp.height).offset(8) // stepLabel의 높이 + 위아래 여백 8
+            }
+            
+            stepLabel.snp.makeConstraints {
+                $0.center.equalToSuperview() // stepBackView 내부에서 중앙 정렬
+            }
+        }
     }
 
     func setupCircularProgressBar() {
@@ -217,7 +234,7 @@ class MainView: UIView {
 
     func updateCircularProgressBar(totalStepsToday: Double, realTimeSteps: Double) {
         let totalSteps = totalStepsToday + realTimeSteps
-        let maxStepCount = 300.0
+        let maxStepCount = 10000.0
         let progress = totalSteps / maxStepCount
         
         let labelRadius: CGFloat = 150

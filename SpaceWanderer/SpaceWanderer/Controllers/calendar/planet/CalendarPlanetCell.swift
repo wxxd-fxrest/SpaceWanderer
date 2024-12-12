@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class CalendarPlanetCell: UICollectionViewCell {
     let planetLabel: UILabel = {
@@ -23,12 +24,11 @@ class CalendarPlanetCell: UICollectionViewCell {
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = UIColor.lightGray.cgColor
         contentView.backgroundColor = SpecialColors.MainViewBackGroundColor
-        
-        planetLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            planetLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            planetLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        ])
+
+        planetLabel.snp.makeConstraints {
+            $0.centerX.equalTo(contentView)
+            $0.centerY.equalTo(contentView)
+        }
     }
     
     required init?(coder: NSCoder) {

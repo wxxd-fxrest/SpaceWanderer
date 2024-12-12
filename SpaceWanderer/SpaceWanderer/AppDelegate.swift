@@ -11,6 +11,7 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import UserNotifications
 import CoreMotion
+import HealthKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -30,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().delegate = self
 
         registerForRemoteNotifications()
+        requestHealthKitAuthorization()
         return true
     }
     
@@ -41,6 +43,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
         return false
     }
+    
+    let healthStore = HKHealthStore()
+
+    func requestHealthKitAuthorization() {
+        guard HKHealthStore.isHealthDataAvailable() else {
+            print("HealthKit은 이 기기에서 사용할 수 없습니다.")
+            return
+        }
+        
+        let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        
+        // 권한 요청
+        healthStore.requestAuthorization(toShare: nil, read: [stepCountType]) { (success, error) in
+            if success {
+                print("HealthKit 권한 요청 성공")
+            } else {
+                print("HealthKit 권한 요청 실패: \(String(describing: error))")
+            }
+        }
+    }
+
     
     // notification 권한 요청
     func registerForRemoteNotifications() {

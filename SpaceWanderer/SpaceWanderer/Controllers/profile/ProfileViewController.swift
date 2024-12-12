@@ -56,8 +56,16 @@ class ProfileViewController: UIViewController {
             self.profileView.birthdayLabel.text = self.birthday
             self.profileView.profileImageView.image = UIImage(named: self.profileImage ?? "LaunchScreenIcon")
             self.profileView.locationLabel.text = self.location
-            self.profileView.starLabel.text = self.totalGoals
-            self.profileView.totalStepsLabel.text = self.totalGoals
+            
+            guard let totalGoalsString = self.totalGoals, let totalGoals = Int(totalGoalsString), totalGoals >= 0 else {
+                // 유효하지 않은 값 처리 (예: 0으로 설정)
+                self.profileView.starLabel.text = "00"
+                self.profileView.totalStepsLabel.text = "00"
+                return
+            }
+
+            self.profileView.starLabel.text = String(format: "%02d", totalGoals)
+            self.profileView.totalStepsLabel.text = String(format: "%02d", totalGoals)
         }
     }
     
@@ -74,6 +82,8 @@ class ProfileViewController: UIViewController {
     }
 
     func saveAndShareImage() {
+        profileView.startLoading() // 로딩 인디케이터 시작
+
         guard let image = captureCardViewAsImage() else { return }
 
         PHPhotoLibrary.requestAuthorization { status in
@@ -95,13 +105,34 @@ class ProfileViewController: UIViewController {
             print("Failed to save image: \(error.localizedDescription)")
         } else {
             print("Image saved to the photo library.")
+            self.profileView.stopLoading() // 로딩 인디케이터 중지
         }
     }
     
     @objc private func downloadIconTapped() {
         print("Download Icon Tapped")
-        saveAndShareImage()
+        
+        // 이미지 다운로드 여부 확인하는 알럿 생성
+        let alertController = UIAlertController(title: "이미지를 다운로드 하시겠습니까?",
+                                                message: "다운로드한 이미지는 저장됩니다.",
+                                                preferredStyle: .alert)
+        
+        // "확인" 액션 추가
+        let confirmAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            self?.saveAndShareImage()
+        }
+        
+        // "취소" 액션 추가
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        
+        // 알럿에 액션들 추가
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        
+        // 알럿을 화면에 표시
+        present(alertController, animated: true, completion: nil)
     }
+
 
     @objc private func moreIconTapped() {
         print("More Icon Tapped")

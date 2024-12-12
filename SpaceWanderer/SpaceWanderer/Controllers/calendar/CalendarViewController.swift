@@ -336,14 +336,22 @@ class CalendarViewController: UIViewController, UIPopoverPresentationControllerD
     private func updatePlanetLabel() {
         calendarView.updatePlanetLabel(with: "Planet")
     }
-    
+
     @objc private func showMonthSelectionModal() {
         let monthSelectionVC = MonthSelectionViewController()
         monthSelectionVC.delegate = self
         monthSelectionVC.selectedDate = selectedDate
-        monthSelectionVC.modalPresentationStyle = .custom
-        monthSelectionVC.transitioningDelegate = self // 바텀 시트 표시를 위해 필요
         
-        present(monthSelectionVC, animated: true, completion: nil)
+        // 바텀 시트 설정
+        if let sheet = monthSelectionVC.sheetPresentationController {
+            sheet.detents = [
+                .custom { _ in 300 } // 바텀 시트 높이
+            ]
+            sheet.prefersGrabberVisible = true // 핸들 표시
+            sheet.prefersEdgeAttachedInCompactHeight = true // 화면 가장자리 고정
+        }
+        
+        monthSelectionVC.modalPresentationStyle = .pageSheet
+        present(monthSelectionVC, animated: true)
     }
 }

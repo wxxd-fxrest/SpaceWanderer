@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileEditViewController: CustomNavigationController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileEditViewController: CustomNavigationController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     var userUniqueId: String?
     var userIdentifier: String?
     
@@ -39,8 +39,76 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
         
         // confirmButton에 target 액션 추가
         profileEditView.confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        
+        // Keyboard Setup
+        setupKeyboardHandling()
+        setupTapGesture()
+        
+        // Return 키를 '완료'로 설정
+        profileEditView.nicknameTextField.returnKeyType = .done
+        profileEditView.nicknameTextField.delegate = self
     }
     
+    // MARK: Keyboard handling
+    private func setupKeyboardHandling() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(notification:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(notification:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func keyboardWillShow(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        
+        UIView.animate(withDuration: animationDuration) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        
+        UIView.animate(withDuration: animationDuration) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == profileEditView.nicknameTextField {
+            // '완료' 버튼을 클릭하면 키보드 내려가기
+            textField.resignFirstResponder() // 키보드 내려가기
+            return false // 텍스트 필드에서 포커스 해제
+        }
+        return true
+    }
+    
+    // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
@@ -48,15 +116,16 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
         setupNavigationBar(withTitle: "프로필 수정", backButtonImage: "LargeLeftIcon")
     }
     
+    // MARK: imageButtonTapped
     @objc private func imageButtonTapped(_ sender: UIButton) {
         // 선택된 이미지 인덱스를 업데이트
         selectedImageIndex = sender.tag
         selectedImageName = profileEditView.imageNames[sender.tag]
-
+        
         // 모든 버튼 테두리 초기화 후, 선택된 버튼만 테두리 추가
         updateImageBorders()
     }
-
+    
     private func updateImageBorders() {
         let imageButtons = profileEditView.getImageButtons()
         for (index, button) in imageButtons.enumerated() {
@@ -87,14 +156,14 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
                     
                     alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
                     self?.present(alertController, animated: true, completion: nil)
-
+                    
                 case .failure(let error):
                     self?.showAlert(title: "에러", message: error.localizedDescription)
                 }
             }
         }
     }
-
+    
     @objc private func confirmButtonTapped() {
         var requestData: [String: Any] = [:]
         
@@ -132,10 +201,10 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
             }
             return // 중복 확인 결과를 기다리므로 이후 작업 중단
         }
-
+        
         // 다른 데이터 추가
         appendOtherUpdateData(to: &requestData)
-
+        
         guard !requestData.isEmpty else {
             // 변경 사항 없음 처리
             DispatchQueue.main.async {
@@ -143,11 +212,11 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
             }
             return
         }
-
+        
         // 업데이트 요청 처리
         handleUpdate(requestData: requestData)
     }
-
+    
     private func appendOtherUpdateData(to requestData: inout [String: Any]) {
         if let selectedImageName = selectedImageName, selectedImageName != previousProfileImage {
             requestData["profileImage"] = selectedImageName
@@ -175,7 +244,7 @@ class ProfileEditViewController: CustomNavigationController, UIImagePickerContro
             }
         }
     }
-
+    
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .default))

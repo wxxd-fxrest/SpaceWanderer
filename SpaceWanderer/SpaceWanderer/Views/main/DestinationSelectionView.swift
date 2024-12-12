@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class DestinationSelectionView: UIView {
     var tableView: UITableView!
@@ -23,17 +24,13 @@ class DestinationSelectionView: UIView {
     private func setupTableView() {
         tableView = UITableView()
         tableView.backgroundColor = SpecialColors.MainViewBackGroundColor
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         
         // 테이블 뷰 구체적인 설정
         addSubview(tableView)
         
         // 테이블 뷰 레이아웃 설정
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: trailingAnchor)
-        ])
+        tableView.snp.makeConstraints {
+            $0.edges.equalToSuperview() // 부모 뷰(top, bottom, leading, trailing)에 모두 붙임
+        }
     }
 }

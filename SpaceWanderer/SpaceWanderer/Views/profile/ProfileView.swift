@@ -59,7 +59,7 @@ class ProfileView: UIView {
     lazy var starStackView: UIStackView = UIFactory.makeStackView(
         arrangedSubviews: [starIcon, starLabel],
         axis: .horizontal,
-        spacing: 8,
+        spacing: 4,
         alignment: .center,
         distribution: .fill
     )
@@ -94,6 +94,11 @@ class ProfileView: UIView {
         distribution: .fill
     )
     
+    var loadingIndicator = UIActivityIndicatorView(style: .medium).then {
+        $0.color = SpecialColors.WhiteColor
+        $0.hidesWhenStopped = true
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -109,8 +114,13 @@ class ProfileView: UIView {
         moreIcon.isUserInteractionEnabled = true
         
         // Parent View에 추가
-        addSubviews(combinedStackView, cardView, totalCombinedStackView)
+        addSubviews(combinedStackView, cardView, totalCombinedStackView, loadingIndicator)
 
+        loadingIndicator.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview()
+        }
+        
         iconsStackView.snp.makeConstraints {
             $0.width.equalTo(60)
         }
@@ -191,6 +201,22 @@ class ProfileView: UIView {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(cardView.snp.bottom).offset(28)
             $0.leading.trailing.equalToSuperview().inset(20)  // 좌우 여백 20
+        }
+    }
+    
+    // 로딩 인디케이터 시작
+    func startLoading() {
+        DispatchQueue.main.async {
+            self.loadingIndicator.startAnimating()
+            self.isUserInteractionEnabled = false // 사용자 인터랙션 비활성화
+        }
+    }
+
+    // 로딩 인디케이터 중지
+    func stopLoading() {
+        DispatchQueue.main.async {
+            self.loadingIndicator.stopAnimating()
+            self.isUserInteractionEnabled = true // 사용자 인터랙션 활성화
         }
     }
 }

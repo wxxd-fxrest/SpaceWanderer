@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 // MARK: - MonthSelectionViewControllerDelegate 프로토콜
 protocol MonthSelectionViewControllerDelegate: AnyObject {
@@ -22,13 +23,41 @@ class MonthSelectionViewController: UIViewController, UIPickerViewDataSource, UI
     
     private let pickerView = UIPickerView()
     
-    // 확인/취소 버튼
-    private let confirmButton = UIButton()
-    private let cancelButton = UIButton()
+    lazy var buttonStackView: UIStackView = UIFactory.makeStackView(
+        arrangedSubviews: [cancelButton, confirmButton],
+        axis: .horizontal,
+        spacing: 26,
+        alignment: .center,
+        distribution: .fillEqually
+    )
+    
+    let confirmButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("확인", for: .normal)
+        button.setTitleColor(SpecialColors.WhiteColor, for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
+        button.backgroundColor = SpecialColors.MainViewBackGroundColor // 원하는 배경색
+        button.layer.cornerRadius = 12 // 모서리 둥글게
+        button.addTarget(self, action: #selector(confirmAction), for: .touchUpInside)
+        return button
+    }()
+    
+    let cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(SpecialColors.MainViewBackGroundColor, for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
+        button.backgroundColor = SpecialColors.WhiteColor // 원하는 배경색
+        button.layer.cornerRadius = 12 // 모서리 둥글게
+        button.layer.borderWidth = 1.0 // 보더 두께
+        button.layer.borderColor = SpecialColors.MainViewBackGroundColor.cgColor // 보더 색상
+        button.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
+        return button
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = SpecialColors.MainViewBackGroundColor
+        view.backgroundColor = SpecialColors.WhiteColor
         setupPickerView()
         setupYears()
         setInitialDateSelection()
@@ -41,11 +70,11 @@ class MonthSelectionViewController: UIViewController, UIPickerViewDataSource, UI
         pickerView.delegate = self
         
         view.addSubview(pickerView)
-        pickerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            pickerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pickerView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
+        
+        pickerView.snp.makeConstraints {
+            $0.centerX.equalToSuperview() // view의 중심 X축에 맞춤
+            $0.centerY.equalToSuperview() // view의 중심 Y축에 맞춤
+        }
     }
     
     private func setupYears() {
@@ -65,32 +94,14 @@ class MonthSelectionViewController: UIViewController, UIPickerViewDataSource, UI
     }
     
     private func setupButtons() {
-        // 확인 버튼
-        confirmButton.setTitle("확인", for: .normal)
-        confirmButton.backgroundColor = .green // 원하는 색상으로 변경
-        confirmButton.addTarget(self, action: #selector(confirmAction), for: .touchUpInside)
-        
-        // 취소 버튼
-        cancelButton.setTitle("취소", for: .normal)
-        cancelButton.backgroundColor = .red // 원하는 색상으로 변경
-        cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
-        
         // 버튼 레이아웃 설정
-        view.addSubview(confirmButton)
-        view.addSubview(cancelButton)
+        view.addSubview(buttonStackView)
         
-        confirmButton.translatesAutoresizingMaskIntoConstraints = false
-        cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
-            confirmButton.widthAnchor.constraint(equalToConstant: 100),
-            
-            cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
-            cancelButton.widthAnchor.constraint(equalToConstant: 100)
-        ])
+        buttonStackView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(30)
+            $0.height.equalTo(36)
+            $0.bottom.equalToSuperview().inset(36)
+        }
     }
     
     // 확인 버튼 액션
@@ -166,7 +177,7 @@ class MonthSelectionViewController: UIViewController, UIPickerViewDataSource, UI
         
         // 글자 색상 변경
         let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: SpecialColors.WhiteColor // 원하는 색상으로 변경
+            .foregroundColor: SpecialColors.MainViewBackGroundColor // 원하는 색상으로 변경
         ]
         return NSAttributedString(string: title, attributes: attributes)
     }

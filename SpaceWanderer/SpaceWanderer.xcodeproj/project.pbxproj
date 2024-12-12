@@ -18,6 +18,8 @@
 		0B1FC1322CEF13DA00DC0CFF /* GuestBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */; };
 		0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */; };
 		0B1FC1382CEF25BC00DC0CFF /* PlanetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */; };
+		0B2A500F2D06FF8E00BAAC76 /* PersonalInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A500E2D06FF8E00BAAC76 /* PersonalInformationViewController.swift */; };
+		0B2A50132D06FFB200BAAC76 /* TermsOfUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2A50122D06FFB200BAAC76 /* TermsOfUseViewController.swift */; };
 		0B2CED882CE8AAA200F19FD5 /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2CED872CE8AAA200F19FD5 /* ProfileEditViewController.swift */; };
 		0B2CED8A2CE8AAAD00F19FD5 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2CED892CE8AAAD00F19FD5 /* SettingViewController.swift */; };
 		0B301C792CC272530008804A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B301C782CC272530008804A /* AppDelegate.swift */; };
@@ -99,6 +101,8 @@
 		0B1FC1312CEF13DA00DC0CFF /* GuestBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestBookViewController.swift; sourceTree = "<group>"; };
 		0B1FC1352CEF228C00DC0CFF /* CalendarPlanetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPlanetCell.swift; sourceTree = "<group>"; };
 		0B1FC1372CEF25BC00DC0CFF /* PlanetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetModel.swift; sourceTree = "<group>"; };
+		0B2A500E2D06FF8E00BAAC76 /* PersonalInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInformationViewController.swift; sourceTree = "<group>"; };
+		0B2A50122D06FFB200BAAC76 /* TermsOfUseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfUseViewController.swift; sourceTree = "<group>"; };
 		0B2CED872CE8AAA200F19FD5 /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
 		0B2CED892CE8AAAD00F19FD5 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		0B301C752CC272530008804A /* SpaceWanderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceWanderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -461,6 +465,8 @@
 			children = (
 				0B2CED872CE8AAA200F19FD5 /* ProfileEditViewController.swift */,
 				0B2CED892CE8AAAD00F19FD5 /* SettingViewController.swift */,
+				0B2A500E2D06FF8E00BAAC76 /* PersonalInformationViewController.swift */,
+				0B2A50122D06FFB200BAAC76 /* TermsOfUseViewController.swift */,
 			);
 			path = setting;
 			sourceTree = "<group>";
@@ -662,6 +668,7 @@
 				0BA08E662CE9E05800D2633F /* StepDetailViewController.swift in Sources */,
 				0B301C832CC272530008804A /* SpaceWanderer.xcdatamodeld in Sources */,
 				0B8BC1F22CDA1A650009B553 /* ActivityIndicatorHelper.swift in Sources */,
+				0B2A50132D06FFB200BAAC76 /* TermsOfUseViewController.swift in Sources */,
 				0BBDC0BC2CFDABAC00EB26BC /* DestinationSelectionViewModel.swift in Sources */,
 				0B1FC1362CEF228C00DC0CFF /* CalendarPlanetCell.swift in Sources */,
 				0B1153A62CF9BE7E003AF39F /* ProfileEditView.swift in Sources */,
@@ -684,6 +691,7 @@
 				0B7B63642CF8712300FC38CC /* AddPlanetView.swift in Sources */,
 				0BEBD8912CD3A63B001590E8 /* AppleLoginModel.swift in Sources */,
 				0B1153AA2CF9CD3F003AF39F /* SelectProfileImageView.swift in Sources */,
+				0B2A500F2D06FF8E00BAAC76 /* PersonalInformationViewController.swift in Sources */,
 				0B8BC1F32CDA1A650009B553 /* UIView+.swift in Sources */,
 				0B301C7B2CC272530008804A /* SceneDelegate.swift in Sources */,
 				0B7B636E2CF8D2AA00FC38CC /* MainView.swift in Sources */,

@@ -35,6 +35,14 @@ class ProfileEditView: UIView {
         textField.leftView = paddingView
         textField.leftViewMode = .always
         
+        // 자동완성 및 단어 추천 비활성화
+        textField.autocorrectionType = .no // 자동완성 비활성화
+        textField.autocapitalizationType = .none // 자동 대문자 비활성화
+        textField.smartDashesType = .no // 스마트 대시 비활성화
+        textField.smartQuotesType = .no // 스마트 따옴표 비활성화
+        textField.smartInsertDeleteType = .no // 스마트 삽입 및 삭제 비활성화
+        textField.spellCheckingType = .no // 맞춤법 검사 비활성화
+        
         return textField
     }()
     lazy var nicknameStackView: UIStackView = UIFactory.makeStackView(

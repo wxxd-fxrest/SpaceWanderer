@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class CalendarDayCell: UICollectionViewCell {
     private let dayLabel = UILabel()
@@ -24,21 +25,19 @@ class CalendarDayCell: UICollectionViewCell {
         contentView.addSubview(dayLabel)
         contentView.addSubview(statusIndicator)
         
-        dayLabel.translatesAutoresizingMaskIntoConstraints = false
-        statusIndicator.translatesAutoresizingMaskIntoConstraints = false
+        dayLabel.snp.makeConstraints {
+            $0.center.equalToSuperview() // dayLabel을 contentView의 중앙에 배치
+        }
         
-        NSLayoutConstraint.activate([
-            dayLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            dayLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            statusIndicator.widthAnchor.constraint(equalToConstant: 10),
-            statusIndicator.heightAnchor.constraint(equalToConstant: 10),
-            statusIndicator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
-            statusIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-        ])
+        statusIndicator.snp.makeConstraints {
+            $0.width.height.equalTo(10) // statusIndicator의 가로, 세로 크기를 10으로 설정
+            $0.centerX.equalToSuperview() // contentView의 중심에 X축 정렬
+            $0.bottom.equalToSuperview().inset(4) // contentView의 아래쪽에서 4만큼 떨어지도록 설정
+        }
         
-        statusIndicator.layer.cornerRadius = 5
+        statusIndicator.layer.cornerRadius = 5 // 원형으로 만들기 위해 cornerRadius 설정
     }
-    
+
     func configure(date: Date, steps: Int) {
         let day = Calendar.current.component(.day, from: date)
         dayLabel.text = "\(day)"
@@ -66,7 +65,9 @@ class CalendarDayCell: UICollectionViewCell {
             }
 
             // 10,000보 이상일 때 초록색, 아닐 때 빨간색으로 표시
-            statusIndicator.backgroundColor = steps >= 10000 ? .green : .red
+            statusIndicator.layer.borderWidth = 0.9
+            statusIndicator.layer.borderColor = steps >= 10000 ? SpecialColors.MainColor.cgColor : SpecialColors.AlertRed.cgColor
+            statusIndicator.backgroundColor = steps >= 10000 ? SpecialColors.MainColor : SpecialColors.MainViewBackGroundColor
             
             // 글자 색 변경: 10,000보 이상일 때 초록색, 그 외에는 기본 색상으로 설정
             dayLabel.textColor = steps >= 10000 ? SpecialColors.WhiteColor : SpecialColors.GearGray

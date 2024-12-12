@@ -23,7 +23,7 @@ class SelectProfileImageView: UIView {
     
     let confirmButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("확인", for: .normal)
+        button.setTitle("프로필 생성 완료", for: .normal)
         button.backgroundColor = SpecialColors.MainColor
         button.tintColor = SpecialColors.WhiteColor
         button.layer.cornerRadius = 12
