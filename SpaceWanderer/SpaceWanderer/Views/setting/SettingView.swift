@@ -15,7 +15,7 @@ class SettingView: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.backgroundColor = SpecialColors.MainViewBackGroundColor
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SettingCell")
         // 구분선 색상 변경
-        tableView.separatorColor = SpecialColors.WhiteColor.withAlphaComponent(0.6) // 원하는 색상으로 변경
+        tableView.separatorColor = SpecialColors.WhiteColor.withAlphaComponent(0.1) // 원하는 색상으로 변경
         tableView.separatorStyle = .singleLine // 구분선 스타일 설정 (기본값: singleLine)
         
         return tableView

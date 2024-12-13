@@ -10,9 +10,9 @@ import SnapKit
 
 class MainView: UIView {
     let isSmallDevice = UIScreen.main.bounds.height <= 667 // iPhone SE (1세대) 기준
-
+    
     // MARK: step label
-    lazy var stepBackView = UIFactory.makeView(backgroundColor: SpecialColors.MainColor.withAlphaComponent(0.6), cornerRadius: 12)
+    lazy var stepBackView = UIFactory.makeView(backgroundColor: SpecialColors.GreenStarColor.withAlphaComponent(0.6), cornerRadius: 12)
     var stepLabel = UIFactory.makeLabel(text: "step", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .semiBold, size: 20, isScaled: true), textAlignment: .center)
     
     // MARK: success label & button
@@ -27,7 +27,7 @@ class MainView: UIView {
     lazy var goalTitleLabel = UIFactory.makeLabel(text: "축하합니다! 오늘 목표를 달성하셨습니다!", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .semiBold, size: isSmallDevice ? 16 : 18, isScaled: true), textAlignment: .center)
     lazy var goalLabel = UIFactory.makeLabel(text: "클릭 시 상세페이지로 이동", textColor: SpecialColors.WhiteColor.withAlphaComponent(0.6), font: UIFont.pretendard(style: .regular, size: self.isSmallDevice ? 14 : 16, isScaled: true), textAlignment: .center)
     var goalIconImage = UIFactory.makeImageView(imageName: "LargeRightIcon", color: SpecialColors.WhiteColor)
-
+    
     // MARK: destination label & button
     var selectDestinationButton = UIFactory.makeView(backgroundColor: SpecialColors.MainViewBackGroundColor.withAlphaComponent(0.3))
     lazy var destinationStackView: UIStackView = UIFactory.makeStackView(
@@ -50,7 +50,7 @@ class MainView: UIView {
         $0.color = SpecialColors.WhiteColor
         $0.hidesWhenStopped = true
     }
-
+    
     // MARK: ProgressBar
     private var progressLayer: CAShapeLayer!
     private var trackLayer: CAShapeLayer!
@@ -58,6 +58,8 @@ class MainView: UIView {
     private var progressMarkBackgroundView: UIView!
     private let radius: CGFloat = 150
     private let lineWidth: CGFloat = 16
+    
+    var progressPercentageLabel = UIFactory.makeLabel(text: "step", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .semiBold, size: 16, isScaled: true), textAlignment: .center)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,7 +71,11 @@ class MainView: UIView {
     }
     
     func updateStepLabel(with steps: Int) {
-        stepLabel.text = String(steps)
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal  // 숫자 형식을 천 단위로 구분
+        if let formattedNumber = numberFormatter.string(from: NSNumber(value: steps)) {
+            stepLabel.text = formattedNumber
+        }
     }
     
     func showGoalMessage() {
@@ -80,7 +86,7 @@ class MainView: UIView {
         
         addSubview(goalButton)
         goalButton.addSubviews(goalLabelStackView)
-                
+        
         goalButton.snp.makeConstraints {
             $0.centerX.equalToSuperview() // 가로 중앙 정렬
             $0.top.equalTo(safeAreaLayoutGuide.snp.bottom).offset(isSmallDevice ? -90 : -150) // 조건에 따른 간격 설정
@@ -130,23 +136,22 @@ class MainView: UIView {
     @objc private func goalButtonTappedAction() {
         goalButtonTapped?()
     }
- 
+    
     // 로딩 인디케이터 시작
     func startLoading() {
         loadingIndicator.startAnimating()
         isUserInteractionEnabled = false // 사용자 인터랙션 비활성화
     }
-
+    
     // 로딩 인디케이터 중지
     func stopLoading() {
         loadingIndicator.stopAnimating()
         isUserInteractionEnabled = true // 사용자 인터랙션 활성화
     }
     
-    
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        
         // 트랙 레이어 및 프로그레스 레이어 다시 설정
         let radius: CGFloat = 150
         let lineWidth: CGFloat = 18
@@ -169,7 +174,7 @@ class MainView: UIView {
             layer.addSublayer(trackLayer)
             trackLayer.zPosition = -1 // 뒤로 보냄
         }
-
+        
         if progressLayer == nil {
             progressLayer = CAShapeLayer()
             let progressPath = UIBezierPath(
@@ -204,7 +209,7 @@ class MainView: UIView {
             }
         }
     }
-
+    
     func setupCircularProgressBar() {
         let backgroundDiameter: CGFloat = 40
         if progressMarkBackgroundView == nil {
@@ -229,9 +234,17 @@ class MainView: UIView {
             innerCircleView.snp.makeConstraints {
                 $0.edges.equalToSuperview().inset(2)
             }
+
+            // 퍼센트 레이블 추가
+            innerCircleView.addSubview(progressPercentageLabel)
+            
+            // 퍼센트 레이블 제약 설정
+            progressPercentageLabel.snp.makeConstraints {
+                $0.center.equalToSuperview()  // 레이블을 innerCircleView 중앙에 배치
+            }
         }
     }
-
+    
     func updateCircularProgressBar(totalStepsToday: Double, realTimeSteps: Double) {
         let totalSteps = totalStepsToday + realTimeSteps
         let maxStepCount = 10000.0
@@ -247,6 +260,10 @@ class MainView: UIView {
             $0.centerX.equalToSuperview().offset(xOffset)
             $0.centerY.equalToSuperview().offset(yOffset)
         }
+        
+        // 퍼센트 레이블에 값 업데이트
+        let percentage = Int(progress * 100) // 퍼센트 계산
+        progressPercentageLabel.text = "\(percentage)%"
         
         // 프로그레스 레이어 업데이트
         let progressPath = UIBezierPath(

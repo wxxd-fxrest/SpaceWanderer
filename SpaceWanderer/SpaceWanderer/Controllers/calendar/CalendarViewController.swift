@@ -334,7 +334,7 @@ class CalendarViewController: UIViewController, UIPopoverPresentationControllerD
     }
     
     private func updatePlanetLabel() {
-        calendarView.updatePlanetLabel(with: "Planet")
+        calendarView.updatePlanetLabel(with: "PLANET")
     }
 
     @objc private func showMonthSelectionModal() {

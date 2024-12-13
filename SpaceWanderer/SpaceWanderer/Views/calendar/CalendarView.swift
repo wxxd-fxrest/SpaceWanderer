@@ -11,9 +11,9 @@ import Then
 
 class CalendarView: UIView {
     // MARK: - UI Elements
-    var monthLabel = UIFactory.makeLabel(text: "month", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .semiBold, size: 18, isScaled: true), textAlignment: .center)
+    var monthLabel = UIFactory.makeLabel(text: "month", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .bold, size: 18, isScaled: true), textAlignment: .center)
     var totalStepsLabel = UIFactory.makeLabel(text: "total steps", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .regular, size: 16, isScaled: true), textAlignment: .center)
-    var planetLabel = UIFactory.makeLabel(text: "planet", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .regular, size: 18, isScaled: true), textAlignment: .center)
+    var planetLabel = UIFactory.makeLabel(text: "Planet", textColor: SpecialColors.WhiteColor, font: UIFont.pretendard(style: .bold, size: 18, isScaled: true), textAlignment: .center)
 
     lazy var calendarCollectionView = UICollectionView(
         frame: .zero,
@@ -71,7 +71,7 @@ class CalendarView: UIView {
         
         calendarCollectionView.snp.updateConstraints {
             $0.height.equalTo(contentHeight)
-            $0.top.equalTo(monthLabel.snp.bottom).offset(10)
+            $0.top.equalTo(monthLabel.snp.bottom).offset(14)
             $0.leading.trailing.equalToSuperview()
         }
     }
@@ -98,12 +98,12 @@ class CalendarView: UIView {
         }
         
         planetLabel.snp.makeConstraints {
-            $0.top.equalTo(calendarCollectionView.snp.bottom).offset(10)
+            $0.top.equalTo(calendarCollectionView.snp.bottom).offset(24)
             $0.leading.equalToSuperview().offset(16)
         }
         
         planetCollectionView.snp.makeConstraints {
-            $0.top.equalTo(planetLabel.snp.bottom).offset(20)
+            $0.top.equalTo(planetLabel.snp.bottom).offset(14)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(200)
         }

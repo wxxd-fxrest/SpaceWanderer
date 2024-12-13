@@ -5,6 +5,7 @@
 //  Created by 밀가루 on 12/2/24.
 //
 
+// MARK: 기본
 //import UIKit
 //import CoreMotion
 //import UserNotifications
@@ -209,9 +210,10 @@
 //}
 
 
+
+// MARK: HEALTHKIT
 import UIKit
 import HealthKit
-import CoreMotion
 import UserNotifications
 
 protocol MainViewModelDelegate: AnyObject {
@@ -221,12 +223,9 @@ protocol MainViewModelDelegate: AnyObject {
 }
 
 class MainViewModel {
-    
     weak var delegate: MainViewModelDelegate?
-    
-    private let pedometer = CMPedometer()
-    private let healthStore = HKHealthStore() // HealthKit 인스턴스
-    
+
+    private let healthStore = HKHealthStore()
     private var userIdentifier: String?
     private var userUniqueId: String?
     private var destination: String?
@@ -251,8 +250,12 @@ class MainViewModel {
         self.mainView = mainView
     }
     
+    // 사용자 데이터를 가져오는 메서드
     func fetchUserData() {
-        guard let userIdentifier = userIdentifier else { return }
+        guard let userIdentifier = userIdentifier else {
+            print("userIdentifier가 nil입니다.")
+            return
+        }
         
         DispatchQueue.main.async {
             self.mainView.startLoading()
@@ -277,6 +280,20 @@ class MainViewModel {
         }
     }
     
+    // HealthKit 권한 요청
+    func requestHealthKitPermissions() {
+        guard HKHealthStore.isHealthDataAvailable() else { return }
+        
+        let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        let readTypes: Set<HKObjectType> = [stepCountType]
+        
+        healthStore.requestAuthorization(toShare: nil, read: readTypes) { success, error in
+            if !success {
+                print("HealthKit 권한 요청 실패: \(String(describing: error))")
+            }
+        }
+    }
+    
     // 마지막으로 기록된 날짜를 가져오는 메서드
     func fetchLastRecordedDate() {
         guard let userUniqueId = userUniqueId else { return }
@@ -297,55 +314,26 @@ class MainViewModel {
     
     // 누락된 날짜들을 처리하는 메서드
     func handleMissingDates(lastRecordedDate: String) {
-        print("lastRecordedDate: ", lastRecordedDate)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        guard let lastDate = dateFormatter.date(from: lastRecordedDate) else { return }
-        let todayDate = Date()
+        let todayDate = dateFormatter.string(from: Date())
+        var currentDate = lastRecordedDate
         
-        var currentDate = lastDate
-        
-        // `lastRecordedDate` 다음날부터 오늘 날짜까지 순차적으로 걸음 수를 가져옴
-        while currentDate < todayDate {
-            currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-            let formattedDate = dateFormatter.string(from: currentDate)
-            fetchStepsFromHealthKit(forDate: formattedDate)  // HealthKit에서 걸음 수 가져오기
-            print("HealthKit에서 fetchStepsFor \(formattedDate)")
-        }
-        
-        // 오늘 날짜에 대해서도 처리
-        fetchAndSendSteps(forDate: dateFormatter.string(from: todayDate))
-    }
-
-    // HealthKit에서 날짜별 걸음 수를 가져오는 메서드
-    func fetchStepsFromHealthKit(forDate date: String) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        guard let targetDate = dateFormatter.date(from: date) else { return }
-        
-        let startOfDay = Calendar.current.startOfDay(for: targetDate)
-        let endOfDay = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
-        
-        let stepsQuantityType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
-        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay)
-        
-        let query = HKStatisticsQuery(quantityType: stepsQuantityType, quantitySamplePredicate: predicate, options: .cumulativeSum) { query, result, error in
-            guard error == nil, let result = result, let sum = result.sumQuantity() else {
-                print("HealthKit에서 걸음 수를 가져오는 데 실패했습니다.")
-                return
+        while currentDate != todayDate {
+            fetchAndSendSteps(forDate: currentDate)
+            if let date = dateFormatter.date(from: currentDate) {
+                let nextDate = Calendar.current.date(byAdding: .day, value: 1, to: date)!
+                currentDate = dateFormatter.string(from: nextDate)
             }
-            
-            let totalSteps = sum.doubleValue(for: HKUnit.count())
-            self.sendStepsToServer(steps: totalSteps, date: date)
-            print("totalSteps: ", totalSteps)
         }
         
-        healthStore.execute(query)
+        if currentDate == todayDate {
+            fetchAndSendSteps(forDate: currentDate)
+        }
     }
-
-    // CMPedometer로 걸음 수를 가져오는 메서드
+    
+    // 지정된 날짜에 대한 걸음 수를 HealthKit으로 가져오는 메서드
     func fetchAndSendSteps(forDate date: String) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -357,15 +345,19 @@ class MainViewModel {
         let startOfDay = Calendar.current.startOfDay(for: targetDate)
         let endOfDay = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
         
-        pedometer.queryPedometerData(from: startOfDay, to: endOfDay) { data, error in
-            guard error == nil, let data = data else {
-                print("걸음 수를 가져오는 데 실패했습니다: \(String(describing: error))")
+        // HealthKit에서 걸음 수 가져오기
+        let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay)
+        let query = HKStatisticsQuery(quantityType: stepCountType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            guard error == nil, let result = result else {
                 return
             }
             
-            let deviceSteps = data.numberOfSteps.doubleValue
+            let deviceSteps = result.sumQuantity()?.doubleValue(for: .count()) ?? 0
             self.sendStepsToServer(steps: deviceSteps, date: date)
         }
+        
+        healthStore.execute(query)
     }
     
     // 서버에 걸음 수 전송하는 메서드
@@ -388,48 +380,52 @@ class MainViewModel {
         }
     }
     
-    // 오늘 걸음 수 가져오는 메서드 (CMPedometer 사용)
+    // 오늘 걸음 수 가져오는 메서드
     func fetchTotalStepsForToday() {
-        let now = Date()
-        let startOfDay = Calendar.current.startOfDay(for: now)
-        let endOfDay = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
-
-        pedometer.queryPedometerData(from: startOfDay, to: endOfDay) { data, error in
-            guard error == nil, let data = data else {
-                print("오늘의 걸음 수를 가져오는 데 실패했습니다.")
-                return
-            }
-
-            let deviceSteps = data.numberOfSteps.doubleValue
-            DispatchQueue.main.async {
-                self.totalStepsToday = deviceSteps
-                self.delegate?.checkForStepGoal()
-                self.delegate?.updateCircularProgressBar()
-                self.mainView.updateStepLabel(with: Int(self.totalStepsToday + self.realTimeSteps))
-            }
-        }
-    }
-
-    // 실시간 단계 업데이트 시작하는 메서드
-    func startRealTimeStepUpdates() {
-        guard CMPedometer.isStepCountingAvailable() else {
-            print("걸음 수 계산을 사용할 수 없습니다.")
+        guard HKHealthStore.isHealthDataAvailable() else {
+            print("HealthKit을 사용할 수 없습니다.")
             return
         }
         
-        pedometer.startUpdates(from: Date()) { data, error in
-            guard error == nil, let data = data else {
-                print("실시간 단계 업데이트 오류: \(String(describing: error))")
+        let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        let todayStart = Calendar.current.startOfDay(for: Date())
+        let todayEnd = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: todayStart)!
+        
+        let predicate = HKQuery.predicateForSamples(withStart: todayStart, end: todayEnd)
+        let query = HKStatisticsQuery(quantityType: stepCountType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            guard error == nil, let result = result else {
+                print("오늘의 걸음 수를 가져오는 중 오류 발생")
                 return
             }
             
-            self.realTimeSteps = data.numberOfSteps.doubleValue
+            self.totalStepsToday = result.sumQuantity()?.doubleValue(for: .count()) ?? 0
             DispatchQueue.main.async {
-                print("실시간 걸음 수: \(self.realTimeSteps)")
+                print("오늘 걸음 수(자정부터): \(self.totalStepsToday)")
                 self.delegate?.checkForStepGoal()
                 self.delegate?.updateCircularProgressBar()
                 self.mainView.updateStepLabel(with: Int(self.totalStepsToday + self.realTimeSteps))
             }
         }
+        
+        healthStore.execute(query)
+    }
+    
+    // 실시간 단계 업데이트 시작하는 메서드
+    func startRealTimeStepUpdates() {
+        guard HKHealthStore.isHealthDataAvailable() else {
+            print("HealthKit을 사용할 수 없습니다.")
+            return
+        }
+        
+        let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        let query = HKObserverQuery(sampleType: stepCountType, predicate: nil) { _, _, error in
+            if let error = error {
+                print("실시간 단계 업데이트 오류: \(error.localizedDescription)")
+            } else {
+                self.fetchTotalStepsForToday()
+            }
+        }
+        
+        healthStore.execute(query)
     }
 }
